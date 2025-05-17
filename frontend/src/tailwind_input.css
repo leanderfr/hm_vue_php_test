@@ -1,0 +1,9 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.teste {
+@apply text-red-500 text-3xl;
+}
+
