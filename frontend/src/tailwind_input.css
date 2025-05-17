@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.teste {
-@apply text-red-500 text-3xl;
+.headerBar {
+@apply flex flex-row  justify-between w-full bg-yellow-300 ;
 }
 

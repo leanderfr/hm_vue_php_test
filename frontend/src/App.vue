@@ -3,7 +3,10 @@
 </script>
 
 <template>
-  <div class='teste'>ljksaljksaklsajlsa
+  <div class='headerBar'>
+  <div>1</div>
+  <div>2</div>
+  <div>3</div>
   </div>
 </template>
 
