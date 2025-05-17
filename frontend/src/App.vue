@@ -17,7 +17,7 @@
           </div>
 
           <label for="chkLanguageSelector" class="switch_language"  >
-            <input id="chkLanguageSelector" type="checkbox"  v-model="isUSASelected"   />
+            <input id="chkLanguageSelector" type="checkbox"  v-model="isUSASelected"   @change="isUSASelected = ! isUSASelected " />
             <span class="slider_language round"></span>
           </label>
 
@@ -38,8 +38,29 @@
     data() {
       return {
         isUSASelected: true,
+        expressions: [],  // english/portuguese
+        isLoading: true,
+        error: null,
       }
-    }
+    },
+
+    mounted() {
+      this.fetchExpressions();
+    },
+
+    methods: {
+      async fetchExpressions() {
+        this.isLoading = true;
+        try {
+          const response = await axios.get('https://api.example.com/data'); 
+          this.items = response.data;
+        } catch (error) {
+          this.error = error;
+        } finally {
+          this.isLoading = false;
+        }
+      },
+    },
   }
 
 </script>
