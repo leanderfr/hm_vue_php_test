@@ -562,6 +562,10 @@ video {
   visibility: collapse;
 }
 
+.absolute {
+  position: absolute;
+}
+
 .relative {
   position: relative;
 }
@@ -586,8 +590,28 @@ video {
   display: none;
 }
 
+.h-11 {
+  height: 2.75rem;
+}
+
+.h-16 {
+  height: 4rem;
+}
+
+.h-20 {
+  height: 5rem;
+}
+
+.h-9 {
+  height: 2.25rem;
+}
+
 .w-full {
   width: 100%;
+}
+
+.flex-grow {
+  flex-grow: 1;
 }
 
 .border-collapse {
@@ -610,6 +634,14 @@ video {
   flex-direction: column;
 }
 
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
 .justify-between {
   justify-content: space-between;
 }
@@ -621,6 +653,10 @@ video {
 .bg-yellow-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(253 224 71 / var(--tw-bg-opacity, 1));
+}
+
+.p-0 {
+  padding: 0px;
 }
 
 .text-red-300 {
@@ -663,12 +699,124 @@ video {
   transition-duration: 150ms;
 }
 
+/*****************************************************************************************************
+though this thought to be a tailwind file, sometimes I used vanilla css to prove I know it too 
+*****************************************************************************************************/
+
 .headerBar {
   display: flex;
+  height: 4rem;
   width: 100%;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
-  --tw-bg-opacity: 1;
-  background-color: rgb(253 224 71 / var(--tw-bg-opacity, 1));
+  padding: 0px;
 }
 
+.countrySelect {
+  display: flex;
+  flex-direction: row;
+  flex-basis: 33%;
+  flex:1;
+  justify-content: end;
+  gap: 10px;
+}
+
+.flagClicked {
+  background-color: #d6e5fc;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 70px;
+  display: flex;
+  justify-content: center;
+}
+
+.flagUnclicked {
+  background-color: transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 70px;
+  display: flex;
+  justify-content: center;
+}
+
+.flagUnclicked:hover {
+  background-color: lightgray;
+}
+
+/*********************************************************************************************************************************
+customized input type='checkbox' to select language/country, switcher button appearance 
+*********************************************************************************************************************************/
+
+.switch_language {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  margin-left: 5px;
+  margin-top: 1px;
+}
+
+.switch_language input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider_language {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: lightgray;
+  transition: 0.1s;
+  border: solid 1px transparent;
+}
+
+.slider_language:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  /* cor da bolinha */
+  transition: 0.1s;
+}
+
+input:checked + .slider_language {
+  background-color: lightgray;
+}
+
+input:focus + .slider_language {
+  box-shadow: 0 0 1px yellow;
+}
+
+input:checked + .slider_language:before {
+  transform: translateX(24px);
+}
+
+.slider_language.round {
+  border-radius: 30px;
+  height: 30px;
+}
+
+.slider_language.round:before {
+  border-radius: 50%;
+}
+
+/*********************************************************************************************************************************
+*********************************************************************************************************************************/
+
+.HiringMachineLogo {
+  background-image: url("./assets/images/hiringmachine_io_logo.jpeg");
+  background-repeat: no-repeat;
+  background-size: 60px 60px;
+  display: flex;
+  flex-basis: 33%;
+  height: 100%;
+  background-position: 10px;
+}

@@ -4,11 +4,47 @@
 
 <template>
   <div class='headerBar'>
-  <div>1</div>
-  <div>2</div>
-  <div>3</div>
+
+    <div class='HiringMachineLogo'>&nbsp;</div>
+    <div>2</div>
+    <div>
+
+        <!-- language/country selector  -->
+        <div class="countrySelect">    
+
+          <div :class="! isUSASelected ? 'flagClicked' : 'flagUnclicked' "   id='flagBRAZIL'  @click="isUSASelected = false"  >         
+            <img src="./assets/images/brazil_flag.svg" alt='' />
+          </div>
+
+          <label for="chkLanguageSelector" class="switch_language"  >
+            <input id="chkLanguageSelector" type="checkbox"  v-model="isUSASelected"   @change="isUSASelected = ! isUSASelected " />
+            <span class="slider_language round"></span>
+          </label>
+
+          <div :class="isUSASelected ? 'flagClicked' : 'flagUnclicked' "   id='flagUSA'  @click="isUSASelected = true"  >         
+            <img src="./assets/images/usa_flag.svg" alt='' />
+          </div>
+
+        </div>
+
+    </div>
+
   </div>
 </template>
+
+<script>
+
+  export default {
+    data() {
+      return {
+        isUSASelected: true,
+      }
+    }
+  }
+
+</script>
+
+
 
 <style scoped>
 </style>
