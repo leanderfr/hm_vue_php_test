@@ -5,7 +5,7 @@
 <template>
   <div class='headerBar'>
 
-    <div class='HiringMachineLogo'>&nbsp;</div>
+    <div class='HiringMachineLogo'></div>
     <div>2</div>
     <div>
 
@@ -17,7 +17,7 @@
           </div>
 
           <label for="chkLanguageSelector" class="switch_language"  >
-            <input id="chkLanguageSelector" type="checkbox"  v-model="isUSASelected"   @change="isUSASelected = ! isUSASelected " />
+            <input id="chkLanguageSelector" type="checkbox"  v-model="isUSASelected"   />
             <span class="slider_language round"></span>
           </label>
 
