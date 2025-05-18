@@ -1,9 +1,13 @@
 
 <template>
 
-  <div> <!-- this is just a fragment to wrap the template -->
+  <div class='carsBrowser'> 
 
-hljkdshljkdsljkds
+    <div class='carCard' v-for='car in cars' :key='car.id'>
+        <span>{{car.description}}</span>
+        <span>{{car.plate}}</span>
+    </div>
+
   </div>
 
 </template>
@@ -16,6 +20,8 @@ import { prepareLoadingAnimation, slidingMessage  } from './js/utils.js'
 
 
 export default {
+  props: ['cars'],
+
   data() {
     return {
     }

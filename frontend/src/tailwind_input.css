@@ -203,7 +203,15 @@ align-items: center;
     width: 90%;
 }
 
-.carsBrowser {
-@apply flex flex-row w-full bg-yellow-100 h-[100px] border-t-[1px] border-gray-400 border-b-[1px]
+.carsBrowserContainer {
+@apply w-full  h-[100px] border-t-[1px] border-gray-400 border-b-[1px] flex 
+}
 
+.carsBrowser {
+@apply flex flex-row   grow h-full items-center pl-2
+}
+
+.carCard {
+@apply bg-[#E6F0FF] hover:border-gray-700 hover:border-[1px] cursor-pointer 
+    border-transparent border-[1px] flex flex-col h-full w-[200px] pl-2
 }

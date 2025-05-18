@@ -32,7 +32,11 @@
     </div>
 
     <!-- horizontal cars browser -->
-    <div class='carsBrowser'><CarsBrowser /></div>
+    <div class='carsBrowserContainer'>
+      <div v-if="cars">
+        <CarsBrowser :cars='cars' />
+      </div>
+    </div>
 
     <!-- waiting backend response animation, thanx God Vue has 'v-show', React doesnt and the animation has to be (re)prepared all the time  -->
     <div v-show="isLoading" class='backdropTransparent'  >
@@ -123,8 +127,7 @@ export default {
     },
 
     async fetchCars() {
-let language = this.isUSASelected ? 'english' : 'portuguese';
-      await fetch(`${this.backendUrl}/expressions/${language}`)
+      await fetch(`${this.backendUrl}/cars`)
 
       .then(response => {
         if (!response.ok) {
@@ -133,16 +136,13 @@ let language = this.isUSASelected ? 'english' : 'portuguese';
         return response.json()
       })
       .then((data) => {
-//        this.expressions = data;        
-console.log('ssssssss expressions='+data)
+        this.cars = data;        
       })
       .catch((error) => {
         this.isLoading = false;
         slidingMessage('Fatal error= '+error, 3000)        
       })  
-
     },
-
   },
 
   components: {

@@ -57,7 +57,7 @@ function internalError($message = 'Internal Error') {
         }
     ]
 
-$exceptionExpressions = true 
+$toReturnExpressions = true 
     different treatment when returning expressions (english/portuguese)
     transforms json into associative json (item => expression), example:
 
@@ -65,7 +65,7 @@ $exceptionExpressions = true
 
 *********************************************************************************************************/
 
-function executeFetchQueryAndReturnJsonResult($sql, $simplifyJSON=false, $exceptionExpressions=false) {
+function executeFetchQueryAndReturnJsonResult($sql, $simplifyJSON=false, $toReturnExpressions=false) {
 
   global $dbConnection;
    
@@ -79,7 +79,7 @@ function executeFetchQueryAndReturnJsonResult($sql, $simplifyJSON=false, $except
   $anyData = mysqli_num_rows($result) > 0;
 
   // different treatment when returning expressions portuguese/english
-  if ($exceptionExpressions)  {
+  if ($toReturnExpressions)  {
     $expressions = array();
 
     while($row = mysqli_fetch_assoc($result))    {

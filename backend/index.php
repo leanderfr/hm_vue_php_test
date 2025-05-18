@@ -20,44 +20,50 @@ if ($method == "OPTIONS") {
 } 
 header("HTTP/1.0 200 OK"); 
 
+
 require 'setup.php';
 require 'functions.php';
 require 'aws/aws-autoloader.php';  // AWS S3 handler
 require "Router.php";
-require "handlers/Expressions.php";
+require "handlers/Expressions.php";  
+require "handlers/Cars.php";  
 
+
+//********************************************************************
 // analyse the received route and points what to do
+//********************************************************************
 $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
 $params = explode("/", $path);
 
-// load handler based on the route
-
-// if came at least the first element of the route (expressions, cars, etc)
-if ( isset($params[0]) )  {
-
-  $subject = $params[1] ;
-  switch ($subject) {
-    case "expressions":
-        $handlerExpressions = new Expressions;
-        break;
-  }
-}
+// prepare handlers
+$handlerExpressions = new Expressions;
+$handlerCars = new Cars;
 
 $router = new Router;
 
-$router->add("/expressions/{language}", function($language) use ($handlerExpressions) {  
+// expressions (english/portuguese)
+$router->addGet("/expressions/{language}", function($language) use($handlerExpressions) {  
   $handlerExpressions->getAll($language);
 });
 
-$router->add("/products/{id}", function($id) {
+// cars
+$router->addGet("/cars", function() use($handlerCars)  {  
+  $handlerCars->getAll();
+});
+
+
+$router->addGet("/products/{id}", function($id) {
     echo "This is the page for product $id";
 });
-$router->add("/products/{id}/orders/{order_id}", function($id, $order_id) {
+$router->addGet("/products/{id}/orders/{order_id}", function($id, $order_id) {
     echo "This is the page for product $id, and order $order_id";
   die();
 });
 $router->dispatch($path);
+
+//********************************************************************
+//********************************************************************
 
 
 ?>
