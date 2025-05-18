@@ -202,3 +202,8 @@ align-items: center;
     font-size: 1.3em;
     width: 90%;
 }
+
+.carsBrowser {
+@apply flex flex-row w-full bg-yellow-100 h-[100px] border-t-[1px] border-gray-400 border-b-[1px]
+
+}
