@@ -14,7 +14,7 @@ overflow: hidden;
 though this was thought to be a tailwind file, I use some moments vanilla css to prove I know it too 
 *****************************************************************************************************/
 .headerBar {
-@apply flex flex-row  justify-between w-full  h-16 items-center p-0 ;
+@apply flex flex-row  justify-between w-full  h-16 items-center p-0 mb-2;
 }
 
 .headerLogo {
@@ -27,7 +27,7 @@ though this was thought to be a tailwind file, I use some moments vanilla css to
   background-position: 10px;
 }
 .headerText {
-@apply text-2xl grow text-center ;
+@apply text-2xl  text-center  basis-[33%]
 }
 
 .headerRight {
@@ -37,6 +37,7 @@ flex-basis: 33%;
 flex:1;
 justify-content: end;
 gap: 10px;
+padding-right: 10px;
 }
 
 .flagClicked {
@@ -212,6 +213,6 @@ align-items: center;
 }
 
 .carCard {
-@apply bg-[#E6F0FF] hover:border-gray-700 hover:border-[1px] cursor-pointer 
-    border-transparent border-[1px] flex flex-col h-full w-[200px] pl-2
+@apply bg-[#E6F0FF] hover:border-gray-700 hover:border-[1px] cursor-pointer justify-center pr-2
+    border-transparent border-[1px] flex flex-col h-full w-[230px] pl-2 text-right text-gray-500
 }

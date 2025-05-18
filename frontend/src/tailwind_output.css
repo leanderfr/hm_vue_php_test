@@ -635,8 +635,8 @@ video {
   min-height: 100%;
 }
 
-.w-\[200px\] {
-  width: 200px;
+.w-\[230px\] {
+  width: 230px;
 }
 
 .w-full {
@@ -649,6 +649,10 @@ video {
 
 .grow {
   flex-grow: 1;
+}
+
+.basis-\[33\%\] {
+  flex-basis: 33%;
 }
 
 .border-collapse {
@@ -757,6 +761,11 @@ video {
   background-color: rgb(230 240 255 / var(--tw-bg-opacity, 1));
 }
 
+.bg-cyan-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(165 243 252 / var(--tw-bg-opacity, 1));
+}
+
 .bg-emerald-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(167 243 208 / var(--tw-bg-opacity, 1));
@@ -800,8 +809,16 @@ video {
   padding-left: 0.5rem;
 }
 
+.pr-2 {
+  padding-right: 0.5rem;
+}
+
 .text-center {
   text-align: center;
+}
+
+.text-right {
+  text-align: right;
 }
 
 .align-middle {
@@ -816,6 +833,11 @@ video {
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
 }
 
 .text-red-300 {
@@ -874,6 +896,7 @@ though this was thought to be a tailwind file, I use some moments vanilla css to
 *****************************************************************************************************/
 
 .headerBar {
+  margin-bottom: 0.5rem;
   display: flex;
   height: 4rem;
   width: 100%;
@@ -894,7 +917,7 @@ though this was thought to be a tailwind file, I use some moments vanilla css to
 }
 
 .headerText {
-  flex-grow: 1;
+  flex-basis: 33%;
   text-align: center;
   font-size: 1.5rem;
   line-height: 2rem;
@@ -907,6 +930,7 @@ though this was thought to be a tailwind file, I use some moments vanilla css to
   flex:1;
   justify-content: end;
   gap: 10px;
+  padding-right: 10px;
 }
 
 .flagClicked {
@@ -1089,14 +1113,19 @@ input:checked + .slider_language:before {
 .carCard {
   display: flex;
   height: 100%;
-  width: 200px;
+  width: 230px;
   cursor: pointer;
   flex-direction: column;
+  justify-content: center;
   border-width: 1px;
   border-color: transparent;
   --tw-bg-opacity: 1;
   background-color: rgb(230 240 255 / var(--tw-bg-opacity, 1));
+  padding-right: 0.5rem;
   padding-left: 0.5rem;
+  text-align: right;
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
 }
 
 .carCard:hover {
