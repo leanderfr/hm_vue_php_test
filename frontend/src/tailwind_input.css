@@ -7,6 +7,7 @@
 
 body { 
 font-family: Arial, Helvetica, sans-serif;
+overflow: hidden;
 }
 
 /*****************************************************************************************************
@@ -176,4 +177,28 @@ align-items: center;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     padding-top: 29px;
+}
+
+
+#messagesSlidingDiv {
+    position: absolute;
+    height: 70px;
+    line-height: 70px;
+    z-index: 10000;
+    left: 4%;
+    display: none;
+    text-align: center;
+    bottom: 25px;
+    margin: auto;
+    background-color: #ffebeb;
+    border-color: #b40000;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    color: #c40000;
+    font-size: 1.3em;
+    width: 90%;
 }

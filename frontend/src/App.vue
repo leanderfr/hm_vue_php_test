@@ -5,10 +5,10 @@
 
     <div class='headerBar'>
 
-      <div class='headerLogo'></div>
+      <div class='headerLogo' @click='teste' ></div>
 
-      <div class='headerText' @click='isLoading=true'>
-          {{ expressions.app_header }}
+      <div class='headerText' >
+          <div>{{ expressions.app_header_title }}</div>
       </div>
 
       <!-- language/country selector  -->
@@ -31,9 +31,20 @@
 
     </div>
 
+    <!-- waiting backend response animation  -->
     <div v-show="isLoading" class='backdropTransparent'  >
       <div id='divLoading' >&nbsp;</div>
     </div>
+
+    <!-- show sliding error messages -->
+    <div id="messagesSlidingDiv" >
+      &nbsp;
+    </div>
+
+    <audio id="alertBeep" autoplay>
+      <source src="./assets/sounds/error_beep.mp3" type="audio/mpeg">    
+    </audio>
+
   </div>
 
 </template>
@@ -71,12 +82,21 @@ export default {
       let language = this.isUSASelected ? 'english' : 'portuguese';
 
       fetch(`${this.backendUrl}/expressions/${language}`)
-      .then((response) => response.json())
-      .then((data) => {
-        this.expressions = data;
+
+      .then(response => {
         this.isLoading = false;
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        return response.json()
       })
-      .catch((error) => console.log('erro='+error));        
+      .then((data) => {
+        this.expressions = data;        
+      })
+      .catch((error) => {
+        this.isLoading = false;
+        slidingMessage('Fatal error= '+error, 3000)        
+      })  
 
     },
   }

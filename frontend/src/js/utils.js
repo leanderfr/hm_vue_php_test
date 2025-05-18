@@ -2,8 +2,6 @@
 import 'spin.js/spin.css';
 import {Spinner} from 'spin.js';
 
-let alertBeep = new Audio("../assets/sounds/error_beep.mp3")
-
 const prepareLoadingAnimation = () => {
     var opts = {
       lines: 12 // The number of lines to draw
@@ -54,12 +52,13 @@ display sliding message in red
 ************************************************************************************************************************************************************/
 const slidingMessage = (html, time) => {
 
-  let slidingDIV = $('#msgRolanteErros')
+  let slidingDIV = $('#messagesSlidingDiv')
 
   slidingDIV.html('&nbsp;&nbsp;&nbsp;&nbsp;' + html);
   slidingDIV.show("slide", { direction: "left" }, 200);
 
-  alertBeep.play()
+  // browser wont allow play beep unless user already 'touched' something in the screen
+  if (navigator.userActivation.hasBeenActive)     $('#alertBeep')[0].play()
 
   setTimeout(function () { slidingDIV.hide("slide", { direction: "right" }, 200); }, time);
 }
