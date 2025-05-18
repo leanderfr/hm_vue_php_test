@@ -1,9 +1,10 @@
 
 <template>
 
-  <div class="flex flex-col w-full h-[95%] border-l-red-200 bg-yellow-100 ">
+  <div class='flex flex-col h-full ' id='scheduleContainer'>
 
-    <div class="flex flex-row h-[60px] w-full justify-between border-b-2">
+    <!-- tool bar -->
+    <div class="flex flex-row h-[60px] w-full justify-between border-b-2" id='scheduleToolbar'>
 
       <!-- current year -->
       <div class="flex flex-row text-2xl font-bold pt-4" id='currentYear'>ss</div>
@@ -28,46 +29,43 @@
 
     </div>
 
-    <div class="flex flex-row h-[calc(100%-60px)]  w-full  gap-x-[1px] px-[20px]">
-
-        <!-- lado esquerdo, agenda e detalhes do veiculo escolhido -->
-        <div class="flex flex-col w-full  border-b-2  h-full ">
-
-              <!-- week days  -->
-              <div class="w-full border-b-2 border-b-gray-300 text-lg py-1 grow-0" >  
-                  <div class="w-[calc(100%-22px)] flex flex-row text-gray-500  text-lg font-bold text-center h-12 justify-center cursor-pointer items-center" >
-                    <div class='w-[9%] tdBookingHeader'>&nbsp;</div>
-                    <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn0' bookings_this_day='' real_date=''></div> 
-                    <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn1' bookings_this_day='' real_date=''></div>
-                    <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn2' bookings_this_day='' real_date=''></div>
-                    <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn3' bookings_this_day='' real_date=''></div>
-                    <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn4' bookings_this_day='' real_date=''></div> 
-                    <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn5' bookings_this_day='' real_date=''></div>
-                    <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn6' bookings_this_day='' real_date=''></div>
-                  </div>
-              </div>
-
-              <!-- loop to display times from 05:00 to 23:00  -->
-              <div class="w-full flex flex-col  overflow-y-auto  flex-1 border-l-0 border-gray-200 border-r-0 relative" id='bookingsTable' >  
-
-                <div v-for="hour in counter(5, 24)" :key="hour" class="w-full flex flex-row  leading-[60px]  justify-center cursor-pointer border-b-2 border-gray-300 hover:bg-gray-100"  >
-                  <div class='w-[9%] tdBookingCell flex justify-center'>{{ hourFormat(hour, currentCountry) }}</div>
-                  <div class='w-[13%] tdBookingCell' id='bookingHourDay0{{hour}}' ></div>
-                  <div class='w-[13%] tdBookingCell' id='bookingHourDay1{{hour}}'></div>
-                  <div class='w-[13%] tdBookingCell' id='bookingHourDay2{{hour}}'></div>
-                  <div class='w-[13%] tdBookingCell' id='bookingHourDay3{{hour}}'></div>
-                  <div class='w-[13%] tdBookingCell' id='bookingHourDay4{{hour}}'></div>
-                  <div class='w-[13%] tdBookingCell' id='bookingHourDay5{{hour}}'></div>
-                  <div class='w-[13%] tdBookingCell' id='bookingHourDay6{{hour}}'></div>
-                </div>
-          
-              </div>
-
+    <!-- week days  -->
+    <div class="w-full border-b-2 border-b-gray-300 text-lg py-1 " id='scheduleHeader' >  
+        <div class="w-[calc(100%-22px)] flex flex-row text-gray-500  text-lg font-bold text-center h-12 justify-center cursor-pointer items-center" >
+          <div class='w-[9%] tdBookingHeader'>&nbsp;</div>
+          <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn0' bookings_this_day='' real_date=''>s</div> 
+          <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn1' bookings_this_day='' real_date=''></div>
+          <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn2' bookings_this_day='' real_date=''></div>
+          <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn3' bookings_this_day='' real_date=''></div>
+          <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn4' bookings_this_day='' real_date=''></div> 
+          <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn5' bookings_this_day='' real_date=''></div>
+          <div class='w-[13%] tdBookingHeader rounded-2xl' id='datecolumn6' bookings_this_day='' real_date=''></div>
         </div>
+    </div>
+
+    <!-- loop to display times from 05:00 to 23:00  -->
+    <div class="w-full flex flex-col  overflow-y-scroll h-[20px]  border-l-0 border-gray-200 border-r-0  " id='bookingsTable' >  
+
+      <div v-for="hour in counter(5, 24)" :key="hour" class="w-full flex flex-row  leading-[60px]  justify-center cursor-pointer border-b-2 border-gray-300 hover:bg-gray-100"  >
+        <div class='w-[9%] tdBookingCell flex justify-center'>{{ hourFormat(hour, currentCountry) }}</div>
+        <div class='w-[13%] tdBookingCell' id='bookingHourDay0{{hour}}' ></div>
+        <div class='w-[13%] tdBookingCell' id='bookingHourDay1{{hour}}'></div>
+        <div class='w-[13%] tdBookingCell' id='bookingHourDay2{{hour}}'></div>
+        <div class='w-[13%] tdBookingCell' id='bookingHourDay3{{hour}}'></div>
+        <div class='w-[13%] tdBookingCell' id='bookingHourDay4{{hour}}'></div>
+        <div class='w-[13%] tdBookingCell' id='bookingHourDay5{{hour}}'></div>
+        <div class='w-[13%] tdBookingCell' id='bookingHourDay6{{hour}}'></div>
+      </div>
 
     </div>
 
-  </div>
+
+
+    </div>
+
+  
+
+
 
 </template>
 
@@ -100,6 +98,15 @@ let BookingCalendar_CurrentDate = _today_;
 ************************************************************************************************************************************************************/
 
 async function refreshBookingDatesAndContent() { 
+
+  // the only way to make the 'bookingsTable' stop overflowing the parent div, put its height manually
+  let hgt1 = $('#scheduleToolbar').height()
+  let hgt2 = $('#scheduleHeader').height()
+  let hgtCONTAINER = $('#scheduleContainer').height()
+
+  $('#bookingsTable').height( hgtCONTAINER - hgt1 - hgt2 - 10)
+
+  
 
   // necessario abrir evento assincrono para exibir div ajax loading, caso contrario navegador nao atualiza a tela
   //setTimeout(() => {showLoadingGif(); }, 1);

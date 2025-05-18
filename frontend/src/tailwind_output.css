@@ -656,16 +656,12 @@ video {
   height: 100px;
 }
 
+.h-\[20px\] {
+  height: 20px;
+}
+
 .h-\[60px\] {
   height: 60px;
-}
-
-.h-\[95\%\] {
-  height: 95%;
-}
-
-.h-\[calc\(100\%-60px\)\] {
-  height: calc(100% - 60px);
 }
 
 .h-auto {
@@ -681,8 +677,17 @@ video {
   height: 100%;
 }
 
+.h-screen {
+  height: 100vh;
+}
+
 .max-h-full {
   max-height: 100%;
+}
+
+.max-h-max {
+  max-height: -moz-max-content;
+  max-height: max-content;
 }
 
 .min-h-full {
@@ -711,14 +716,6 @@ video {
 
 .w-full {
   width: 100%;
-}
-
-.w-\[95\%\] {
-  width: 95%;
-}
-
-.w-\[calc\(100\%-60px\)\] {
-  width: calc(100% - 60px);
 }
 
 .flex-1 {
@@ -797,13 +794,20 @@ video {
   gap: 1rem;
 }
 
-.gap-x-\[1px\] {
-  -moz-column-gap: 1px;
-       column-gap: 1px;
-}
-
 .overflow-y-auto {
   overflow-y: auto;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+.overflow-y-visible {
+  overflow-y: visible;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
 }
 
 .rounded-2xl {
@@ -914,9 +918,19 @@ video {
   background-color: rgb(167 243 208 / var(--tw-bg-opacity, 1));
 }
 
+.bg-gray-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1));
+}
+
 .bg-red-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 202 202 / var(--tw-bg-opacity, 1));
+}
+
+.bg-red-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 165 165 / var(--tw-bg-opacity, 1));
 }
 
 .bg-red-400 {
@@ -941,6 +955,11 @@ video {
 .bg-yellow-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 249 195 / var(--tw-bg-opacity, 1));
+}
+
+.bg-yellow-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 240 138 / var(--tw-bg-opacity, 1));
 }
 
 .bg-yellow-300 {
@@ -989,16 +1008,6 @@ video {
   padding-bottom: 0.25rem;
 }
 
-.px-\[10px\] {
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.px-\[20px\] {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
 .pl-2 {
   padding-left: 0.5rem;
 }
@@ -1009,10 +1018,6 @@ video {
 
 .pt-4 {
   padding-top: 1rem;
-}
-
-.pl-\[10px\] {
-  padding-left: 10px;
 }
 
 .text-center {
@@ -1349,17 +1354,16 @@ input:checked + .slider_language:before {
   border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
 }
 
-.scheduleContainer {
+.mainContainer {
   display: flex;
   width: 100%;
   flex-grow: 1;
-  flex-direction: row;
-  --tw-bg-opacity: 1;
-  background-color: rgb(207 250 254 / var(--tw-bg-opacity, 1));
+  flex-direction: column;
 }
 
 .appBody {
   display: flex;
+  height: 100vh;
   width: 100%;
   flex-direction: column;
 }

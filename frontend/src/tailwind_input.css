@@ -217,11 +217,11 @@ align-items: center;
     border-transparent border-[1px] flex flex-col h-full w-[230px] pl-2 text-right text-gray-500
 }
 
-.scheduleContainer {
-@apply flex flex-row grow w-full bg-cyan-100 
+.mainContainer {
+@apply flex flex-col w-full grow 
 }
 .appBody {
-@apply flex flex-col w-full 
+@apply flex flex-col w-full h-screen
 }
 
 .btnBOOKING_ADD_CAR_RESERVATION {

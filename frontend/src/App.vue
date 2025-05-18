@@ -1,44 +1,53 @@
 
 <template>
 
-  <div class='appBody'>  
+  <div>  <!-- fragment -->
 
-    <div class='headerBar'>
+    <div class='appBody'>  
 
-      <div class='headerLogo' ></div>
+      <div class='headerBar'>
 
-      <div class='headerText' >
-          <div>{{ expressions.app_header_title }}</div>
-      </div>
+        <div class='headerLogo' ></div>
 
-      <!-- language/country selector  -->
-      <div class="headerRight">    
-
-        <div :class="! isUSASelected ? 'flagClicked' : 'flagUnclicked' "   id='flagBRAZIL'  @click="isUSASelected = false"  >         
-          <img src="./assets/images/brazil_flag.svg" alt='' />
+        <div class='headerText' >
+            <div>{{ expressions.app_header_title }}</div>
         </div>
 
-        <label for="chkLanguageSelector" class="switch_language"  >
-          <input id="chkLanguageSelector" type="checkbox"  v-model="isUSASelected"    />
-          <span class="slider_language round"></span>
-        </label>
+        <!-- language/country selector  -->
+        <div class="headerRight">    
 
-        <div :class="isUSASelected ? 'flagClicked' : 'flagUnclicked' "   id='flagUSA'  @click="isUSASelected = true"  >         
-          <img src="./assets/images/usa_flag.svg" alt='' />
+          <div :class="! isUSASelected ? 'flagClicked' : 'flagUnclicked' "   id='flagBRAZIL'  @click="isUSASelected = false"  >         
+            <img src="./assets/images/brazil_flag.svg" alt='' />
+          </div>
+
+          <label for="chkLanguageSelector" class="switch_language"  >
+            <input id="chkLanguageSelector" type="checkbox"  v-model="isUSASelected"    />
+            <span class="slider_language round"></span>
+          </label>
+
+          <div :class="isUSASelected ? 'flagClicked' : 'flagUnclicked' "   id='flagUSA'  @click="isUSASelected = true"  >         
+            <img src="./assets/images/usa_flag.svg" alt='' />
+          </div>
+
         </div>
 
       </div>
 
-    </div>
+      <!-- horizontal cars browser -->
+      <div class='carsBrowserContainer' v-if="cars.lenght!=0" >
+        <CarsBrowser :cars='cars' />
+      </div>
 
-    <!-- horizontal cars browser -->
-    <div class='carsBrowserContainer' v-if="cars.lenght!=0" >
-      <CarsBrowser :cars='cars' />
-    </div>
+      <!-- the schedule  -->
+      <div class='mainContainer' v-if="cars.length!=0 && expressions.length!=0" >
+        <Schedule :expressions='expressions' :currentCountry="isUSASelected ? 'usa' : 'brazil'" />
+      </div>
 
-    <!-- the schedule  -->
-    <div class='scheduleContainer' v-if="cars.length!=0 && expressions.length!=0">
-      <Schedule :expressions='expressions' :currentCountry="isUSASelected ? 'usa' : 'brazil'" />
+      <div class='h-[60px] bg-red-300 flex' >
+        DIV FINAL
+      </div>
+
+
     </div>
 
 
@@ -57,6 +66,7 @@
     </audio>
 
   </div>
+
 
 </template>
 
