@@ -5,7 +5,7 @@
 
     <div class='headerBar'>
 
-      <div class='headerLogo' @click='teste' ></div>
+      <div class='headerLogo' @click='expressions=null' ></div>
 
       <div class='headerText' >
           <div>{{ expressions.app_header_title }}</div>
@@ -75,6 +75,16 @@ export default {
     this.fetchExpressions()
   },
 
+   watch: {
+      // user changes current language, (re)fetch expressions
+      isUSASelected: {
+        handler() {
+          this.fetchExpressions()
+        },
+        immediate: false,
+      },
+    },
+
   methods: {
     async fetchExpressions() {
       this.isLoading = true;
@@ -84,13 +94,13 @@ export default {
       fetch(`${this.backendUrl}/expressions/${language}`)
 
       .then(response => {
-        this.isLoading = false;
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
         return response.json()
       })
       .then((data) => {
+        this.isLoading = false;
         this.expressions = data;        
       })
       .catch((error) => {
@@ -99,6 +109,8 @@ export default {
       })  
 
     },
+
+
   }
 }
 
