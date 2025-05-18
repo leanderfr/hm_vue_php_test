@@ -22,27 +22,11 @@
 
 
 
-<script>
-
+<script setup>
 import { prepareLoadingAnimation, slidingMessage  } from './js/utils.js'
 
+const props = defineProps( ['cars'] )
 
-export default {
-  props: ['cars'],
-
-  data() {
-    return {
-    }
-  },
-
-  mounted() {
-  },
-
-
-  methods: {
-
-  }
-}
 
 </script>
 

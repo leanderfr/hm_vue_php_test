@@ -63,5 +63,46 @@ const slidingMessage = (html, time) => {
   setTimeout(function () { slidingDIV.hide("slide", { direction: "right" }, 200); }, time);
 }
 
+/************************************************************************************************************************************************************
+counter
+************************************************************************************************************************************************************/
+const counter = (start, end) => {
+    const result = [];
+    for (let i = start; i <= end; i++) {
+      result.push(i);
+    }
+    return result;
+}
 
-export { prepareLoadingAnimation, isStringJSON, slidingMessage };
+//********************************************************************************************************************************
+// returns string in hour format, depending on the selected country/language 
+// Brasil= hour= 5, string= 05:00,  hour= 22, string= 22:00
+// USA= hour= 5, string= 05:00 am,  hour= 22, string= 10:00 pm
+//*******************************************************************************************************************************
+export const hourFormat = (hour, currentCountry) => {
+ 
+  let hourTMP = hour
+
+  let am_pm = 'am'
+
+  if (currentCountry == 'usa') {
+    // convert example: 23:00 into 11:00 pm
+    if (hourTMP > 12) {
+      hourTMP -= 12
+      am_pm = 'pm'
+    }
+  }
+  // leading zeros
+  hourTMP = hourTMP.toString();
+  while (hourTMP.length < 2) hourTMP = "0" + hourTMP;
+
+  if (currentCountry == 'usa')
+    hourTMP += ':00 ' + am_pm
+  else if (currentCountry == 'brazil')
+    hourTMP += ':00'
+
+  return (hourTMP)
+}
+
+
+export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter };

@@ -1,11 +1,11 @@
 
 <template>
 
-  <div> <!-- this is just a fragment to wrap the template -->
+  <div class='appBody'>  
 
     <div class='headerBar'>
 
-      <div class='headerLogo' @click='expressions=null' ></div>
+      <div class='headerLogo' ></div>
 
       <div class='headerText' >
           <div>{{ expressions.app_header_title }}</div>
@@ -32,11 +32,15 @@
     </div>
 
     <!-- horizontal cars browser -->
-    <div class='carsBrowserContainer'>
-      <div v-if="cars">
-        <CarsBrowser :cars='cars' />
-      </div>
+    <div class='carsBrowserContainer' v-if="cars.lenght!=0" >
+      <CarsBrowser :cars='cars' />
     </div>
+
+    <!-- the schedule  -->
+    <div class='scheduleContainer' v-if="cars.length!=0 && expressions.length!=0">
+      <Schedule :expressions='expressions' :currentCountry="isUSASelected ? 'usa' : 'brazil'" />
+    </div>
+
 
     <!-- waiting backend response animation, thanx God Vue has 'v-show', React doesnt and the animation has to be (re)prepared all the time  -->
     <div v-show="isLoading" class='backdropTransparent'  >
@@ -57,98 +61,93 @@
 </template>
 
 
+<!-- composition API , way cleaner then options API -->
+<script setup>
+  import { ref, onMounted, watch  } from 'vue';
+  import CarsBrowser from './CarsBrowser.vue';
+  import Schedule from './Schedule.vue';
 
-<script>
-import CarsBrowser from './CarsBrowser.vue';
+  // some nice effects using jquery
+  import 'jquery-ui-bundle';
+  import 'jquery-ui-bundle/jquery-ui.min.css';
 
-// some nice effects using jquery
-import 'jquery-ui-bundle';
-import 'jquery-ui-bundle/jquery-ui.min.css';
+  import { prepareLoadingAnimation, slidingMessage  } from './js/utils.js'
 
-import { prepareLoadingAnimation, slidingMessage  } from './js/utils.js'
+  const isUSASelected = ref(true)
+  const expressions = ref([])
+  const cars = ref([])
+  const isLoading = ref(true)
+  const error = ref(null)
+  const backendUrl = ref('http://localhost')  // it changes depending if the app is running as a container (AWS EC2) or locally
+
+  //***************************************************************************
+  //***************************************************************************
+  onMounted( () => {
+      prepareLoadingAnimation()
+
+      isLoading.value = true
+
+      Promise.all( [fetchExpressions(), fetchCars()] ).then(() => {
+        isLoading.value = false
+      })
+  })
+
+  //***************************************************************************
+  // if user changes current language, (re) fetch expressions (port/english)
+  //*************************************************************************** 
+  watch(isUSASelected, () => {
+      isLoading.value = true;
+
+      Promise.all( [fetchExpressions()] ).then(() => {
+        isLoading.value = false
+      })        
+    },
+    { immediate: false }
+  )
 
 
-export default {
-  data() {
-    return {
-      isUSASelected: true,
-      expressions: [],  // english/portuguese
-      cars: [], 
-      isLoading: true,
-      error: null,
-      backendUrl: 'http://localhost',  // it changes depending if it is containerized or not
-    }
-  },
+  //***************************************************************************
+  //*************************************************************************** 
+  async function fetchExpressions() {
+    let language = isUSASelected.value ? 'english' : 'portuguese';
 
-  mounted() {
-    prepareLoadingAnimation()
+    await fetch(`${backendUrl.value}/expressions/${language}`)
 
-    this.isLoading = true;
-
-    Promise.all( [this.fetchExpressions(), this.fetchCars()] ).then(() => {
-      this.isLoading = false
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      return response.json()
     })
-    
-  },
-
-  watch: {
-    // user changes current language, (re)fetch expressions
-    isUSASelected: {
-      handler() {
-        this.isLoading = true;
-
-        Promise.all( [this.fetchExpressions()] ).then(() => {
-          this.isLoading = false
-        })        
-      },
-      immediate: false,
-    },
-  },
-
-  methods: {
-    async fetchExpressions() {
-      let language = this.isUSASelected ? 'english' : 'portuguese';
-
-      await fetch(`${this.backendUrl}/expressions/${language}`)
-
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        return response.json()
-      })
-      .then((data) => {
-        this.expressions = data;        
-      })
-      .catch((error) => {
-        this.isLoading = false;
-        slidingMessage('Fatal error= '+error, 3000)        
-      })  
-    },
-
-    async fetchCars() {
-      await fetch(`${this.backendUrl}/cars`)
-
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        return response.json()
-      })
-      .then((data) => {
-        this.cars = data;        
-      })
-      .catch((error) => {
-        this.isLoading = false;
-        slidingMessage('Fatal error= '+error, 3000)        
-      })  
-    },
-  },
-
-  components: {
-    CarsBrowser
+    .then((data) => {
+      expressions.value = data;        
+    })
+    .catch((error) => {
+      isLoading.value = false;
+      slidingMessage('Fatal error= '+error, 3000)        
+    })  
   }
-}
+
+  //***************************************************************************
+  //*************************************************************************** 
+  async function fetchCars() {
+    await fetch(`${backendUrl.value}/cars`)
+
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      return response.json()
+    })
+    .then((data) => {
+      cars.value = data;        
+    })
+    .catch((error) => {
+      isLoading.value = false;
+      slidingMessage('Fatal error= '+error, 3000)        
+    })  
+  }
+
 
 </script>
 
