@@ -29,22 +29,22 @@ require "handlers/Expressions.php";
 // analyse the received route and points what to do
 $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
-die( 'aaq'.$path);
+$params = explode("/", $path);
 
-// load  handler based on the route
-switch ($path) {
-  case "/expressions":
-      $handlerExpressions = new Expressions;
-die('jlkdsljkd');
-      break;
+// load handler based on the route
+
+// if came at least the first element of the route (expressions, cars, etc)
+if ( isset($params[0]) )  {
+
+  $subject = $params[1] ;
+  switch ($subject) {
+    case "expressions":
+        $handlerExpressions = new Expressions;
+        break;
+  }
 }
 
 $router = new Router;
-
-
-$router->add("/", function() {
-    echo "This is the homepage";
-});
 
 $router->add("/expressions/{language}", function($language) use ($handlerExpressions) {  
   $handlerExpressions->getAll($language);

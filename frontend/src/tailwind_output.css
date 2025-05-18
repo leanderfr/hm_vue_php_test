@@ -614,6 +614,10 @@ video {
   flex-grow: 1;
 }
 
+.grow {
+  flex-grow: 1;
+}
+
 .border-collapse {
   border-collapse: collapse;
 }
@@ -650,6 +654,11 @@ video {
   border-width: 1px;
 }
 
+.bg-yellow-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 249 195 / var(--tw-bg-opacity, 1));
+}
+
 .bg-yellow-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(253 224 71 / var(--tw-bg-opacity, 1));
@@ -657,6 +666,15 @@ video {
 
 .p-0 {
   padding: 0px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .text-red-300 {
@@ -699,8 +717,12 @@ video {
   transition-duration: 150ms;
 }
 
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 /*****************************************************************************************************
-though this thought to be a tailwind file, sometimes I used vanilla css to prove I know it too 
+though this was thought to be a tailwind file, I use some moments vanilla css to prove I know it too 
 *****************************************************************************************************/
 
 .headerBar {
@@ -713,7 +735,16 @@ though this thought to be a tailwind file, sometimes I used vanilla css to prove
   padding: 0px;
 }
 
-.countrySelect {
+.headerText {
+  flex-grow: 1;
+  --tw-bg-opacity: 1;
+  background-color: rgb(34 211 238 / var(--tw-bg-opacity, 1));
+  text-align: center;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.headerRight {
   display: flex;
   flex-direction: row;
   flex-basis: 33%;
@@ -816,6 +847,7 @@ input:checked + .slider_language:before {
   background-repeat: no-repeat;
   background-size: 60px 60px;
   display: flex;
+  background-color: yellow;
   flex-basis: 33%;
   height: 100%;
   background-position: 10px;

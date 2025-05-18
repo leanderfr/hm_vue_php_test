@@ -11,7 +11,7 @@ class Expressions
             "from terms  ".
             "where ifnull(active, false)= true and deleted_at is null ";
 
-    executeFetchQueryAndReturnJsonResult( $sql );
+    executeFetchQueryAndReturnJsonResult( $sql, false, true );
   }
 
 

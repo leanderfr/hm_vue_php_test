@@ -1,17 +1,26 @@
 
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/*****************************************************************************************************
-though this thought to be a tailwind file, sometimes I used vanilla css to prove I know it too 
-*****************************************************************************************************/
 
+body { 
+font-family: Arial, Helvetica, sans-serif;
+}
+
+/*****************************************************************************************************
+though this was thought to be a tailwind file, I use some moments vanilla css to prove I know it too 
+*****************************************************************************************************/
 .headerBar {
 @apply flex flex-row  justify-between w-full  h-16 items-center p-0 ;
 }
 
-.countrySelect {
+.headerText {
+@apply text-2xl grow text-center bg-cyan-400;
+}
+
+.headerRight {
 display: flex;
 flex-direction: row;
 flex-basis: 33%;
@@ -114,6 +123,7 @@ input:checked + .slider_language:before {
   background-repeat: no-repeat;
   background-size: 60px 60px;
   display: flex;
+background-color: yellow;
   flex-basis: 33%;
   height: 100%;
   background-position: 10px;

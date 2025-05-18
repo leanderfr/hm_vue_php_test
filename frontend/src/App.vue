@@ -6,26 +6,26 @@
   <div class='headerBar'>
 
     <div class='HiringMachineLogo'></div>
-    <div>2</div>
-    <div>
 
-        <!-- language/country selector  -->
-        <div class="countrySelect">    
+    <div class='headerText'>
+        {{ expressions.app_header }}
+    </div>
 
-          <div :class="! isUSASelected ? 'flagClicked' : 'flagUnclicked' "   id='flagBRAZIL'  @click="isUSASelected = false"  >         
-            <img src="./assets/images/brazil_flag.svg" alt='' />
-          </div>
+    <!-- language/country selector  -->
+    <div class="headerRight">    
 
-          <label for="chkLanguageSelector" class="switch_language"  >
-            <input id="chkLanguageSelector" type="checkbox"  v-model="isUSASelected"   @change="isUSASelected = ! isUSASelected " />
-            <span class="slider_language round"></span>
-          </label>
+      <div :class="! isUSASelected ? 'flagClicked' : 'flagUnclicked' "   id='flagBRAZIL'  @click="isUSASelected = false"  >         
+        <img src="./assets/images/brazil_flag.svg" alt='' />
+      </div>
 
-          <div :class="isUSASelected ? 'flagClicked' : 'flagUnclicked' "   id='flagUSA'  @click="isUSASelected = true"  >         
-            <img src="./assets/images/usa_flag.svg" alt='' />
-          </div>
+      <label for="chkLanguageSelector" class="switch_language"  >
+        <input id="chkLanguageSelector" type="checkbox"  v-model="isUSASelected"    />
+        <span class="slider_language round"></span>
+      </label>
 
-        </div>
+      <div :class="isUSASelected ? 'flagClicked' : 'flagUnclicked' "   id='flagUSA'  @click="isUSASelected = true"  >         
+        <img src="./assets/images/usa_flag.svg" alt='' />
+      </div>
 
     </div>
 
@@ -41,6 +41,7 @@
         expressions: [],  // english/portuguese
         isLoading: true,
         error: null,
+        backendUrl: 'http://localhost',
       }
     },
 
@@ -51,16 +52,21 @@
     methods: {
       async fetchExpressions() {
         this.isLoading = true;
-        try {
-          const response = await axios.get('https://api.example.com/data'); 
-          this.items = response.data;
-        } catch (error) {
-          this.error = error;
-        } finally {
+
+        // if language already defined and portuguese, any other situation, english
+        //let language = typeof isUSASelected != 'undefined' && ! isUSASelected  ? 'portuguese' : 'english'
+        let language = this.isUSASelected ? 'english' : 'portuguese';
+
+        fetch(`${this.backendUrl}/expressions/${language}`)
+        .then((response) => response.json())
+        .then((data) => {
+          this.expressions = data;
           this.isLoading = false;
-        }
+        })
+        .catch((error) => console.log('erro='+error));        
+
       },
-    },
+    }
   }
 
 </script>

@@ -56,9 +56,16 @@ function internalError($message = 'Internal Error') {
             "car_image": "Accomplished_car_001462.png"
         }
     ]
+
+$exceptionExpressions = true 
+    different treatment when returning expressions (english/portuguese)
+    transforms json into associative json (item => expression), example:
+
+  {"welcome":"Welcome, Visitor!","available_cars":"Available cars","odometer":"Odometer","itemmenu_main":"Home",...}
+
 *********************************************************************************************************/
 
-function executeFetchQueryAndReturnJsonResult($sql, $simplifyJSON=false) {
+function executeFetchQueryAndReturnJsonResult($sql, $simplifyJSON=false, $exceptionExpressions=false) {
 
   global $dbConnection;
    
@@ -71,19 +78,31 @@ function executeFetchQueryAndReturnJsonResult($sql, $simplifyJSON=false) {
 
   $anyData = mysqli_num_rows($result) > 0;
 
-  if (! $simplifyJSON)        {
-      $json = array();
+  // different treatment when returning expressions portuguese/english
+  if ($exceptionExpressions)  {
+    $expressions = array();
 
-      // converte resultset em json para o front end
-      while($row =mysqli_fetch_assoc($result))    {
-        $json[] = $row;
+    while($row = mysqli_fetch_assoc($result))    {
+      $expressions[$row["item"]] =  htmlentities($row["expression"]) ;
+    }
+    die( json_encode($expressions) );     
+  }
+  else {    
+      // returns array of objects
+      if (! $simplifyJSON)        {
+          $json = array();
+
+          // converte resultset em json para o front end
+          while($row =mysqli_fetch_assoc($result))    {
+            $json[] = $row;
+          }
+      }
+
+      // returns simple json
+      if ($simplifyJSON)   {
+        $json = mysqli_fetch_array($result, MYSQLI_ASSOC);
       }
   }
-
-  if ($simplifyJSON)   {
-    $json = mysqli_fetch_array($result, MYSQLI_ASSOC);
-  }
-
 
   //********************************************************************************************
   // send data to frontend

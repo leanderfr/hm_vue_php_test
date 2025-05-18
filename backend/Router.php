@@ -27,6 +27,6 @@ class Router
             }
         }
 
-        echo "Page not found";
+        echo "Page not found or invalid route";
     }
 }
