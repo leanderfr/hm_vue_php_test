@@ -405,7 +405,7 @@ async function  performSaveBookingRecord()  {
   }, 10);
   
 
-  await fetch(`${props.backendUrl.value}/expressions`, {method: 'POST', body: formData})
+  await fetch(`${props.backendUrl}/booking`, {method: props.formHttpMethodApply, body: formData})
 
   .then(response => {
     if (!response.ok) {

@@ -27,6 +27,7 @@ require 'aws/aws-autoloader.php';  // AWS S3 handler
 require "Router.php";
 require "handlers/Expressions.php";  
 require "handlers/Cars.php";  
+require "handlers/Bookings.php";  
 
 
 //********************************************************************
@@ -39,18 +40,49 @@ $params = explode("/", $path);
 // prepare handlers
 $handlerExpressions = new Expressions;
 $handlerCars = new Cars;
+$handlerBookings = new Bookings;
 
 $router = new Router;
 
+//********************************************************************
 // expressions (english/portuguese)
+//********************************************************************
 $router->addGet("/expressions/{language}", function($language) use($handlerExpressions) {  
   $handlerExpressions->getAll($language);
 });
 
+//********************************************************************
 // cars
+//********************************************************************
 $router->addGet("/cars", function() use($handlerCars)  {  
   $handlerCars->getAll();
 });
+
+
+//********************************************************************
+// bookings 
+// the country is needed to inform the format of the date
+//********************************************************************
+$router->addGet("/bookings/{country}/{car_id}/{firstday}/{lastday}", 
+      function($country, $car_id, $firstday, $lastday) use($handlerBookings)  {  
+
+  $handlerBookings->getByCarIdAndPeriod( $country, $car_id, $firstday, $lastday );
+});
+
+$router->addGet("/bookings/{country}/{booking_id}", function($country, $booking_id) use($handlerBookings)  {  
+  $handlerBookings->getBookingById( $country, $booking_id );
+});
+
+$router->addPost("/booking", function() use($handlerBookings)  {  
+  $handlerBookings->postBooking();
+});
+
+$router->addPatch("/booking/{booking_id}", function($booking_id) use($handlerBookings)  {  
+  $handlerBookings->postBooking($booking_id);
+});
+
+
+
 
 
 $router->addGet("/products/{id}", function($id) {

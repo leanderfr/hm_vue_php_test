@@ -120,4 +120,33 @@ function executeFetchQueryAndReturnJsonResult($sql, $simplifyJSON=false, $toRetu
 
 
 
+
+
+
+//*********************************************************************************************************
+// execute query to post or patch  (crud)
+//*********************************************************************************************************
+
+function executeCrudQueryAndReturnResult($sql, $needToReturnId = false  ) {
+  global $dbConnection;
+
+  try {
+    mysqli_query($dbConnection, $sql) or internalError('[2] Database error');  
+
+    $lastId = mysqli_query($dbConnection, "select LAST_INSERT_ID() as record_id" ) or internalError('[3] Database error');    
+    if ($___lastID = mysqli_fetch_object($lastId))   $newRecordId = $___lastID->record_id;
+    else internalError('[4] Database error');    
+
+    http_response_code(200);   // 200= it was ok
+    if ($needToReturnId) return "__success__|$newRecordId";
+    else die( '__success__' );
+
+  } catch(Exception $e)  {
+    internalError( mysqli_error($dbConnection) );
+  }
+
+}
+
+
+
 ?>
