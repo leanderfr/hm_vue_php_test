@@ -660,6 +660,17 @@ const editBookingRecord = (event, _id_) =>  {
   showBookingForm.value = true
 }
 
+/****************************************************************************************************
+ open booking form in blank to insert record
+****************************************************************************************************/
+const newBookingRecord = (event, _id_) =>  {
+  event.stopPropagation();
+  formHttpMethodApply.value = 'POST'
+  bookingIdEdit.value = ''
+
+  showBookingForm.value = true
+}
+
 
 /****************************************************************************************************
  close modal form

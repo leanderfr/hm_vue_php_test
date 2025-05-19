@@ -166,8 +166,10 @@
 
 <script setup>
 import { onMounted  } from 'vue';
-import { slidingMessage  } from './js/utils.js'
+import { slidingMessage, dateToIsoStringConsideringLocalUTC  } from './js/utils.js'
 const emit = defineEmits( ['showLoading', 'hideLoading'] );
+
+import moment from 'moment';
 
 const props = defineProps( ['expressions', 'backendUrl', 'currentCountry', 'formHttpMethodApply', 'bookingIdEdit'] )
 
@@ -214,8 +216,7 @@ async function getBookingFormPopulatedAndReady() {
           $('#txtDropOffHour').val( booking.dropoff_hour )
           $('#txtDriverName').val( booking.driver_name )
 
-          setTimeout(() => { $('#txtPickUpDate').focus()  }, 500);
-          
+          putFocusInFirstInputText_AndOthersParticularitiesOfTheBookingForm() 
         })
 
 
@@ -226,8 +227,212 @@ async function getBookingFormPopulatedAndReady() {
     }
 
   }
- 
+
+  // booking form was called to add new record
+  if ( props.formHttpMethodApply === 'POST')   {
+    putFocusInFirstInputText_AndOthersParticularitiesOfTheBookingForm()
+  }
+
 }
+
+
+/************************************************************************************************************************************************************
+put focus first field and prepare masks
+************************************************************************************************************************************************************/
+const putFocusInFirstInputText_AndOthersParticularitiesOfTheBookingForm = () => { 
+
+  // hour typing
+  if ( props.currentCountry=='usa') {
+    $.mask.definitions['h'] = "[A^Pa^p]"
+    $('#txtPickUpHour, #txtDropOffHour').mask('99:99 hm', {placeholder:"hh:mm _m "})    // USA hour format
+  } else {
+    $('#txtPickUpHour, #txtDropOffHour').mask('99:99', {placeholder:"hh:mm"})           // Brazil
+  }
+
+  $('#txtPickUpDate, #txtDropOffDate').mask('99/99/99');   
+  setTimeout(() => {
+    $('#txtPickUpDate').focus()    
+  }, 500);
+}
+
+
+
+
+
+/********************************************************************************************************************************************************
+ valida dados do formulario e se tudo ok, tenta gravar
+********************************************************************************************************************************************************/
+async function  performSaveBookingRecord()  {
+
+  let error = ''
+
+  // validate dates / hours 
+
+  //******************************************************************************************/
+  // pick up date
+  //******************************************************************************************/
+  let _txtPickUpDate_ = $('#txtPickUpDate').val()
+  let txtPickUpDate = _txtPickUpDate_.split('/')  
+  let pickUpIso8601Format
+
+  if (props.currentCountry == 'usa')  
+    pickUpIso8601Format = '20'+txtPickUpDate[2] +'-' + txtPickUpDate[0] + '-'+txtPickUpDate[1]    // yyyy-mm-dd
+
+  if (props.currentCountry == 'brazil')   
+    pickUpIso8601Format = '20'+txtPickUpDate[2] +'-' + txtPickUpDate[1] + '-'+txtPickUpDate[0]    // yyyy-mm-dd
+
+
+  if (! moment(pickUpIso8601Format).isValid())     error = props.expressions.pickup_date_error 
+
+  //******************************************************************************************/
+  // pick up hour
+  //******************************************************************************************/
+
+  let regex_usa = /^([0]\d|[1][0-2]):([0-5]\d)\s?(?:AM|PM)$/i;          
+  let regex_brazil = /^(?:[01][0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9])?$/;
+
+  let txtPickUpHour = $('#txtPickUpHour').val()
+
+  if   (   (props.currentCountry == 'usa'  &&  ! regex_usa.test(txtPickUpHour))     ||     (props.currentCountry == 'brazil' &&  ! regex_brazil.test(txtPickUpHour))    )
+    error = props.expressions.pickup_hour_error
+
+  
+
+  
+  //******************************************************************************************/
+  // drop off date
+  //******************************************************************************************/
+
+  let _txtDropOffDate_ = $('#txtDropOffDate').val()
+  let txtDropOffDate = _txtDropOffDate_.split('/')  
+  let dropOffIso8601Format
+
+  if (props.currentCountry == 'usa')  
+    dropOffIso8601Format = '20'+txtDropOffDate[2] +'-' + txtDropOffDate[0] + '-'+txtDropOffDate[1]    // yyyy-mm-dd
+
+  if (props.currentCountry == 'brazil')    
+    dropOffIso8601Format = '20'+txtDropOffDate[2] +'-' + txtDropOffDate[1] + '-'+txtDropOffDate[0]    // yyyy-mm-dd
+
+  if (! moment(dropOffIso8601Format).isValid())     error = props.expressions.dropoff_date_error
+
+
+  //******************************************************************************************/
+  // drop off hour
+  //******************************************************************************************/
+
+  let txtDropOffHour = $('#txtDropOffHour').val()
+
+  if   (   (props.currentCountry == 'usa'  &&  ! regex_usa.test(txtDropOffHour))     ||     (props.currentCountry == 'brazil' &&  ! regex_brazil.test(txtDropOffHour))    )
+    error = props.expressions.dropoff_hour_error
+
+  // driver's name
+  if ( $('#txtDriverName').val().trim().length < 3 )  errors.push('txtDriverName')
+
+
+  // show any error detected
+  if (error!='') {
+    slidingMessage(error, 3000)
+    return;
+  }
+
+
+  var formData = new FormData(); 
+
+
+  let pickUpHour, pickUpMinute, dropOffHour, dropOffMinute, pickupAlmostReady, dropoffAlmostReady
+
+  
+  // converts USA hour format (12 AM/PM) to HH:MM
+  if (props.currentCountry == 'usa')  {
+    pickUpHour = moment(txtPickUpHour, ["h:mm A"]).format("HH");
+    pickUpMinute = moment(txtPickUpHour, ["h:mm A"]).format("mm");
+
+    dropOffHour = moment(txtDropOffHour, ["h:mm A"]).format("HH");
+    dropOffMinute = moment(txtDropOffHour, ["h:mm A"]).format("mm");
+
+    pickupAlmostReady = new Date('20'+txtPickUpDate[2], parseInt(txtPickUpDate[0], 10)-1, txtPickUpDate[1], pickUpHour, pickUpMinute)   // mm/dd/yy
+    dropoffAlmostReady = new Date('20'+txtDropOffDate[2], parseInt(txtDropOffDate[0], 10)-1, txtDropOffDate[1], dropOffHour, dropOffMinute)
+  }
+
+  if (props.currentCountry == 'brazil')  { 
+    pickUpHour = moment(txtPickUpHour, ["HH:mm"]).format("HH");
+    pickUpMinute = moment(txtPickUpHour, ["HH:mm"]).format("mm");
+
+    dropOffHour = moment(txtDropOffHour, ["HH:mm"]).format("HH");
+    dropOffMinute = moment(txtDropOffHour, ["HH:mm"]).format("mm");
+
+    pickupAlmostReady = new Date('20'+txtPickUpDate[2], parseInt(txtPickUpDate[1], 10)-1, txtPickUpDate[0], pickUpHour, pickUpMinute)  // dd/mm/yy
+    dropoffAlmostReady = new Date('20'+txtDropOffDate[2], parseInt(txtDropOffDate[1], 10)-1, txtDropOffDate[0], dropOffHour, dropOffMinute)
+  }
+
+  // verifica se data devolucao é maior do que data retirada
+  let datesDifference = ( dropoffAlmostReady - pickupAlmostReady ) / 36e5;
+  if (datesDifference < 0) {
+    slidingMessage(props.expressions.dropoff_greater_error, 3000)
+    $('#txtDropOffDate').focus() 
+    return
+  }
+
+  // boooking must be at least  1 hour in advance
+  let _minimumDate = new Date();  
+  let minimumDate = _minimumDate.getTime() + (1*60*60*1000);   // add 1 hour
+
+  let datesDifference1 = ( dropoffAlmostReady - minimumDate ) / 36e5;
+  let datesDifference2 = ( pickupAlmostReady - minimumDate ) / 36e5;
+
+  if (datesDifference1 < 0 || datesDifference2 < 0) {
+    slidingMessage('slidingFormMessage', $Terms.booking_dates_not_in_advance, 4000)
+    $('#txtDropOffDate').focus() 
+    return
+  }
+
+  formData.append('dropoff_datetime', dateToIsoStringConsideringLocalUTC(dropoffAlmostReady))    //  iso8601 datetime format
+  formData.append('pickup_datetime', dateToIsoStringConsideringLocalUTC(pickupAlmostReady))    //  iso8601 datetime format
+  formData.append('driver_name', $('#txtDriverName').val())
+  formData.append('car_id', 1)
+
+
+  let route = ''
+
+  if (props.formHttpMethodApply=='POST') 
+    route += 'booking'        
+  if (props.formHttpMethodApply=='PATCH') 
+    route += `booking/${props.bookingIdEdit}`  
+
+  // formHttpMethodApply= POST, PATCH ou DELETE
+  setTimeout(() => {
+    emit('showLoading')    
+  }, 10);
+  
+
+  await fetch(`${props.backendUrl.value}/expressions`, {method: 'POST', body: formData})
+
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    return response.json()
+  })
+  .then((data) => {
+    expressions.value = data;        
+  })
+  .catch((error) => {
+    emit('hideLoading')
+    slidingMessage('Fatal error= '+error, 3000)        
+  })  
+
+
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
