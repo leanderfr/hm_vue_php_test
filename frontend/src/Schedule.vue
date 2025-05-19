@@ -64,8 +64,13 @@
     <div id="divCALENDAR"></div>
     <input type='hidden' id='lastChosenDate' value='' class="datepicker" style='visibility:hidden' /> 
 
-    <div v-if="showBookingForm" id='backDrop' class='w-full h-full  absolute flex items-center justify-center left-0 top-0 z-10 bg-[rgba(0,0,0,0.5)]' @click.self='closeAnyBookingModalWindow' aria-hidden="true"  >  
-      <BookingForm :expressions='expressions' />
+    <div v-if="showBookingForm" id='backDrop' class='w-full h-full  absolute flex items-center justify-center left-0 top-0 z-10 bg-[rgba(0,0,0,0.5)]' @click.self='closeBookingForm' aria-hidden="true"  >  
+      <BookingForm 
+          :expressions='expressions' 
+          :backendUrl='backendUrl' 
+          :currentCountry='currentCountry' 
+          :bookingIdEdit='bookingIdEdit'
+          :formHttpMethodApply = 'formHttpMethodApply'  />
     </div>
 
   
@@ -77,6 +82,7 @@
 
 
 <script setup>
+
 import { onMounted, ref , onUpdated  } from 'vue';
 import { prepareLoadingAnimation, slidingMessage, counter, hourFormat  } from './js/utils.js'
 import BookingForm from './BookingForm.vue';
@@ -87,6 +93,12 @@ const props = defineProps( ['expressions', 'currentCountry', 'backendUrl', 'imag
 const datePicker = ref(null)
 const displayAllCarsReservations = ref(false)
 const showBookingForm = ref(false)
+
+// id of the current booking being edited or viewed
+const bookingIdEdit = ref(null)
+
+// method being used with the booking form
+const formHttpMethodApply = ref(null)
 
 // the post it <div> of the reservation can be moved or clicked, when it is being dragged, the variable 'draggingBookingDivYet', 
 // deactivate temporarely the 'click'  event
@@ -237,7 +249,7 @@ async function refreshBookingDatesAndContent() {
   let __firstDayWeek = firstDayWeek.toLocaleDateString("fr-CA", {year:"numeric", month: "2-digit", day:"2-digit"})    
   let __lastDayWeek = lastDayWeek.toLocaleDateString("fr-CA", {year:"numeric", month: "2-digit", day:"2-digit"})    
 
-// *********************************************************************************************************************************
+  // *********************************************************************************************************************************
   // load the reservations (backend) of the week being viewed
   // *********************************************************************************************************************************
 
@@ -256,7 +268,7 @@ async function refreshBookingDatesAndContent() {
 
       .then( (bookings) => {
 
-        // exemplo json retornado
+        // example of result json
         /*
         [
             {
@@ -630,8 +642,8 @@ const postItBookingDivs = () => {
 ****************************************************************************************************/
 const editBookingRecord = (event, _id_) =>  {
   event.stopPropagation();
-  //formHttpMethodApply = 'PATCH'
-  currentBookingFormRecordId = _id_
+  formHttpMethodApply.value = 'PATCH'
+  bookingIdEdit.value = _id_
 
   showBookingForm.value = true
 }
@@ -640,7 +652,7 @@ const editBookingRecord = (event, _id_) =>  {
 /****************************************************************************************************
  close modal form
 ****************************************************************************************************/
-const closeAnyBookingModalWindow = () =>  {
+const closeBookingForm = () =>  {
   showBookingForm.value=false
 }
 

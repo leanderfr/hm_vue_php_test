@@ -10,13 +10,14 @@
         <div id='divWINDOW_TOP'>
           
           <div id='divWINDOW_TITLE'>
-<!--
-            {#if (formHttpMethodApply=='POST')  }
-              new_booking_form_title}  
-            {:else if (formHttpMethodApply=='PATCH')  }
-              edit_booking_form_title}  
-            {/if}
--->
+
+            <div v-if="formHttpMethodApply=='POST'">
+              {{ expressions.new_booking }}
+            </div>
+            <div v-if="formHttpMethodApply=='PATCH'">
+              {{ expressions.edit_booking }}
+            </div>
+
           </div>
 
           <div class='flex flex-row '>
@@ -45,7 +46,7 @@
              <!-- pick up date/time -->
             <div class="flex flex-col w-[calc(40%-10px)] ">
               <div class="flex flex-row w-full  ">  
-                <div class='w-[69%]'>{{ expressions.pick_up_car }}  :</div>
+                <div class='w-[69%]'>{{ expressions.pick_up_car }}:</div>
                 <div class='w-[30%]'>{{ expressions._hour_ }}</div>
               </div>
 
@@ -56,9 +57,7 @@
                       <!-- data -->
                       <div class='flex flex-col w-full'  >
                           <div class='flex flex-row w-full' >
-                            <input type="text" autocomplete="off" sequence="1"  id="txtPickUpDate" :placeholder='expressions.date_placeholder'  maxlength='10' class='text_formFieldValue w-full' @focus="target.select()" >
-                            <!-- icone que aciona escolha de data pelo calendario -->  
-                            <div  class='btnDATE_PICKER' @click="whichInputTextCalled='txtPickUpDate';showDatePicker=true" aria-hidden="true"></div>    
+                            <input type="text" autocomplete="off" sequence="1"   id="txtPickUpDate" :placeholder='expressions.date_placeholder'  maxlength='10' class='text_formFieldValue w-full' @focus="$event.target.select()" >  
                           </div>
                       </div>
 
@@ -67,7 +66,7 @@
                   <!-- hora -->
                   <div class="flex w-[30%]">  
                     <div class='flex flex-col w-full'  >
-                      <input type="text" autocomplete="off" sequence="2"  id="txtPickUpHour" :placeholder='expressions.hour_placeholder' maxlength='8' class='text_formFieldValue w-full' @focus="target.select()" >
+                      <input type="text" autocomplete="off" sequence="2"  id="txtPickUpHour" :placeholder='expressions.hour_placeholder' maxlength='8' class='text_formFieldValue w-full' @focus="$event.target.select()" >
                     </div>
                   </div>
 
@@ -88,9 +87,7 @@
                         <!-- data -->
                         <div class='flex flex-col w-full'  >
                             <div class='flex flex-row w-full' >
-                                <input type="text" autocomplete="off" sequence="3"  id="txtDropOffDate" :placeholder='expressions.date_placeholder' maxlength='10' class='text_formFieldValue w-full' @focus="target.select()" >
-                                <!-- icone que aciona escolha de data pelo calendario -->  
-                                <div  class='btnDATE_PICKER' @click="whichInputTextCalled='txtDropOffDate';showDatePicker=true" aria-hidden="true"></div>    
+                                <input type="text" autocomplete="off" sequence="3"  id="txtDropOffDate" :placeholder='expressions.date_placeholder' maxlength='10' class='text_formFieldValue w-full' @focus="$event.target.select()" >
                             </div>  
                         </div>  
 
@@ -99,7 +96,7 @@
                     <!-- hora -->
                     <div class="flex w-[30%]">  
                       <div class='flex flex-col w-full'  >
-                          <input type="text" autocomplete="off" sequence="4"  id="txtDropOffHour" :placeholder='expressions.hour_placeholder' maxlength='5' class='text_formFieldValue w-full' @focus="target.select()" >
+                          <input type="text" autocomplete="off" sequence="4"  id="txtDropOffHour" :placeholder='expressions.hour_placeholder' maxlength='5' class='text_formFieldValue w-full' @focus="$event.target.select()" >
                       </div>
                     </div>  
                     
@@ -111,7 +108,7 @@
               <div class='w-full'>{{ expressions.driver_name }}:</div>
               <div class="flex flex-row w-full">  
                     <div class="flex flex-col w-full">  
-                      <input type="text" autocomplete="off" sequence="5"  id="txtDriverName" maxlength='50' class='text_formFieldValue w-full' @focus="target.select()" >
+                      <input type="text" autocomplete="off" sequence="5"  id="txtDriverName" maxlength='50' class='text_formFieldValue w-full' @focus="$event.target.select()" >
                     </div>
               </div>
             </div>
@@ -168,7 +165,64 @@
 
 
 <script setup>
+import { onMounted  } from 'vue';
 
-const props = defineProps( ['expressions'] )
+const props = defineProps( ['expressions', 'backendUrl', 'currentCountry', 'formHttpMethodApply', 'bookingIdEdit'] )
+
+onMounted( () => {
+  getBookingFormPopulatedAndReady()
+})
+
+const teste = (e) => {
+
+console.log(e)
+
+}
+
+
+/************************************************************************************************************************************************************
+get data from the booking record
+************************************************************************************************************************************************************/
+
+async function getBookingFormPopulatedAndReady() { 
+
+  // if booking form was not called to record insertion, first fetch record data
+  if ( props.formHttpMethodApply != 'POST')   {
+
+    try {
+        let _route_ = `${props.backendUrl}/bookings/${props.currentCountry}/${props.bookingIdEdit}`
+
+        await fetch(_route_, {method: 'GET'})
+
+        .then( (response) => {
+
+          if (!response.ok) {
+            throw new Error(`Booking Read Err Fatal= ${response.status}`);
+          }
+          return response.json();
+        })
+
+        .then( (booking) => {
+          $('#txtPickUpDate').val( booking.pickup_date )
+          $('#txtDropOffDate').val( booking.dropoff_date )
+          $('#txtPickUpHour').val( booking.pickup_hour )
+          $('#txtDropOffHour').val( booking.dropoff_hour )
+          $('#txtDriverName').val( booking.driver_name )
+
+          setTimeout(() => { $('#txtPickUpDate').focus()  }, 500);
+          
+        })
+
+
+    } 
+    catch(err) {
+      throw new Error(`Bookings Prepare Err Fatal= ${err.message}`);
+    }
+
+  }
+ 
+}
+
+
 
 </script>
