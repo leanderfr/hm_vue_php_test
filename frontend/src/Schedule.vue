@@ -70,7 +70,10 @@
           :backendUrl='backendUrl' 
           :currentCountry='currentCountry' 
           :bookingIdEdit='bookingIdEdit'
-          :formHttpMethodApply = 'formHttpMethodApply'  />
+          :formHttpMethodApply = 'formHttpMethodApply'  
+          @closeBookingForm="showBookingForm=false" 
+          @showLoading="emit('showLoading')" 
+          @hideLoading="emit('hideLoading')"  />
     </div>
 
   
@@ -86,6 +89,11 @@
 import { onMounted, ref , onUpdated  } from 'vue';
 import { prepareLoadingAnimation, slidingMessage, counter, hourFormat  } from './js/utils.js'
 import BookingForm from './BookingForm.vue';
+
+//const showLoading = defineEmits( ['showLoading'] );
+//const hideLoading = defineEmits( ['hideLoading'] );
+
+const emit = defineEmits( ['showLoading', 'hideLoading'] );
 
 const props = defineProps( ['expressions', 'currentCountry', 'backendUrl', 'imagesUrl' ] )
 
@@ -151,6 +159,8 @@ let BookingCalendar_CurrentDate = _today_;
 ************************************************************************************************************************************************************/
 
 async function refreshBookingDatesAndContent() { 
+
+  emit('showLoading')
 
   // the only way to make the 'bookingsTable' stop overflowing the parent div, was to put its height manually
   // have no more time to make it with css now, but there may be a way with css
@@ -267,6 +277,7 @@ async function refreshBookingDatesAndContent() {
       })
 
       .then( (bookings) => {
+        emit('hideLoading')
 
         // example of result json
         /*
@@ -386,6 +397,7 @@ async function refreshBookingDatesAndContent() {
 
   } 
   catch(err) {
+    emit('hideLoading')
     throw new Error(`Bookings Prepare Err Fatal= ${err.message}`);
   }
  

@@ -45,7 +45,10 @@
             :expressions='expressions' 
             :currentCountry="isUSASelected ? 'usa' : 'brazil'" 
             :backendUrl='backendUrl'    
-            :imagesUrl = 'imagesUrl'   />
+            :imagesUrl = 'imagesUrl'
+            @showLoading="isLoading=true" 
+            @hideLoading="isLoading=false" />
+
       </div>
 
       <!-- footer toolbar   -->
