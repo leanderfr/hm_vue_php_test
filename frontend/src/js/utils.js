@@ -167,7 +167,6 @@ const formatDate = (date) => {
     if (day.length < 2) 
         day = '0' + day;
 
-
     hours = ("0" + hours).slice(-2);
     minutes = ("0" + minutes).slice(-2);
 
