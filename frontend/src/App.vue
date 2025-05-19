@@ -105,7 +105,9 @@
   const cars = ref([])
   const isLoading = ref(true)
   const error = ref(null)
-  const backendUrl = ref('http://localhost')  // it changes depending if the app is running as a container (AWS EC2) or locally
+  // it changes depending if the app is running as a container (AWS EC2) or locally
+  const backendUrl = ref('https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine:8073/')  
+  //const backendUrl = ref('http://127.0.0.1')  
   const imagesUrl = ref('https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine/')  
 
 
