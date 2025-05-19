@@ -166,7 +166,7 @@
 
 <script setup>
 import { onMounted  } from 'vue';
-import { slidingMessage, dateToIsoStringConsideringLocalUTC  } from './js/utils.js'
+import { slidingMessage, dateToIsoStringConsideringLocalUTC, formatDate  } from './js/utils.js'
 const emit = defineEmits( ['showLoading', 'hideLoading', 'closeBookingForm'] );
 
 import moment from 'moment';
@@ -386,8 +386,11 @@ async function  performSaveBookingRecord()  {
     return
   }
 
-  formData.append('dropoff_datetime', dateToIsoStringConsideringLocalUTC(dropoffAlmostReady))    //  iso8601 datetime format
-  formData.append('pickup_datetime', dateToIsoStringConsideringLocalUTC(pickupAlmostReady))    //  iso8601 datetime format
+  //formData.append('dropoff_datetime', dateToIsoStringConsideringLocalUTC(dropoffAlmostReady))    //  iso8601 datetime format
+  //formData.append('pickup_datetime', dateToIsoStringConsideringLocalUTC(pickupAlmostReady))    //  iso8601 datetime format
+  formData.append('dropoff_datetime', formatDate(dropoffAlmostReady))    //  iso8601 datetime format
+  formData.append('pickup_datetime', formatDate(pickupAlmostReady))    //  iso8601 datetime format
+  
   formData.append('driver_name', $('#txtDriverName').val())
   formData.append('car_id', 1)
 
@@ -418,6 +421,8 @@ async function  performSaveBookingRecord()  {
     emit('hideLoading')
     setTimeout(() => {
       emit('closeBookingForm')  
+      emit('refreshBookingDatesAndContent')  
+
     }, 3100);
     
   })
@@ -426,18 +431,7 @@ async function  performSaveBookingRecord()  {
     slidingMessage('Fatal error= '+error, 3000)        
   })  
 
-
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

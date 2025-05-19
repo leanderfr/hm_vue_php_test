@@ -151,8 +151,32 @@ const dateToIsoStringConsideringLocalUTC = (date) => {
       ':' + pad(Math.abs(tzo) % 60);
 }
 
+/************************************************************************************************************************************************************
+***********************************************************************************************************************************************************/
+
+const formatDate = (date) => {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+        let hours =  d.getHours();
+        let minutes =  d.getMinutes()
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+
+    hours = ("0" + hours).slice(-2);
+    minutes = ("0" + minutes).slice(-2);
+
+    return ([year, month, day].join('-') + ' '+hours+':'+minutes)
+}
+
 //********************************************************************************************************************************
 //*******************************************************************************************************************************
 
 
-export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter, hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC };
+export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter, 
+      hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC, formatDate };

@@ -148,7 +148,7 @@ class Bookings
     if ($dataError!='') internalError( $dataError );
 
     $carId = $_POST['car_id'];
-    $pickupDatetime = $_POST['pickup_datetime'];
+    $pickupDatetime =   $_POST['pickup_datetime'];
     $dropoffDatetime = $_POST['dropoff_datetime'];
     $driverName = $_POST['driver_name'];
 

@@ -49,13 +49,13 @@
 
       <div v-for="hour in counter(5, 23)" :key="hour" class="w-full flex flex-row  leading-[60px]  justify-center cursor-pointer border-b-2 border-gray-300 hover:bg-gray-100"  >
         <div class='w-[9%] tdBookingCell flex justify-center'>{{ hourFormat(hour, currentCountry) }}</div>
-        <div class='w-[13%] tdBookingCell' id='bookingHourDay0{{hour}}'></div>
-        <div class='w-[13%] tdBookingCell' id='bookingHourDay1{{hour}}'></div>
-        <div class='w-[13%] tdBookingCell' id='bookingHourDay2{{hour}}'></div>
-        <div class='w-[13%] tdBookingCell' id='bookingHourDay3{{hour}}'></div>
-        <div class='w-[13%] tdBookingCell' id='bookingHourDay4{{hour}}'></div>
-        <div class='w-[13%] tdBookingCell' id='bookingHourDay5{{hour}}'></div>
-        <div class='w-[13%] tdBookingCell' id='bookingHourDay6{{hour}}'></div>
+        <div class='w-[13%] tdBookingCell' :id="'bookingHourDay0' + hour"></div>
+        <div class='w-[13%] tdBookingCell' :id="'bookingHourDay1' + hour"></div>
+        <div class='w-[13%] tdBookingCell' :id="'bookingHourDay2' + hour"></div>
+        <div class='w-[13%] tdBookingCell' :id="'bookingHourDay3' + hour"></div>
+        <div class='w-[13%] tdBookingCell' :id="'bookingHourDay4' + hour"></div>
+        <div class='w-[13%] tdBookingCell' :id="'bookingHourDay5' + hour"></div>
+        <div class='w-[13%] tdBookingCell' :id="'bookingHourDay6' + hour"></div>
       </div>
 
     </div>
@@ -73,7 +73,8 @@
           :formHttpMethodApply = 'formHttpMethodApply'  
           @closeBookingForm="showBookingForm=false" 
           @showLoading="emit('showLoading')" 
-          @hideLoading="emit('hideLoading')"  />
+          @hideLoading="emit('hideLoading')" 
+          @refreshBookingDatesAndContent = "refreshBookingDatesAndContent"   />
     </div>
 
   
@@ -386,7 +387,6 @@ async function refreshBookingDatesAndContent() {
               // avanca 1 dia
               currentDay.setDate(currentDay.getDate() + 1);
             }
-
             whichColor = (whichColor < availableColors.length-1) ? (whichColor + 1) : 0   // pega proxima cor didsponivel para <div>
         }
 
@@ -524,6 +524,7 @@ const postItBookingDivs = () => {
       let tableRowBookingTop = startingHour - 5    // 5= hora inicial do dia, 05:00
       let tableRowBookingBottom = endingHour - 5
 
+
       // a <div> que exibe a agenda (bookingsTable), possui <div>'s filhas que sao as horas do dia (05:00 - 23:00)
       // e cada hora do dia possui <div>'s filhas que sao os dias da semana (segunda - sexta)
 
@@ -536,7 +537,6 @@ const postItBookingDivs = () => {
 
       let pickupMoment = booking[2]
       let dropoffMoment = booking[3]
-                        
 
       let carImage = booking[9]
       let driverName = booking[4]
@@ -566,6 +566,7 @@ const postItBookingDivs = () => {
 
       // calcula altura da <div> da reserva, considerando a distancia entre a hora final/inicial da reserva
       // 60 pixels, o tamanho da <div> que cada hora tem
+
       let bookDivHeight = (tableRowBookingBottom - tableRowBookingTop) * 62
       bookDivHeight -= parseInt(startingMinute, 10)
       bookDivHeight += parseInt(endingMinute, 10)
@@ -612,7 +613,6 @@ const postItBookingDivs = () => {
 
       if ( bookingsIDs.indexOf(bookingId) == -1 ) bookingsIDs.push( bookingId )
 
-
       let bookTopHourDivPosition = document.getElementById( $divBookingTop.attr('id') ).getBoundingClientRect()   // captura posicao da <div> hora inicio da reserva
       let bookingsTablePosition = document.getElementById( 'bookingsTable' ).getBoundingClientRect()   // captura posicao da <div> container das reservas
 
@@ -624,7 +624,7 @@ const postItBookingDivs = () => {
       let divTopPosition = parseInt(bookTopHourDivPosition.top, 10) - parseInt(bookingsTablePosition.top, 10)
       divTopPosition += parseInt(startingMinute , 10)    // minutos = pixels
 
-      $divBOOKING.css("top", divTopPosition);
+      $divBOOKING.css("top", divTopPosition); 
 
       divCount++
 
@@ -653,7 +653,7 @@ const postItBookingDivs = () => {
  open booking edit form
 ****************************************************************************************************/
 const editBookingRecord = (event, _id_) =>  {
-  event.stopPropagation();
+  event.stopPropagation();  
   formHttpMethodApply.value = 'PATCH'
   bookingIdEdit.value = _id_
 
