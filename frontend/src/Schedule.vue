@@ -63,7 +63,14 @@
     <!-- help to pick date -->
     <div id="divCALENDAR"></div>
     <input type='hidden' id='lastChosenDate' value='' class="datepicker" style='visibility:hidden' /> 
+
+    <div v-if="showBookingForm" id='backDrop' class='w-full h-full  absolute flex items-center justify-center left-0 top-0 z-10 bg-[rgba(0,0,0,0.5)]' @click.self='closeAnyBookingModalWindow' aria-hidden="true"  >  
+      <BookingForm :expressions='expressions' />
+    </div>
+
+  
   </div>
+
   
 
 </template>
@@ -72,16 +79,22 @@
 <script setup>
 import { onMounted, ref , onUpdated  } from 'vue';
 import { prepareLoadingAnimation, slidingMessage, counter, hourFormat  } from './js/utils.js'
+import BookingForm from './BookingForm.vue';
 
 const props = defineProps( ['expressions', 'currentCountry', 'backendUrl', 'imagesUrl' ] )
 
 // date picker
 const datePicker = ref(null)
 const displayAllCarsReservations = ref(false)
+const showBookingForm = ref(false)
 
 // the post it <div> of the reservation can be moved or clicked, when it is being dragged, the variable 'draggingBookingDivYet', 
 // deactivate temporarely the 'click'  event
 let draggingBookingDivYet = false
+
+// the current record ID being viewed/edit
+let currentBookingFormRecordId
+
 
 
 
@@ -363,11 +376,7 @@ async function refreshBookingDatesAndContent() {
   catch(err) {
     throw new Error(`Bookings Prepare Err Fatal= ${err.message}`);
   }
-
-
-
-
-  
+ 
 }
 
 /************************************************************************************************************************************************************
@@ -442,8 +451,6 @@ var $input = $( '.datepicker' ).pickadate({
 datePicker.value = $input.pickadate('picker')
 }
  
-
-
 
 /************************************************************************************************************************************************************
 display the post it's (<div>'s) with the reservation data obtained through API
@@ -618,6 +625,24 @@ const postItBookingDivs = () => {
 }
 
 
+/****************************************************************************************************
+ open booking edit form
+****************************************************************************************************/
+const editBookingRecord = (event, _id_) =>  {
+  event.stopPropagation();
+  //formHttpMethodApply = 'PATCH'
+  currentBookingFormRecordId = _id_
+
+  showBookingForm.value = true
+}
+
+
+/****************************************************************************************************
+ close modal form
+****************************************************************************************************/
+const closeAnyBookingModalWindow = () =>  {
+  showBookingForm.value=false
+}
 
 
 
