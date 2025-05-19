@@ -167,7 +167,7 @@
 <script setup>
 import { onMounted  } from 'vue';
 import { slidingMessage, dateToIsoStringConsideringLocalUTC  } from './js/utils.js'
-const emit = defineEmits( ['showLoading', 'hideLoading'] );
+const emit = defineEmits( ['showLoading', 'hideLoading', 'closeBookingForm'] );
 
 import moment from 'moment';
 
@@ -326,7 +326,7 @@ async function  performSaveBookingRecord()  {
     error = props.expressions.dropoff_hour_error
 
   // driver's name
-  if ( $('#txtDriverName').val().trim().length < 3 )  errors.push('txtDriverName')
+  if ( $('#txtDriverName').val().trim().length < 3 )  error = props.expressions.missing_driver_name
 
 
   // show any error detected
@@ -365,7 +365,7 @@ async function  performSaveBookingRecord()  {
     dropoffAlmostReady = new Date('20'+txtDropOffDate[2], parseInt(txtDropOffDate[1], 10)-1, txtDropOffDate[0], dropOffHour, dropOffMinute)
   }
 
-  // verifica se data devolucao é maior do que data retirada
+  // drop off date must be greater than pick up
   let datesDifference = ( dropoffAlmostReady - pickupAlmostReady ) / 36e5;
   if (datesDifference < 0) {
     slidingMessage(props.expressions.dropoff_greater_error, 3000)
@@ -381,7 +381,7 @@ async function  performSaveBookingRecord()  {
   let datesDifference2 = ( pickupAlmostReady - minimumDate ) / 36e5;
 
   if (datesDifference1 < 0 || datesDifference2 < 0) {
-    slidingMessage('slidingFormMessage', $Terms.booking_dates_not_in_advance, 4000)
+    slidingMessage(props.expressions.booking_hour_advance, 3000)
     $('#txtDropOffDate').focus() 
     return
   }
@@ -393,28 +393,33 @@ async function  performSaveBookingRecord()  {
 
 
   let route = ''
-
   if (props.formHttpMethodApply=='POST') 
     route += 'booking'        
   if (props.formHttpMethodApply=='PATCH') 
-    route += `booking/${props.bookingIdEdit}`  
+    route += `booking/${props.bookingIdEdit}`   
 
   // formHttpMethodApply= POST, PATCH ou DELETE
   setTimeout(() => {
     emit('showLoading')    
   }, 10);
   
-
-  await fetch(`${props.backendUrl}/booking`, {method: props.formHttpMethodApply, body: formData})
+  // PHP doesnt work weel with PATCH (laravel does), need to send all with POST here
+  //await fetch(`${props.backendUrl}/booking`, {method: props.formHttpMethodApply, body: formData})
+  await fetch(`${props.backendUrl}/${route}`, {method: 'POST', body: formData})
 
   .then(response => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
-    return response.json()
+    return response.text()
   })
-  .then((data) => {
-    expressions.value = data;        
+  .then((msg) => {
+    slidingMessage(props.expressions.boooking_recorded, 3000)        
+    emit('hideLoading')
+    setTimeout(() => {
+      emit('closeBookingForm')  
+    }, 3100);
+    
   })
   .catch((error) => {
     emit('hideLoading')

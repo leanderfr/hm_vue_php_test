@@ -15,11 +15,6 @@ class Router
         $this->routes[$path] = $handler;
     }
 
-    public function addPatch(string $path, Closure $handler): void
-    {
-        $this->routes[$path] = $handler;
-    }
-
 
 
     public function dispatch(string $path): void

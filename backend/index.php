@@ -73,13 +73,14 @@ $router->addGet("/bookings/{country}/{booking_id}", function($country, $booking_
   $handlerBookings->getBookingById( $country, $booking_id );
 });
 
+$router->addPost("/booking/{booking_id}", function($booking_id) use($handlerBookings)  {  
+  $handlerBookings->postBooking($booking_id);
+});
+
 $router->addPost("/booking", function() use($handlerBookings)  {  
   $handlerBookings->postBooking();
 });
 
-$router->addPatch("/booking/{booking_id}", function($booking_id) use($handlerBookings)  {  
-  $handlerBookings->postBooking($booking_id);
-});
 
 
 

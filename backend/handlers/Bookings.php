@@ -105,18 +105,18 @@ class Bookings
   //***************************************************************************************************************************************
   //***************************************************************************************************************************************
   public function postBooking($booking_id=''): void   {
+    global $dbConnection;
 
-    if ( $_SERVER['REQUEST_METHOD'] !== 'POST' &&  $_SERVER['REQUEST_METHOD'] !== 'PATCH'  ) {
+    if ( $_SERVER['REQUEST_METHOD'] !== 'POST'  ) {
       http_response_code(500);   
       die( 'Method not allowed' );
     }
-
 
     // verify request
     $fields = [ ['int', 'car_id', 1, 6]  ,  
                 ['datetime', 'pickup_datetime', 5, 20]  ,
                 ['datetime', 'dropoff_datetime', 5, 200]  ,
-                ['string', 'driver_name', 3, 50] ]
+                ['string', 'driver_name', 3, 50] ];
 
     $dataError = '';
     for ($i=0; $i < count($fields); $i++)  {
@@ -165,14 +165,14 @@ class Bookings
                 "where id = $booking_id ";
       $dbOperation = 'update';
     }
-
     $dbConnection -> autocommit(true);    // record without need to transaction
 
     // execute query and get the ID of the just handled record (third param)
     $result = executeCrudQueryAndReturnResult($crudSql, true);    
 
+    http_response_code(200);   // 200= it was ok
     if ($dbOperation == 'update')   die( '__success__' );
     else die( $result );    // __success__|id registro
 
-
+  }
 }
