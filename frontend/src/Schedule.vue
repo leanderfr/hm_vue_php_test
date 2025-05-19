@@ -48,7 +48,7 @@
 
       <div v-for="hour in counter(5, 24)" :key="hour" class="w-full flex flex-row  leading-[60px]  justify-center cursor-pointer border-b-2 border-gray-300 hover:bg-gray-100"  >
         <div class='w-[9%] tdBookingCell flex justify-center'>{{ hourFormat(hour, currentCountry) }}</div>
-        <div class='w-[13%] tdBookingCell' id='bookingHourDay0{{hour}}' ></div>
+        <div class='w-[13%] tdBookingCell' id='bookingHourDay0{{hour}}'></div>
         <div class='w-[13%] tdBookingCell' id='bookingHourDay1{{hour}}'></div>
         <div class='w-[13%] tdBookingCell' id='bookingHourDay2{{hour}}'></div>
         <div class='w-[13%] tdBookingCell' id='bookingHourDay3{{hour}}'></div>
@@ -61,7 +61,7 @@
 
     <!-- help to pick date -->
     <div id="divCALENDAR"></div>
-    <input type='hidden' id='lastChosenDate' value='' class="datepicker" /> 
+    <input type='hidden' id='lastChosenDate' value='' class="datepicker" style='visibility:hidden' /> 
   </div>
 
   
@@ -70,13 +70,25 @@
 
 
 <script setup>
-import { onMounted, ref  } from 'vue';
+import { onMounted, ref , onUpdated  } from 'vue';
 import { prepareLoadingAnimation, slidingMessage, counter, hourFormat  } from './js/utils.js'
 
 const props = defineProps( ['expressions', 'currentCountry'] )
 
+
+
 // date picker
 const datePicker = ref(null)
+
+//*****************************************************************************
+//*****************************************************************************
+
+onUpdated( () => {
+  refreshBookingDatesAndContent()  // start displaying dates from current week and its reservations
+})
+
+//*****************************************************************************
+//*****************************************************************************
 
 onMounted( () => {
   refreshBookingDatesAndContent()  // start displaying dates from current week and its reservations
@@ -114,12 +126,15 @@ async function refreshBookingDatesAndContent() {
     $('#bookingsTable').height( hgtCONTAINER - hgt1 - hgt2 - 10)
   }
 
+
   
 
   // necessario abrir evento assincrono para exibir div ajax loading, caso contrario navegador nao atualiza a tela
   //setTimeout(() => {showLoadingGif(); }, 1);
 
   let currentDate = new Date(BookingCalendar_CurrentDate.getFullYear(), BookingCalendar_CurrentDate.getMonth(), BookingCalendar_CurrentDate.getDate());
+
+  let options = {month: '2-digit', day: '2-digit'} 
 
   // get back until finding the last sunday before current date (BookingCalendar_CurrentDate)
   while (currentDate.getDay()!=0)  {
@@ -136,7 +151,7 @@ async function refreshBookingDatesAndContent() {
   let today = new Date();  
   let _today_ = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-  let options = {month: '2-digit', day: '2-digit'} 
+  //let options = {month: '2-digit', day: '2-digit'} 
 
   let displayedYears = []
 
@@ -222,20 +237,36 @@ prepare calendar to choose date
 ************************************************************************************************************************************************************/
 function prepareCalendar() {
 
+let months , weekdays, _today, _close_
+
+if (props.currentCountry == 'usa') {
+  months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] ,
+  weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  _today_ = 'Today'
+  _close_ = 'Close'
+} else {
+  months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'] ,
+  weekdays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+  _today_ = 'Hoje'
+  _close_ = 'Fechar'
+}
 var $input = $( '.datepicker' ).pickadate({
   formatSubmit: 'dd/mm/yy',  
   container: '#divCALENDAR', 
   format: 'dd/mm/yyyy',  
-  monthsFull: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-  weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
-  today: 'Hoje',
+  monthsFull: months,
+  weekdaysShort: weekdays,
+  today: _today_,
   clear: '',  
-  close: 'Fechar',
+  close: _close_,
   closeOnSelect: true,  
   onClose: function() {     
     let chosenDate =  datePicker.value.get()   // dd/mm/yyyy 
 
-    if (chosenDate != $('#lastChosenDate').val()) {     
+    let currentDate = new Date(BookingCalendar_CurrentDate.getFullYear(), BookingCalendar_CurrentDate.getMonth(), BookingCalendar_CurrentDate.getDate());
+    let _currentDate_ = currentDate.toLocaleDateString( 'pt-br' )
+
+    if (chosenDate != _currentDate_ && chosenDate!='' && _currentDate_!='') {     
       BookingCalendar_CurrentDate = new Date(parseInt(chosenDate.substring(6, 10), 10), 
                       parseInt(chosenDate.substring(3, 5), 10)-1,
                       parseInt(chosenDate.substring(0, 2), 10) );       
