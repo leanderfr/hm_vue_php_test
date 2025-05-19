@@ -247,6 +247,12 @@ align-items: center;
         bg-icon-all-cars  bg-contain bg-center hover:border-gray-500 h-12;
 }
 
+.btnBOOKING_ALL_CARS_ACTIVE {
+    /* icon-all-cars is defined in tailwind.config.js */
+    @apply border-[navy] border-2
+}
+
+
 .btnBOOKING_LEFT_ARROW {
     /* icon-left-arrow is defined in tailwind.config.js */
     @apply cursor-pointer w-[130px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
@@ -332,5 +338,25 @@ div._doggy_3_english {
   height: 133px;
   background: url('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/images/thought_3_english.png') no-repeat top left;
   float: right;
+}
+
+/* prettier tooltip to highlight buttons */
+.prettierTitle_black {
+    background-color: #333333 !important;
+    border-color: #333333 !important ;
+    border-bottom-left-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+    border-top-left-radius: 6px !important;
+    border-top-right-radius: 6px !important;
+    color: white !important;
+    font-family: "Roboto", sans-serif !important;
+    font-size: 13px !important;
+    line-height: 15px !important;
+    white-space: nowrap !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    position: relative !important;
+    display: inline-block !important;
+    z-index: 1000004 !important;
 }
 

@@ -40,7 +40,11 @@
 
       <!-- display schedule only if theres at least 1 car and 1 expression  -->
       <div v-if="cars.length!=0 && expressions.length!=0" class='mainContainer'  >
-        <Schedule :expressions='expressions' :currentCountry="isUSASelected ? 'usa' : 'brazil'" />
+        <Schedule 
+            :key='forceScheduleRedraw' 
+            :expressions='expressions' 
+            :currentCountry="isUSASelected ? 'usa' : 'brazil'" 
+            :backendUrl='backendUrl'    />
       </div>
 
       <!-- footer toolbar   -->
@@ -91,6 +95,7 @@
 
   import { prepareLoadingAnimation, slidingMessage , preparePuppyIcon } from './js/utils.js'
 
+  const forceScheduleRedraw = ref(0)  
   const isUSASelected = ref(true)
   const expressions = ref([])
   const cars = ref([])
@@ -119,6 +124,7 @@
 
       Promise.all( [fetchExpressions()] ).then(() => {
         isLoading.value = false
+        forceScheduleRedraw.value++;
       })        
     },
     { immediate: false }
