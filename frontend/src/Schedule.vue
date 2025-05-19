@@ -3,14 +3,14 @@
 
   <div class='flex flex-col h-full ' id='scheduleContainer'>
 
-    <!-- tool bar -->
+    <!-- top tool bar -->
     <div class="flex flex-row h-[60px] w-full justify-between border-b-2" id='scheduleToolbar'>
 
       <!-- current year -->
-      <div class="flex flex-row text-2xl font-bold pt-4" id='currentYear'>ss</div>
+      <div class="flex flex-row text-[30px] font-bold pt-3 pl-6" id='currentYear'></div>
 
       <!-- action buttons -->
-      <div class="flex flex-row">
+      <div class="flex flex-row pt-1">
           <!-- new booking -->
           <div  class='btnBOOKING_ADD_CAR_RESERVATION putWhiteTooltip'  :title="expressions.new_booking"   @click="newBookingRecord" aria-hidden="true"></div>   
 
@@ -44,7 +44,7 @@
     </div>
 
     <!-- loop to display times from 05:00 to 23:00  -->
-    <div class="w-full flex flex-col  overflow-y-scroll h-[20px]  border-l-0 border-gray-200 border-r-0  " id='bookingsTable' >  
+    <div class="w-full flex flex-col  overflow-y-scroll h-[0px]  border-l-0 border-gray-200 border-r-0  " id='bookingsTable' >  
 
       <div v-for="hour in counter(5, 24)" :key="hour" class="w-full flex flex-row  leading-[60px]  justify-center cursor-pointer border-b-2 border-gray-300 hover:bg-gray-100"  >
         <div class='w-[9%] tdBookingCell flex justify-center'>{{ hourFormat(hour, currentCountry) }}</div>
@@ -59,52 +59,60 @@
 
     </div>
 
-
-
-    </div>
+    <!-- help to pick date -->
+    <div id="divCALENDAR"></div>
+    <input type='hidden' id='lastChosenDate' value='' class="datepicker" /> 
+  </div>
 
   
-
-
 
 </template>
 
 
-
-
 <script setup>
-import { onMounted  } from 'vue';
+import { onMounted, ref  } from 'vue';
 import { prepareLoadingAnimation, slidingMessage, counter, hourFormat  } from './js/utils.js'
 
 const props = defineProps( ['expressions', 'currentCountry'] )
 
+// date picker
+const datePicker = ref(null)
+
 onMounted( () => {
-  refreshBookingDatesAndContent()
+  refreshBookingDatesAndContent()  // start displaying dates from current week and its reservations
+  prepareCalendar()
+
+  $('.btnBOOKING_CALENDAR').on('click', function(event) {
+    event.stopPropagation();
+    datePicker.value.open();  
+  }).on('mousedown', function(event) { event.preventDefault(); });
 })
 
 
-// auxilia a tela de reservas de carros no componente Bookings.svelte
+// BookingCalendar_CurrentDate will be used to control current week
 let today = new Date(); 
 let _today_ = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 let BookingCalendar_CurrentDate = _today_;
 
 
 
-
 /************************************************************************************************************************************************************
- monta o titulo do calendario
- BookingCalendar_CurrentDate ==>  inicia sendo= hoje  
- BookingCalendar_CurrentDate sera atualizada a medida que usuario avançar/retroceder semanas
+ BookingCalendar_CurrentDate ==>  starts with today
+ BookingCalendar_CurrentDate will be updated as the user backs or forwards weeks
 ************************************************************************************************************************************************************/
 
 async function refreshBookingDatesAndContent() { 
 
-  // the only way to make the 'bookingsTable' stop overflowing the parent div, put its height manually
-  let hgt1 = $('#scheduleToolbar').height()
-  let hgt2 = $('#scheduleHeader').height()
-  let hgtCONTAINER = $('#scheduleContainer').height()
+  // the only way to make the 'bookingsTable' stop overflowing the parent div, was to put its height manually
+  // have no more time to make it with css now, but there may be a way with css
+  // make this only once
+  if ( $('#bookingsTable').height()=='0' ) {
+    let hgt1 = $('#scheduleToolbar').height()
+    let hgt2 = $('#scheduleHeader').height()
+    let hgtCONTAINER = $('#scheduleContainer').height()
 
-  $('#bookingsTable').height( hgtCONTAINER - hgt1 - hgt2 - 10)
+    $('#bookingsTable').height( hgtCONTAINER - hgt1 - hgt2 - 10)
+  }
 
   
 
@@ -113,19 +121,19 @@ async function refreshBookingDatesAndContent() {
 
   let currentDate = new Date(BookingCalendar_CurrentDate.getFullYear(), BookingCalendar_CurrentDate.getMonth(), BookingCalendar_CurrentDate.getDate());
 
-  // retrocede ate achar o ultimo domingo antes da data atual (BookingCalendar_CurrentDate)
+  // get back until finding the last sunday before current date (BookingCalendar_CurrentDate)
   while (currentDate.getDay()!=0)  {
     currentDate.setDate(currentDate.getDate() - 1);
   }
 
-  // exibe o dia semana (3 letras)  e a data dd/mm 
+  // obtain weekday (3 letters) and the date itself
   let weekday, weekday_str
 
   let weekdays =  {0: props.expressions.sunday_short, 1: props.expressions.monday_short, 2: props.expressions.tuesday_short, 3: props.expressions.wednesday_short, 
                     4: props.expressions.thursday_short, 5: props.expressions.friday_short, 6: props.expressions.saturday_short} 
 
   
-  let today = new Date();  // hoje
+  let today = new Date();  
   let _today_ = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
   let options = {month: '2-digit', day: '2-digit'} 
@@ -141,16 +149,16 @@ async function refreshBookingDatesAndContent() {
 
     weekday_str = weekdays[weekday]
 
-    // exibe a data na respectiva <div>
+    // display the date in its own '<div>'
     if ( props.currentCountry == 'usa') 
       $(`#datecolumn${weekday}`).html( weekday_str + ' ' +currentDate.toLocaleDateString('en-us', options ))    // mm/dd
     else 
       $(`#datecolumn${weekday}`).html( weekday_str + ' ' + currentDate.toLocaleDateString( 'pt-br', options ))  // dd/mm
 
-    // usa a propriedade (inventada) 'realDate' para memorizar a data real da coluna
+    // use the 'invented' property  'realDate' to save the real date of the column
     $(`#datecolumn${weekday}`).attr('real_date', currentDate.toLocaleDateString("fr-CA", {year:"numeric", month: "2-digit", day:"2-digit"})  )    // yyyy-mm-dd
 
-    // marca o dia de hoje em vermelho
+    // puts today in border red
     if (currentDate.getTime() == _today_.getTime()) {
       $(`#datecolumn${weekday}`).css('border-color', 'blue')
       $(`#datecolumn${weekday}`).attr('today', 'true')
@@ -159,7 +167,7 @@ async function refreshBookingDatesAndContent() {
       $(`#datecolumn${weekday}`).attr('today', 'false')
     }
 
-    // usuario passou/retirou mouse sobre a data no titulo do calendario
+    // user puts/takes out mouse over the date <div>
     $(`#datecolumn${weekday}`).on('mouseleave', function()   {       
         if ( $(this).attr('today')!='true' )   $(this).css("border-color","transparent")
     });      
@@ -168,15 +176,15 @@ async function refreshBookingDatesAndContent() {
         else    $(this).css("border-color","blue")
     });      
 
-    // concatena ano atual para exibir no titulo do calendario de reservas
+    // concatenate curtrent year to display in the title of the schedule
     if (displayedYears.indexOf(currentDate.getFullYear())==-1)  displayedYears.push(currentDate.getFullYear()  )
 
-    // avanca 1 dia
+    // forward 1 day
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
 
-  // exibe no titulo do calendario , ano  ou anos atuais sendo visualizado(s), se estiver no inicio/final de um ano, aparecerão ambos os anos envolvidos  
+  // if the week is between 2 years, display both years 
   let _displayedYears_ = ''
   let y
   for (y=0; y<displayedYears.length; y++) {
@@ -186,15 +194,60 @@ async function refreshBookingDatesAndContent() {
 
   $('#currentYear').html(_displayedYears_)
 
-  // carrega as reservas da semana que esta sendo visualizada
+  // load the reservations (backend) of the week being viewed
 
   let __firstDayWeek = firstDayWeek.toLocaleDateString("fr-CA", {year:"numeric", month: "2-digit", day:"2-digit"})    
   let __lastDayWeek = lastDayWeek.toLocaleDateString("fr-CA", {year:"numeric", month: "2-digit", day:"2-digit"})    
 
   // necessario abrir evento assincrono para exibir div ajax loading, caso contrario navegador nao atualiza a tela
-  //setTimeout(() => {hideLoadingGif()  }, 300);
-  
+  //setTimeout(() => {hideLoadingGif()  }, 300); 
 }
+
+/************************************************************************************************************************************************************
+back/forward week 
+************************************************************************************************************************************************************/
+const browseBookingCalendar = (days) => {
+  // obtain month/year of the date being handled currently
+  let tmpDate = new Date(BookingCalendar_CurrentDate.getFullYear(), BookingCalendar_CurrentDate.getMonth(), BookingCalendar_CurrentDate.getDate());
+  tmpDate.setDate(tmpDate.getDate() + days);
+
+  BookingCalendar_CurrentDate = tmpDate
+
+  refreshBookingDatesAndContent()
+}
+
+
+/************************************************************************************************************************************************************
+prepare calendar to choose date
+************************************************************************************************************************************************************/
+function prepareCalendar() {
+
+var $input = $( '.datepicker' ).pickadate({
+  formatSubmit: 'dd/mm/yy',  
+  container: '#divCALENDAR', 
+  format: 'dd/mm/yyyy',  
+  monthsFull: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+  weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+  today: 'Hoje',
+  clear: '',  
+  close: 'Fechar',
+  closeOnSelect: true,  
+  onClose: function() {     
+    let chosenDate =  datePicker.value.get()   // dd/mm/yyyy 
+
+    if (chosenDate != $('#lastChosenDate').val()) {     
+      BookingCalendar_CurrentDate = new Date(parseInt(chosenDate.substring(6, 10), 10), 
+                      parseInt(chosenDate.substring(3, 5), 10)-1,
+                      parseInt(chosenDate.substring(0, 2), 10) );       
+      refreshBookingDatesAndContent()
+    }    
+  } 
+});
+
+datePicker.value = $input.pickadate('picker')
+}
+ 
+
 
 
 

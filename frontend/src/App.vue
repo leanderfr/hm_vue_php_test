@@ -38,13 +38,13 @@
         <CarsBrowser :cars='cars' />
       </div>
 
-      <!-- the schedule  -->
-      <div class='mainContainer' v-if="cars.length!=0 && expressions.length!=0" >
+      <!-- display schedule only if theres at least 1 car and 1 expression  -->
+      <div v-if="cars.length!=0 && expressions.length!=0" class='mainContainer'  >
         <Schedule :expressions='expressions' :currentCountry="isUSASelected ? 'usa' : 'brazil'" />
       </div>
 
-      <div class='h-[60px] bg-red-300 flex' >
-        DIV FINAL
+      <!-- footer toolbar   -->
+      <div v-if="cars.length!=0 && expressions.length!=0" class='bottomToolbar'  >        
       </div>
 
 
@@ -65,6 +65,14 @@
       <source src="./assets/sounds/error_beep.mp3" type="audio/mpeg">    
     </audio>
 
+    <!-- puppy icon bottom right corner  -->
+    <div class='_doggy'  id='divDoggy'></div>
+    <div class='_doggy_1' id='divDoggy_1'></div>
+    <div class='_doggy_2' id='divDoggy_2'></div>
+    <div v-if='isUSASelected' class='_doggy_3_english' id='divDoggy_3'></div>
+    <div v-if='! isUSASelected' class='_doggy_3_portuguese' id='divDoggy_3'></div>
+
+
   </div>
 
 
@@ -81,7 +89,7 @@
   import 'jquery-ui-bundle';
   import 'jquery-ui-bundle/jquery-ui.min.css';
 
-  import { prepareLoadingAnimation, slidingMessage  } from './js/utils.js'
+  import { prepareLoadingAnimation, slidingMessage , preparePuppyIcon } from './js/utils.js'
 
   const isUSASelected = ref(true)
   const expressions = ref([])
@@ -93,6 +101,7 @@
   //***************************************************************************
   //***************************************************************************
   onMounted( () => {
+      preparePuppyIcon()
       prepareLoadingAnimation()
 
       isLoading.value = true

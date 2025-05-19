@@ -64,7 +64,7 @@ const slidingMessage = (html, time) => {
 }
 
 /************************************************************************************************************************************************************
-counter
+counter, useful to 'v-for' loops
 ************************************************************************************************************************************************************/
 const counter = (start, end) => {
     const result = [];
@@ -76,10 +76,10 @@ const counter = (start, end) => {
 
 //********************************************************************************************************************************
 // returns string in hour format, depending on the selected country/language 
-// Brasil= hour= 5, string= 05:00,  hour= 22, string= 22:00
+// Brazil= hour= 5, string= 05:00,  hour= 22, string= 22:00
 // USA= hour= 5, string= 05:00 am,  hour= 22, string= 10:00 pm
 //*******************************************************************************************************************************
-export const hourFormat = (hour, currentCountry) => {
+const hourFormat = (hour, currentCountry) => {
  
   let hourTMP = hour
 
@@ -104,5 +104,33 @@ export const hourFormat = (hour, currentCountry) => {
   return (hourTMP)
 }
 
+//********************************************************************************************************************************
+// prepares mouseover, over puppy icon,, bottom right corner
+//*******************************************************************************************************************************
 
-export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter };
+const preparePuppyIcon = () => {
+  $('#divDoggy').mouseover(function (e) {
+    $('#divDoggy_1').show(); $('#divDoggy_2').show(); $('#divDoggy_3').show();
+    $('#divDoggy_1').animate({ bottom: '55px', right: '105px', zIndex: 3000 }, 200, function () {
+    });
+
+    $('#divDoggy_2').animate({ bottom: '75px', right: '125px', zIndex: 3000 }, 200);
+    $('#divDoggy_3').animate({ bottom: '90px', right: '105px' }, 200, function () {
+      $(this).css('z-index', 2101);
+    });
+  });
+
+  // usuario tirou  mouse do icone cachorro 
+  $('#divDoggy').mouseout(function (e) {
+    $('#divDoggy_1').hide(); $('#divDoggy_2').hide(); $('#divDoggy_3').hide();
+    $('#divDoggy_1').css('right', '80px'); $('#divDoggy_1').css('bottom', '1px');
+    $('#divDoggy_2').css('right', '80px'); $('#divDoggy_2').css('bottom', '1px');
+    $('#divDoggy_3').css('right', '80px'); $('#divDoggy_3').css('bottom', '-150px');
+  });
+}
+
+//********************************************************************************************************************************
+//*******************************************************************************************************************************
+
+
+export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter, hourFormat, preparePuppyIcon };

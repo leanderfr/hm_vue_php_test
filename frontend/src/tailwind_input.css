@@ -7,8 +7,13 @@
 
 body { 
 font-family: Arial, Helvetica, sans-serif;
-overflow: hidden;
+overflow: hidden !important;
+
 }
+html { 
+overflow: hidden !important;
+}
+
 
 /*****************************************************************************************************
 though this was thought to be a tailwind file, I use some moments vanilla css to prove I know it too 
@@ -221,7 +226,7 @@ align-items: center;
 @apply flex flex-col w-full grow 
 }
 .appBody {
-@apply flex flex-col w-full h-screen
+@apply flex flex-col w-full h-screen 
 }
 
 .btnBOOKING_ADD_CAR_RESERVATION {
@@ -260,3 +265,72 @@ align-items: center;
 .tdBookingCell {
     @apply border-l-2 border-gray-300  h-full flex items-center justify-center;
 }
+.bottomToolbar {
+  @apply h-[50px] border-t-[1px] border-gray-500 
+}
+
+
+/* puppy icon, bottom right corner */
+div._doggy {
+  bottom: 0px;
+  right: 5px;
+  z-index: 11;
+  position: fixed;
+  width: 65px;
+  height: 40px;
+  float: right;
+  cursor: pointer;
+  background: url('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/images/_dog.png') no-repeat top left;
+}
+
+
+div._doggy_1 {
+  bottom: 1px;
+  display: none;
+  right: 80px;
+  z-index: 2000;
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  float: right;
+  background: url('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/images/thought_1.png') no-repeat top left;
+}
+
+div._doggy_2 {
+  bottom: 1px;
+  display: none;
+  right: 80px;
+  z-index: 2000;
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  float: right;
+  background: url('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/images/thought_2.png') no-repeat top left;
+}
+
+div._doggy_3_portuguese {
+  display: none;
+  bottom: -100px;
+  right: 80px;
+  z-index: 2001;
+  position: absolute;
+  background-color: red;
+  width: 342px;
+  height: 133px;
+  background: url('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/images/thought_3.png') no-repeat top left;
+  float: right;
+}
+
+div._doggy_3_english {
+  display: none;
+  bottom: -100px;
+  right: 80px;
+  z-index: 2001;
+  position: absolute;
+  background-color: red;
+  width: 342px;
+  height: 133px;
+  background: url('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/images/thought_3_english.png') no-repeat top left;
+  float: right;
+}
+
