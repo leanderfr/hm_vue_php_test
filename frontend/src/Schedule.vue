@@ -45,9 +45,9 @@
     </div>
 
     <!-- loop to display times from 05:00 to 23:00  -->
-    <div class="w-full flex flex-col  overflow-y-scroll h-[0px]  border-l-0 border-gray-200 border-r-0  " id='bookingsTable' >  
+    <div class="w-full flex flex-col  overflow-y-scroll h-[0px]  border-l-0 border-gray-200 border-r-0 relative " id='bookingsTable' >  
 
-      <div v-for="hour in counter(5, 24)" :key="hour" class="w-full flex flex-row  leading-[60px]  justify-center cursor-pointer border-b-2 border-gray-300 hover:bg-gray-100"  >
+      <div v-for="hour in counter(5, 23)" :key="hour" class="w-full flex flex-row  leading-[60px]  justify-center cursor-pointer border-b-2 border-gray-300 hover:bg-gray-100"  >
         <div class='w-[9%] tdBookingCell flex justify-center'>{{ hourFormat(hour, currentCountry) }}</div>
         <div class='w-[13%] tdBookingCell' id='bookingHourDay0{{hour}}'></div>
         <div class='w-[13%] tdBookingCell' id='bookingHourDay1{{hour}}'></div>
@@ -64,7 +64,6 @@
     <div id="divCALENDAR"></div>
     <input type='hidden' id='lastChosenDate' value='' class="datepicker" style='visibility:hidden' /> 
   </div>
-
   
 
 </template>
@@ -74,11 +73,16 @@
 import { onMounted, ref , onUpdated  } from 'vue';
 import { prepareLoadingAnimation, slidingMessage, counter, hourFormat  } from './js/utils.js'
 
-const props = defineProps( ['expressions', 'currentCountry', 'backendUrl'] )
+const props = defineProps( ['expressions', 'currentCountry', 'backendUrl', 'imagesUrl' ] )
 
 // date picker
 const datePicker = ref(null)
 const displayAllCarsReservations = ref(false)
+
+// the post it <div> of the reservation can be moved or clicked, when it is being dragged, the variable 'draggingBookingDivYet', 
+// deactivate temporarely the 'click'  event
+let draggingBookingDivYet = false
+
 
 
 //*****************************************************************************
@@ -223,10 +227,10 @@ async function refreshBookingDatesAndContent() {
 // *********************************************************************************************************************************
   // load the reservations (backend) of the week being viewed
   // *********************************************************************************************************************************
-  
+
+  let selectedCar = displayAllCarsReservations ? '-1' : '1';
   try {
-      let _route_ = `${props.backendUrl.value}/bookings/${bookingSelectedCarId}/${__firstDayWeek}/${__lastDayWeek}`
-      logAPI('GET', _route_)
+      let _route_ = `${props.backendUrl}/bookings/${props.currentCountry}/${selectedCar}/${__firstDayWeek}/${__lastDayWeek}`
       await fetch(_route_, {method: 'GET'})
 
       .then( (response) => {
@@ -277,7 +281,7 @@ async function refreshBookingDatesAndContent() {
 
         // remove informacao usada antes, sobre quais reservas devem ser exibidas em cada coluna de dia da semana
         for (weekday=0; weekday<7; weekday++) {
-          jq(`#datecolumn${weekday}`).attr('bookings_this_day','') 
+          $(`#datecolumn${weekday}`).attr('bookings_this_day','') 
         }
 
         let availableColors = [ ['rgb(204, 224, 255)', 'rgb(77, 148, 255)'],
@@ -308,7 +312,7 @@ async function refreshBookingDatesAndContent() {
               // o tamanho da <div> vai depender da qtde de horas reservadas no dia atual
               if (currentDay >= _pickup && currentDay <= _dropoff)   {
 
-                bookingsThisDay = jq(`#datecolumn${weekday}`).attr('bookings_this_day') 
+                bookingsThisDay = $(`#datecolumn${weekday}`).attr('bookings_this_day') 
 
                 // se o inicio de reserva nao é no dia atual, considera reservado desde o começo do dia (05:00), pois ela comecou em um dia anterior ao atual
                 let startingHour = 5, startingMinute = 0                  
@@ -340,7 +344,7 @@ async function refreshBookingDatesAndContent() {
                                     availableColors[whichColor][0] + '|' + availableColors[whichColor][1]    // bgcolor|border color
 
                 // memoriza que na coluna de data atual, esta reserva deve ser exibida
-                jq(`#datecolumn${weekday}`).attr('bookings_this_day', bookingsThisDay) 
+                $(`#datecolumn${weekday}`).attr('bookings_this_day', bookingsThisDay) 
               }
 
               // avanca 1 dia
@@ -410,10 +414,14 @@ var $input = $( '.datepicker' ).pickadate({
   closeOnSelect: true,  
   onClose: function() {     
 
+    // here, user closed the calendar 
+
     let chosenDate =  datePicker.value.get()   // dd/mm/yyyy 
 
     let currentDate = new Date(BookingCalendar_CurrentDate.getFullYear(), BookingCalendar_CurrentDate.getMonth(), BookingCalendar_CurrentDate.getDate());
     let _currentDate_ = currentDate.toLocaleDateString( 'pt-br' )
+
+    // if user closed the calendar but chosen a date
 
     if (chosenDate != _currentDate_ && chosenDate!='' && _currentDate_!='') {     
       BookingCalendar_CurrentDate = new Date(parseInt(chosenDate.substring(6, 10), 10), 
@@ -423,6 +431,7 @@ var $input = $( '.datepicker' ).pickadate({
       refreshBookingDatesAndContent()
     }    
 
+    // put the focus on the table, the component Datepicker.js insists in re(open) alone sometimes
     setTimeout(() => {
       $('#bookingsTable').focus()  
     }, 1000);
@@ -433,6 +442,180 @@ var $input = $( '.datepicker' ).pickadate({
 datePicker.value = $input.pickadate('picker')
 }
  
+
+
+
+/************************************************************************************************************************************************************
+display the post it's (<div>'s) with the reservation data obtained through API
+************************************************************************************************************************************************************/
+
+const postItBookingDivs = () => {
+
+  let $bookingsTable = $('#bookingsTable') 
+  $bookingsTable.scrollTop(0)
+
+  let divCount = 0
+
+  // remove old <div>'s with reservations created before
+  $('.bookTemporaryDiv').off('click')  
+  $('.bookTemporaryDiv').remove()
+
+
+  for (let weekday=0; weekday<7; weekday++) {
+
+    /* example of 'bookings_this_day'
+
+    monday column example:
+      bookings_this_day="Car 1 name|11|03/06/2025 05:00|03/06/2025 11:35|myself the driver|5|0|11|35^Car 2 name|9|10/06/2025 19:00|11/06/2025 19:30|me again driving|19|0|19|30^Titano|7.......
+
+    */
+
+    let bookingsThisDay = $(`#datecolumn${weekday}`).attr('bookings_this_day') 
+    if (bookingsThisDay=='') continue
+
+    let bookings = bookingsThisDay.split('^')   // separador de reservas
+
+    // memoriza IDs de reservas para auxiliar na montagem do evento 'draggable' mais abaixo
+    let bookingsIDs = []
+
+    // lê as reservas para a coluna do dia de semana atual
+    for (let bks=0; bks < bookings.length; bks++)  {
+
+      let booking = bookings[bks].split('|')   // separador de campos da reserva
+
+      let startingHour = booking[5]
+      let startingMinute = booking[6]
+
+      let endingHour = booking[7]
+      let endingMinute = booking[8]
+
+      // converte as horas/minutos para suas respectivas ROWS <div>'s da agenda
+      let tableRowBookingTop = startingHour - 5    // 5= hora inicial do dia, 05:00
+      let tableRowBookingBottom = endingHour - 5
+
+      // a <div> que exibe a agenda (bookingsTable), possui <div>'s filhas que sao as horas do dia (05:00 - 23:00)
+      // e cada hora do dia possui <div>'s filhas que sao os dias da semana (segunda - sexta)
+
+      let $divBookingTop = $bookingsTable.children().eq(tableRowBookingTop).children().eq(weekday+1)      // weekday+1 por causa da 1a coluna (hora)
+      let $divBookingBottom = $bookingsTable.children().eq(tableRowBookingBottom).children().eq(weekday+1)
+
+      let bookDivWidth = $divBookingTop.width() 
+
+      // endingHour= 24 significa que a reserva nao termina no dia de hoje.. continuar para proximo(s) dia(s)
+
+      let pickupMoment = booking[2]
+      let dropoffMoment = booking[3]
+                        
+
+      let carImage = booking[9]
+      let driverName = booking[4]
+
+      let bookingHtml = `<div style='display:flex;flex-direction:column;'>`+
+                        `   <div style='display:flex;flex-direction:row;justify-content: space-between;margin-bottom:20px;align-items: center;;'>`+
+                        `       <div style="background-repeat: no-repeat;background-size: contain;width:80%;height:50px;background-image: url('${props.imagesUrl}${carImage}');margin-bottom:20px "></div>`+
+                        `       <div class='bookingDivDrag'>&nbsp;</div>`+
+                        `   </div>`+
+                        `   <div style='display:flex;flex-direction:row;;margin-bottom:20px;align-items: center;;'>`+
+                        `       <div class='bookingStartingHourInfo'>&nbsp;</div>`+
+                        `       <div style='padding-top:8px;padding-left:10px' >${pickupMoment}</div>`+
+                        `   </div>`+
+                        `   <div style='display:flex;flex-direction:row;;margin-bottom:20px;align-items: center ;;'>`+
+                        `       <div class='bookingEndingHourInfo'>&nbsp;</div>`+
+                        `       <div style='padding-top:8px;padding-left:10px' >${dropoffMoment}</div>`+
+                        `   </div>`+
+                        `   <div style='display:flex;flex-direction:row;;margin-bottom:20px;align-items: center ;;'>`+
+                        `       <div class='bookingDriverInfo'>&nbsp;</div>`+
+                        `       <div style='padding-top:8px;padding-left:10px' >${driverName}</div>`+
+                        `   </div>`+
+                        `</div>`
+
+
+      // <div> de reserva colocada na ultima coluna (ult dia semana), necessario diminuir 2 pixels, se nao browser esconde a borda
+      if (weekday==6) bookDivWidth -= 2;
+
+      // calcula altura da <div> da reserva, considerando a distancia entre a hora final/inicial da reserva
+      // 60 pixels, o tamanho da <div> que cada hora tem
+      let bookDivHeight = (tableRowBookingBottom - tableRowBookingTop) * 62
+      bookDivHeight -= parseInt(startingMinute, 10)
+      bookDivHeight += parseInt(endingMinute, 10)
+
+      /* cria div  */
+      let $divBOOKING = $("<div />").css({
+          position: "absolute",
+          overflow:'hidden',
+          padding: '5px',
+          'border-radius': '5px',
+          cursor: 'pointer',          
+          backgroundColor: booking[10],                  // alterna cor da reserva para diferenciar
+          border: `solid 2px ${booking[11]}`,
+          height: bookDivHeight,
+          width: bookDivWidth ,
+      }).appendTo( $bookingsTable );
+
+      $divBOOKING.attr('id', `bookTemporaryDiv${divCount}`);
+      $divBOOKING.addClass('bookTemporaryDiv')    // bookTemporaryDiv nao possui CSS, serve somente para identificar que é <div> de reserva
+
+      let bookingId = booking[0]
+      $divBOOKING.attr('booking_id', bookingId)  // une as <div>'s que dizem respeito à mesma reserva, para que qdo usuario passar mouse sobre, coloque destauqe sobre todas ao mesma tempo
+
+      $divBOOKING.html( bookingHtml )
+
+      // se clicar na <div> de reserva, abre edicao
+      $divBOOKING.on('click', function(e)   { 
+        if (! draggingBookingDivYet)   editBookingRecord(e, $(this).attr('booking_id') )
+      })
+        
+     
+      // qdo usuario passar/retirar mouse de <div>'s que se referem à mesma reserva, coloca/retira destaque de todas ao mesmo tempo, dando a impressao de serem a mesma
+      $divBOOKING.mouseenter(function()  {
+        $( `[booking_id=${bookingId}]`).css('border', 'solid 2px black')
+        $( `[booking_id=${bookingId}]`).css('background-color', '#ffffcc')
+      });
+      $divBOOKING.mouseleave(function()  {
+        $( `[booking_id=${bookingId}]`).css('border', `solid 2px ${booking[11]}`)
+        $( `[booking_id=${bookingId}]`).css('background-color', `${booking[10]}`  )
+      })
+
+      // memoriza os IDs das reservas para futuro agrupamento de <div>'s  mais abaixo
+      // exemplo:  uma reserva de 2, 3 dias... ela sera exibida em 2, 3 <div>'s - estas divs serao movidas (draggable) e seram destacadas (hover) ao mesmo tempo  
+
+      if ( bookingsIDs.indexOf(bookingId) == -1 ) bookingsIDs.push( bookingId )
+
+
+      let bookTopHourDivPosition = document.getElementById( $divBookingTop.attr('id') ).getBoundingClientRect()   // captura posicao da <div> hora inicio da reserva
+      let bookingsTablePosition = document.getElementById( 'bookingsTable' ).getBoundingClientRect()   // captura posicao da <div> container das reservas
+
+      $divBOOKING.css("left", bookTopHourDivPosition.left - bookingsTablePosition.left + 2);   // posiciona a <div> da reserva no seu dia/horario 
+
+      // se a hora inicial da reserva nao é hora cheia, possui minutos, considerar estes minutos no posicionamento da <div> da reserva
+      // e sendo que a <div> da hora possui exatos 60 pixels, basta somar a qtde de minutos (startingMinute) à posicao top da <div> reserva
+
+      let divTopPosition = parseInt(bookTopHourDivPosition.top, 10) - parseInt(bookingsTablePosition.top, 10)
+      divTopPosition += parseInt(startingMinute , 10)    // minutos = pixels
+
+      $divBOOKING.css("top", divTopPosition);
+
+      divCount++
+
+    }
+
+    // todas as <div>'s que se referem à mesma reserva, serao movidas (draggable) juntas
+    // exemplo:  uma reserva de 2, 3 dias... ela sera exibida em 2, 3 <div>'s - estas divs serao movidas (draggable) e seram destacadas (hover) ao mesmo tempo  
+    setTimeout(() => {
+        for (let ids=0; ids < bookingsIDs.length; ids++)  {
+          $( `[booking_id=${bookingsIDs[ids]}]`).multiDraggable({ 
+            group: $(`[booking_id=${bookingsIDs[ids]}]`),
+
+            // impede disparo de 'click' na div reserva enqto estiver arrastando a div
+            startNative: function (event,ui) {draggingBookingDivYet = true},
+            stopNative : function (event,ui) { setTimeout(() => {draggingBookingDivYet = false}, 100); },
+          });
+        }
+    }, 100);
+
+
+  }
+}
 
 
 

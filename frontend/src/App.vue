@@ -44,7 +44,8 @@
             :key='forceScheduleRedraw' 
             :expressions='expressions' 
             :currentCountry="isUSASelected ? 'usa' : 'brazil'" 
-            :backendUrl='backendUrl'    />
+            :backendUrl='backendUrl'    
+            :imagesUrl = 'imagesUrl'   />
       </div>
 
       <!-- footer toolbar   -->
@@ -102,6 +103,8 @@
   const isLoading = ref(true)
   const error = ref(null)
   const backendUrl = ref('http://localhost')  // it changes depending if the app is running as a container (AWS EC2) or locally
+  const imagesUrl = ref('https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine/')  
+
 
   //***************************************************************************
   //***************************************************************************
