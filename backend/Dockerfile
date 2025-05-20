@@ -18,4 +18,4 @@ EXPOSE 80
 
 # docker build -t hm_vue_php_backend .
 
-# docker run -p 8073:80 hm_vue_php_backend
+# docker run -d -p 8073:80 hm_vue_php_backend

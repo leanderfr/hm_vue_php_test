@@ -23,6 +23,6 @@ CMD [ "http-server", "dist" ]
 
 # docker build -t hm_vue_php_frontend .
 
-# docker run -it -p 8080:8080 --rm --name hm_vue_php_frontend hm_vue_php_frontend
+# docker run -it -d -p 8080:8080 --rm --name hm_vue_php_frontend hm_vue_php_frontend
 
 
