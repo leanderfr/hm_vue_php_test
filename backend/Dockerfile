@@ -16,6 +16,6 @@ RUN a2enmod rewrite
 
 EXPOSE 80
 
-# docker build -t hm_vue_php_frontend .
+# docker build -t hm_vue_php_backend .
 
-# docker run -p 8073:80 hm_vue_php_frontend
+# docker run -p 8073:80 hm_vue_php_backend

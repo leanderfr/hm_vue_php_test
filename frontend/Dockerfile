@@ -21,11 +21,8 @@ RUN npm run build
 EXPOSE 8080
 CMD [ "http-server", "dist" ]
 
+# docker build -t hm_vue_php_frontend .
 
-
-#  docker build -t hm_vue_php_backend .
-
-
-# docker run -it -p 8080:8080 --rm --name hm_vue_php_backend hm_vue_php_backend
+# docker run -it -p 8080:8080 --rm --name hm_vue_php_frontend hm_vue_php_frontend
 
 
