@@ -23,8 +23,6 @@
 
 
 <script setup>
-import { prepareLoadingAnimation, slidingMessage  } from './assets/js/utils.js'
-
 const props = defineProps( ['cars'] )
 
 

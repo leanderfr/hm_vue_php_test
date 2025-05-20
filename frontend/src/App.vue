@@ -101,13 +101,12 @@
 
   import { prepareLoadingAnimation, slidingMessage , preparePuppyIcon } from './assets/js/utils.js'
 
+  // below, no time to solve why docker wont load locally, the solution was to load by sort of CDN
   $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.js", function() {}) 
   $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.date.js", function() {}) 
   $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/legacy.js", function() {}) 
   $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/multiDraggable.js", function() {}) 
   $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/maskDateHour.js", function() {}) 
-
-
 
   const forceScheduleRedraw = ref(0)  
   const isUSASelected = ref(true)
@@ -191,11 +190,7 @@
       slidingMessage('Fatal error= '+error, 3000)        
     })  
   }
-
-
 </script>
-
-
 
 
 <style scoped>

@@ -88,7 +88,6 @@
 <script setup>
 
 import { onMounted, ref , onUpdated  } from 'vue';
-import { prepareLoadingAnimation, slidingMessage, counter, hourFormat  } from './assets/js/utils.js'
 import BookingForm from './BookingForm.vue';
 
 //const showLoading = defineEmits( ['showLoading'] );
@@ -506,13 +505,13 @@ const postItBookingDivs = () => {
 
     let bookings = bookingsThisDay.split('^')   // separador de reservas
 
-    // memoriza IDs de reservas para auxiliar na montagem do evento 'draggable' mais abaixo
+    // memorize bookings ID's to help creating the 'draggable event, below
     let bookingsIDs = []
 
-    // lê as reservas para a coluna do dia de semana atual
+    // read the bookings made to the current weekday
     for (let bks=0; bks < bookings.length; bks++)  {
 
-      let booking = bookings[bks].split('|')   // separador de campos da reserva
+      let booking = bookings[bks].split('|')   // booking fields separator
 
       let startingHour = booking[5]
       let startingMinute = booking[6]
@@ -520,20 +519,20 @@ const postItBookingDivs = () => {
       let endingHour = booking[7]
       let endingMinute = booking[8]
 
-      // converte as horas/minutos para suas respectivas ROWS <div>'s da agenda
-      let tableRowBookingTop = startingHour - 5    // 5= hora inicial do dia, 05:00
+      // convert hours/minutes to the position of the respective row (div) in the schedule
+      let tableRowBookingTop = startingHour - 5    // 5= initial hour of the day, 05:00
       let tableRowBookingBottom = endingHour - 5
 
 
-      // a <div> que exibe a agenda (bookingsTable), possui <div>'s filhas que sao as horas do dia (05:00 - 23:00)
-      // e cada hora do dia possui <div>'s filhas que sao os dias da semana (segunda - sexta)
+      // the <div> que contains the schedule (bookingsTable), has children  <div>'s filhas for each hour (from 05:00 to 23:00)
+      // and each hour has children DIVs with the weekdays (mon - fri)
 
-      let $divBookingTop = $bookingsTable.children().eq(tableRowBookingTop).children().eq(weekday+1)      // weekday+1 por causa da 1a coluna (hora)
+      let $divBookingTop = $bookingsTable.children().eq(tableRowBookingTop).children().eq(weekday+1)      // weekday+1 because of the hour column
       let $divBookingBottom = $bookingsTable.children().eq(tableRowBookingBottom).children().eq(weekday+1)
 
       let bookDivWidth = $divBookingTop.width() 
 
-      // endingHour= 24 significa que a reserva nao termina no dia de hoje.. continuar para proximo(s) dia(s)
+      // endingHour= 24 means the booking wont end today, will keep next day
 
       let pickupMoment = booking[2]
       let dropoffMoment = booking[3]
@@ -561,11 +560,11 @@ const postItBookingDivs = () => {
                         `</div>`
 
 
-      // <div> de reserva colocada na ultima coluna (ult dia semana), necessario diminuir 2 pixels, se nao browser esconde a borda
+      // <div> of the booking at the last column (last day of week) , need to decrease 2 pixels, otherwise browser will hide the border
       if (weekday==6) bookDivWidth -= 2;
 
-      // calcula altura da <div> da reserva, considerando a distancia entre a hora final/inicial da reserva
-      // 60 pixels, o tamanho da <div> que cada hora tem
+      // calculate the height of the post it (div) with the booking, considering the offset between the initial/final hours 
+      // 60 pixels is the size of each hour <div>
 
       let bookDivHeight = (tableRowBookingBottom - tableRowBookingTop) * 62
       bookDivHeight -= parseInt(startingMinute, 10)
@@ -578,27 +577,27 @@ const postItBookingDivs = () => {
           padding: '5px',
           'border-radius': '5px',
           cursor: 'pointer',          
-          backgroundColor: booking[10],                  // alterna cor da reserva para diferenciar
+          backgroundColor: booking[10],                  // toogle color of the booking post it to highlight it
           border: `solid 2px ${booking[11]}`,
           height: bookDivHeight,
           width: bookDivWidth ,
       }).appendTo( $bookingsTable );
 
       $divBOOKING.attr('id', `bookTemporaryDiv${divCount}`);
-      $divBOOKING.addClass('bookTemporaryDiv')    // bookTemporaryDiv nao possui CSS, serve somente para identificar que é <div> de reserva
+      $divBOOKING.addClass('bookTemporaryDiv')    // bookTemporaryDiv is not a real CSS, it works only to identify it is a booking div
 
       let bookingId = booking[0]
-      $divBOOKING.attr('booking_id', bookingId)  // une as <div>'s que dizem respeito à mesma reserva, para que qdo usuario passar mouse sobre, coloque destauqe sobre todas ao mesma tempo
+      $divBOOKING.attr('booking_id', bookingId)  // unite the post its <div>'s that have to do with the same booking, for them to be dragged together with the mouse
 
       $divBOOKING.html( bookingHtml )
 
-      // se clicar na <div> de reserva, abre edicao
+      // if click in the booking <div>, edit it
       $divBOOKING.on('click', function(e)   { 
         if (! draggingBookingDivYet)   editBookingRecord(e, $(this).attr('booking_id') )
       })
         
      
-      // qdo usuario passar/retirar mouse de <div>'s que se referem à mesma reserva, coloca/retira destaque de todas ao mesmo tempo, dando a impressao de serem a mesma
+      // if user hover mouse over the booking <div> post it that have the same id, highlight them at the same time
       $divBOOKING.mouseenter(function()  {
         $( `[booking_id=${bookingId}]`).css('border', 'solid 2px black')
         $( `[booking_id=${bookingId}]`).css('background-color', '#ffffcc')
@@ -608,21 +607,21 @@ const postItBookingDivs = () => {
         $( `[booking_id=${bookingId}]`).css('background-color', `${booking[10]}`  )
       })
 
-      // memoriza os IDs das reservas para futuro agrupamento de <div>'s  mais abaixo
-      // exemplo:  uma reserva de 2, 3 dias... ela sera exibida em 2, 3 <div>'s - estas divs serao movidas (draggable) e seram destacadas (hover) ao mesmo tempo  
+      // memorize the IDs of the bookings to coming grouping of the bookings <div>'s  way below
+      // example:  a boooking the overflows 2 or 3 days will be displyed in 2 or 3 <div>s and those divs will be draggable together
 
       if ( bookingsIDs.indexOf(bookingId) == -1 ) bookingsIDs.push( bookingId )
 
-      let bookTopHourDivPosition = document.getElementById( $divBookingTop.attr('id') ).getBoundingClientRect()   // captura posicao da <div> hora inicio da reserva
-      let bookingsTablePosition = document.getElementById( 'bookingsTable' ).getBoundingClientRect()   // captura posicao da <div> container das reservas
+      let bookTopHourDivPosition = document.getElementById( $divBookingTop.attr('id') ).getBoundingClientRect()   // capture position of the <div> initial time of the booking
+      let bookingsTablePosition = document.getElementById( 'bookingsTable' ).getBoundingClientRect()   // capture position of the container (parent) <div> of the bookings
 
-      $divBOOKING.css("left", bookTopHourDivPosition.left - bookingsTablePosition.left + 2);   // posiciona a <div> da reserva no seu dia/horario 
+      $divBOOKING.css("left", bookTopHourDivPosition.left - bookingsTablePosition.left + 2);   // position the booking <div> at the correct hour/day
 
-      // se a hora inicial da reserva nao é hora cheia, possui minutos, considerar estes minutos no posicionamento da <div> da reserva
-      // e sendo que a <div> da hora possui exatos 60 pixels, basta somar a qtde de minutos (startingMinute) à posicao top da <div> reserva
+      // if the initial hour is ot 'full hour' if it has minutes, conside those minutes when calculating position of the <div>
+      // each hour <div> has 60 pixels, so each more minute= 1 more pixel
 
       let divTopPosition = parseInt(bookTopHourDivPosition.top, 10) - parseInt(bookingsTablePosition.top, 10)
-      divTopPosition += parseInt(startingMinute , 10)    // minutos = pixels
+      divTopPosition += parseInt(startingMinute , 10)    // minutes = pixels
 
       $divBOOKING.css("top", divTopPosition); 
 
@@ -630,8 +629,8 @@ const postItBookingDivs = () => {
 
     }
 
-    // todas as <div>'s que se referem à mesma reserva, serao movidas (draggable) juntas
-    // exemplo:  uma reserva de 2, 3 dias... ela sera exibida em 2, 3 <div>'s - estas divs serao movidas (draggable) e seram destacadas (hover) ao mesmo tempo  
+    // every <div> the refers the same booking will be dragged together
+    // example:  a boooking that overflows 2 or 3 days, will be displayed in 3, 4 different <divs>
     setTimeout(() => {
         for (let ids=0; ids < bookingsIDs.length; ids++)  {
           $( `[booking_id=${bookingsIDs[ids]}]`).multiDraggable({ 
