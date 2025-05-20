@@ -35,7 +35,10 @@
 
       <!-- horizontal cars browser -->
       <div class='carsBrowserContainer' v-if="cars.lenght!=0" >
-        <CarsBrowser :cars='cars' />
+        <CarsBrowser 
+          :cars='cars'  
+          :selectedCar='selectedCar' 
+          @updateSelectedCar='updatedSelectedCar'            /> 
       </div>
 
       <!-- display schedule only if theres at least 1 car and 1 expression  -->
@@ -46,6 +49,8 @@
             :currentCountry="isUSASelected ? 'usa' : 'brazil'" 
             :backendUrl='backendUrl'    
             :imagesUrl = 'imagesUrl'
+            :selectedCar='selectedCar'
+            @updateSelectedCar='updatedSelectedCar'            
             @showLoading="isLoading=true" 
             @hideLoading="isLoading=false" />
 
@@ -101,13 +106,13 @@
 
   import { prepareLoadingAnimation, slidingMessage , preparePuppyIcon } from './assets/js/utils.js'
 
-  // below, no time to solve why docker wont load locally, the solution was to load by sort of CDN
+  // below, no time to solve why docker wont load locally, the solution was to load by sort of CDN, my own AWS repository
   $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.js", function() {}) 
   $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.date.js", function() {}) 
   $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/legacy.js", function() {}) 
   $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/multiDraggable.js", function() {}) 
   $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/maskDateHour.js", function() {}) 
-
+ 
   const forceScheduleRedraw = ref(0)  
   const isUSASelected = ref(true)
   const expressions = ref([])
@@ -115,15 +120,38 @@
   const isLoading = ref(true)
   const error = ref(null)
   // it changes depending if the app is running as a container (AWS EC2) or locally
-  const backendUrl = ref('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com:8073')  
-  //const backendUrl = ref('http://127.0.0.1')  
+  //const backendUrl = ref('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com:8073')  
+  const backendUrl = ref('http://127.0.0.1')  
 
   const imagesUrl = ref('https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine/')  
 
+  // currently selected car (starts with -1= show schedule of all cars)
+  const selectedCar = ref(0)
+
+
+  //***************************************************************************
+  //***************************************************************************
+  const updatedSelectedCar = (carId) => {
+    selectedCar.value = carId
+console.log(selectedCar.value)
+  }
 
   //***************************************************************************
   //***************************************************************************
   onMounted( () => {
+      // handler to keyboard
+      window.onkeydown = (event) => {
+        onKeyDown(event)
+      };
+
+
+      // for now, I have no resolution to re(draw) components but refresh the whole window
+      window.onresize = (event) => {
+        setTimeout(() => {
+          window.location.reload();  
+        }, 500);
+      }
+ 
       preparePuppyIcon()
       prepareLoadingAnimation()
 
@@ -137,7 +165,7 @@
   //***************************************************************************
   // if user changes current language, (re) fetch expressions (port/english)
   //*************************************************************************** 
-  watch(isUSASelected, () => {
+  watch([isUSASelected, selectedCar], () => {
       isLoading.value = true;
 
       Promise.all( [fetchExpressions()] ).then(() => {
@@ -190,6 +218,48 @@
       slidingMessage('Fatal error= '+error, 3000)        
     })  
   }
+
+
+/************************************************************************************************************************************************************
+ handle key pressed throughout the entire application
+************************************************************************************************************************************************************/
+
+const onKeyDown = (e) =>  {
+
+  // if user presses Enter or arrow down/up, backs or forwards the focus to the next/previous field
+  if ( (e.which == 13 || e.which == 38 || e.which == 40)  && $('.text_formFieldValue').is(':focus') )   { 
+        // I had to invent the 'sequence' property, because VITE is bugging about tabIndex
+
+        let tab =  $(':focus').attr("sequence");
+        if (e.which==13 || e.which == 40)  tab++;
+        else if (e.which==38)  tab--;
+
+        e.preventDefault()
+
+        // put the focus in the next/previous field based on the pre determined 'sequence' property
+        $("[sequence='"+tab+"']").focus();          
+  }
+
+  
+
+
+  // if user presses F2 or Esc, being any form edit screen opened
+  if (e.which == 27 || e.which == 113)   { 
+        let bookingRecordForm = typeof $('#bookingRecordForm').attr("id")
+
+        // triggers close button
+        if (bookingRecordForm != 'undefined')  {
+          if (e.which == 27)   $('#btnCLOSE').trigger('click')
+
+          // the following forms contain the button 'F2= save'
+          if (bookingRecordForm != 'undefined')  {
+            if (e.which == 113)   $('#btnSAVE').trigger('click')   // f2 foi pressionado
+          }
+        }
+  }
+}
+
+
 </script>
 
 

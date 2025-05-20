@@ -214,13 +214,18 @@ align-items: center;
 }
 
 .carsBrowser {
-@apply flex flex-row   grow h-full items-center pl-2
+  @apply flex flex-row   grow h-full items-center pl-2
 }
 
 .carCard {
-@apply bg-[#E6F0FF] hover:border-gray-700 hover:border-[1px] cursor-pointer justify-center pr-2
-    border-transparent border-[1px] flex flex-col h-full w-[230px] pl-2 text-right text-gray-500
+  @apply bg-[#E6F0FF] hover:border-gray-700 hover:border-2 cursor-pointer justify-center pr-2
+      border-transparent border-2 flex flex-col h-full w-[230px] pl-2 text-right text-gray-500
 }
+.carCardSelected { 
+  @apply border-[navy] border-2
+}
+
+
 
 .mainContainer {
 @apply flex flex-col w-full grow 
@@ -248,7 +253,6 @@ align-items: center;
 }
 
 .btnBOOKING_ALL_CARS_ACTIVE {
-    /* icon-all-cars is defined in tailwind.config.js */
     @apply border-[navy] border-2
 }
 
@@ -264,6 +268,20 @@ align-items: center;
     @apply cursor-pointer w-[130px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
         bg-icon-right-arrow  bg-contain bg-center hover:border-gray-500 h-12;
 }
+
+.btnCARS_TABLE {
+    /* icon-div-car is defined in tailwind.config.js */
+    @apply cursor-pointer w-[130px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
+        bg-icon-div-car  bg-contain bg-center hover:border-gray-500 h-12;
+}
+
+.btnEXPRESSIONS_TABLE {
+    /* icon-div-expressions is defined in tailwind.config.js */
+    @apply cursor-pointer w-[130px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
+        bg-icon-div-expressions  bg-contain bg-center hover:border-gray-500 h-12;
+}
+
+
 .tdBookingHeader {
     @apply hover:border-2 hover:border-gray-500 border-2 border-transparent  h-full flex items-center justify-center;
 }
@@ -272,7 +290,7 @@ align-items: center;
     @apply border-l-2 border-gray-300  h-full flex items-center justify-center;
 }
 .bottomToolbar {
-  @apply h-[50px] border-t-[1px] border-gray-500 
+  @apply h-[30px] 
 }
 
 
@@ -374,6 +392,11 @@ div._doggy_3_english {
     cursor: pointer;
 }
 
+#divWINDOW_DRAG {
+    @apply bg-icon-div-draggable w-7 bg-transparent bg-no-repeat bg-contain bg-center mr-6  text-gray-700;
+}
+
+
 /* modal form title */
 #divWINDOW_TITLE {
     font-size: 1.2em;
@@ -429,4 +452,5 @@ input[type="text"].text_formFieldValue:focus {
     background-color: #ffffcc;
     border-color: green;
 }
+
 

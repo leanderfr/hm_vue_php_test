@@ -4,7 +4,7 @@
   <div class='flex flex-col h-full ' id='scheduleContainer'>
 
     <!-- top tool bar -->
-    <div class="flex flex-row h-[60px] w-full justify-between border-b-2" id='scheduleToolbar'>
+    <div class="flex flex-row h-[60px] w-full justify-between border-b-2 " id='scheduleToolbar'>
 
       <!-- current year -->
       <div class="flex flex-row text-[30px] font-bold pt-3 pl-6" id='currentYear'></div>
@@ -18,14 +18,21 @@
           <div  class='btnBOOKING_CALENDAR putPrettierTooltip' :title="expressions.choose_date" @click="showCalendar=true" aria-hidden="true"></div>    
 
           <!-- display all the cars reservations -->
-          <div  class='btnBOOKING_ALL_CARS putPrettierTooltip'  :class="{btnBOOKING_ALL_CARS_ACTIVE: displayAllCarsReservations}"
+          <div  class='btnBOOKING_ALL_CARS putPrettierTooltip'  :class="{btnBOOKING_ALL_CARS_ACTIVE: props.selectedCar==0}"
                 :title="expressions.display_all_cars" 
-              @click="displayAllCarsReservations = ! displayAllCarsReservations;" aria-hidden="true"></div>    
+                @click="emit('updateSelectedCar', 0)"  aria-hidden="true"></div>    
 
           <!-- back 1 week   -->
           <div  class='btnBOOKING_LEFT_ARROW putPrettierTooltip'  :title="expressions.previous_week" @click="browseBookingCalendar(-7)" aria-hidden="true"></div>   
           <!-- forward 1 week -->
           <div  class='btnBOOKING_RIGHT_ARROW putPrettierTooltip' :title="expressions.next_week" @click="browseBookingCalendar(+7)" aria-hidden="true"></div>   
+
+          <!-- cars table -->
+          <div  class='btnCARS_TABLE putPrettierTooltip' :title="expressions.cars" @click="browseBookingCalendar(+7)" aria-hidden="true"></div>   
+
+          <!-- expressions table -->
+          <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' :title="expressions.expressions" @click="browseBookingCalendar(+7)" aria-hidden="true"></div>   
+
       </div> 
 
     </div>
@@ -45,7 +52,7 @@
     </div>
 
     <!-- loop to display times from 05:00 to 23:00  -->
-    <div class="w-full flex flex-col  overflow-y-scroll h-[0px]  border-l-0 border-gray-200 border-r-0 relative " id='bookingsTable' >  
+    <div class="w-full flex flex-col  overflow-y-scroll h-[0px]   border-gray-500 relative  border-2 " id='bookingsTable' >  
 
       <div v-for="hour in counter(5, 23)" :key="hour" class="w-full flex flex-row  leading-[60px]  justify-center cursor-pointer border-b-2 border-gray-300 hover:bg-gray-100"  >
         <div class='w-[9%] tdBookingCell flex justify-center'>{{ hourFormat(hour, currentCountry) }}</div>
@@ -89,18 +96,19 @@
 
 import { onMounted, ref , onUpdated  } from 'vue';
 import BookingForm from './BookingForm.vue';
+import { hourFormat, counter  } from './assets/js/utils.js'
 
 //const showLoading = defineEmits( ['showLoading'] );
 //const hideLoading = defineEmits( ['hideLoading'] );
 
-const emit = defineEmits( ['showLoading', 'hideLoading'] );
+const emit = defineEmits( ['showLoading', 'hideLoading','updateSelectedCar'] );
 
-const props = defineProps( ['expressions', 'currentCountry', 'backendUrl', 'imagesUrl' ] )
+const props = defineProps( ['expressions', 'currentCountry', 'backendUrl', 'imagesUrl', 'selectedCar' ] )
 
 // date picker
 const datePicker = ref(null)
-const displayAllCarsReservations = ref(false)
 const showBookingForm = ref(false)
+
 
 // id of the current booking being edited or viewed
 const bookingIdEdit = ref(null)
@@ -263,9 +271,8 @@ async function refreshBookingDatesAndContent() {
   // load the reservations (backend) of the week being viewed
   // *********************************************************************************************************************************
 
-  let selectedCar = displayAllCarsReservations ? '-1' : '1';
   try {
-      let _route_ = `${props.backendUrl}/bookings/${props.currentCountry}/${selectedCar}/${__firstDayWeek}/${__lastDayWeek}`
+      let _route_ = `${props.backendUrl}/bookings/${props.currentCountry}/${props.selectedCar}/${__firstDayWeek}/${__lastDayWeek}`
       await fetch(_route_, {method: 'GET'})
 
       .then( (response) => {

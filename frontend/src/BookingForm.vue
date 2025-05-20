@@ -21,10 +21,9 @@
       </div>
 
       <div class='flex flex-row '>
-          <div class='bg-icon-div-draggable w-7 bg-transparent bg-no-repeat bg-contain bg-center mr-6 containsTooltip'   >
+          <div id='divWINDOW_DRAG' class='mr-8'   >
             &nbsp;
           </div>
-
 
           <div class='divWINDOW_BUTTON mr-2'  aria-hidden="true" @click='userNeedsHelp' >
             &nbsp;&nbsp;[ ? ]&nbsp;&nbsp;
@@ -41,7 +40,7 @@
     <div class="flex flex-col w-full h-auto  px-4 my-6 " >
 
       <!-- pick up/drop off date/time, driver name -->
-      <div class="flex flex-row w-full gap-[10px] border-b-2 pb-1">
+      <div class="flex flex-row w-full gap-[10px] border-b-2 pb-4">
 
           <!-- pick up date/time -->
         <div class="flex flex-col w-[calc(40%-10px)] ">
@@ -151,7 +150,7 @@
 
     <!-- botoes salvar/sair -->
     <div class="flex flex-row w-full justify-between px-6 border-t-[1px] border-t-gray-300 py-2">
-      <button  id="btnCLOSE" class="btnCANCEL" @click="this.$emit('closeBookingForm')" >{{ expressions.button_cancel }}</button>
+      <button  id="btnCLOSE" class="btnCANCEL" @click="emit('closeBookingForm')" >{{ expressions.button_cancel }}</button>
 
       <button  id="btnSAVE" class="btnSAVE" @click="performSaveBookingRecord()" aria-hidden="true">{{ expressions.button_book_car }}</button>
     </div>
@@ -166,7 +165,7 @@
 
 <script setup>
 import { onMounted  } from 'vue';
-import { slidingMessage, dateToIsoStringConsideringLocalUTC, formatDate  } from './assets/js/utils.js'
+import { makeWindowDraggable, slidingMessage, dateToIsoStringConsideringLocalUTC, formatDate  } from './assets/js/utils.js'
 const emit = defineEmits( ['showLoading', 'hideLoading', 'closeBookingForm'] );
 
 import moment from 'moment';
@@ -253,6 +252,8 @@ const putFocusInFirstInputText_AndOthersParticularitiesOfTheBookingForm = () => 
   setTimeout(() => {
     $('#txtPickUpDate').focus()    
   }, 500);
+
+  makeWindowDraggable('divWINDOW_TOP', 'bookingRecordForm')
 }
 
 

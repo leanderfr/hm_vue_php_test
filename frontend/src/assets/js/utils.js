@@ -173,9 +173,15 @@ const formatDate = (date) => {
     return ([year, month, day].join('-') + ' '+hours+':'+minutes)
 }
 
+/***********************************************************************************************************************
+ faz uma janela ser arrastavel usando o getAndShowCarDetails
+***********************************************************************************************************************/
+const makeWindowDraggable = (title_id, window_id) => {
+  $(`#${window_id}`).draggable({ handle: `#${title_id}`, containment: '#backDrop' });
+}
+
+
 //********************************************************************************************************************************
 //*******************************************************************************************************************************
-
-
-export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter, 
+export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter, makeWindowDraggable, 
       hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC, formatDate };
