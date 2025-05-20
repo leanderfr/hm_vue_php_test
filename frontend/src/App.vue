@@ -84,6 +84,7 @@
   </div>
 
 
+
 </template>
 
 
@@ -93,11 +94,20 @@
   import CarsBrowser from './CarsBrowser.vue';
   import Schedule from './Schedule.vue';
 
+
   // some nice effects using jquery
   import 'jquery-ui-bundle';
   import 'jquery-ui-bundle/jquery-ui.min.css';
 
-  import { prepareLoadingAnimation, slidingMessage , preparePuppyIcon } from './js/utils.js'
+  import { prepareLoadingAnimation, slidingMessage , preparePuppyIcon } from './assets/js/utils.js'
+
+  $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.js", function() {}) 
+  $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.date.js", function() {}) 
+  $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/legacy.js", function() {}) 
+  $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/multiDraggable.js", function() {}) 
+  $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/maskDateHour.js", function() {}) 
+
+
 
   const forceScheduleRedraw = ref(0)  
   const isUSASelected = ref(true)

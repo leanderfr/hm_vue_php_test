@@ -88,7 +88,7 @@
 <script setup>
 
 import { onMounted, ref , onUpdated  } from 'vue';
-import { prepareLoadingAnimation, slidingMessage, counter, hourFormat  } from './js/utils.js'
+import { prepareLoadingAnimation, slidingMessage, counter, hourFormat  } from './assets/js/utils.js'
 import BookingForm from './BookingForm.vue';
 
 //const showLoading = defineEmits( ['showLoading'] );

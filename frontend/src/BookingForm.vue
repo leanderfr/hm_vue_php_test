@@ -166,7 +166,7 @@
 
 <script setup>
 import { onMounted  } from 'vue';
-import { slidingMessage, dateToIsoStringConsideringLocalUTC, formatDate  } from './js/utils.js'
+import { slidingMessage, dateToIsoStringConsideringLocalUTC, formatDate  } from './assets/js/utils.js'
 const emit = defineEmits( ['showLoading', 'hideLoading', 'closeBookingForm'] );
 
 import moment from 'moment';
