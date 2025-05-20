@@ -9,8 +9,8 @@ WORKDIR /app
 # copy both 'package.json' and 'package-lock.json' (if available)
 COPY package*.json ./
 
-COPY src/js /app/src/js
-COPY src/assets /app/src/assets
+#COPY src/js /app/src/js
+#COPY src/assets /app/src/assets
 
 # install project dependencies
 RUN npm install
@@ -23,6 +23,7 @@ RUN npm run build
 
 EXPOSE 8080
 CMD [ "http-server", "dist" ]
+
 
 # docker build -t hm_vue_php_frontend .
 
