@@ -106,8 +106,9 @@
   const isLoading = ref(true)
   const error = ref(null)
   // it changes depending if the app is running as a container (AWS EC2) or locally
-  const backendUrl = ref('https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine:8073/')  
+  const backendUrl = ref('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com:8073/')  
   //const backendUrl = ref('http://127.0.0.1')  
+
   const imagesUrl = ref('https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine/')  
 
 
