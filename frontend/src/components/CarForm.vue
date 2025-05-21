@@ -63,37 +63,11 @@
 
       </div>
 
-      <!-- 1a linha, data/hora retirada e devolucao veiculo, nome do motorista -->
-      <div class="flex flex-row w-full gap-[10px] h-[350px] items-end">
+      <!-- car's picture -->
+      <div class="flex flex-row w-full gap-[10px] h-[200px] items-end ">
+          <img id='carPicture'  alt='' style='width:400px;height:200px;border-white' >
+       </div>
 
-            <!-- putWhiteTooltip  nao temm propriedades CSS, é usado somente para endereçar TOOLTIP no jscript!   -->
-
-            <!-- logo fabricante, modelo carro, foto carro -->
-            <div class="flex w-[60%] h-full ">
-
-                  <div class="w-full flex  items-start  flex-col pt-3 pl-3 h-full   ">
-
-                      <!--  foto do carro --> 
-                      <div class="flex flex-row w-full h-[80%] justify-center "> 
-
-                          <div class="bg-no-repeat bg-center bg-contain w-full h-full items-center flex justify-center" id='carDetails_Picture'>
-                          
-<!--                                  {#if $imagesStillLoading} 
-                                  <img id='carDetails_Picture'  alt=''  class='gifImageLoading' src='loading.gif'>
-                              {/if}
--->
-
-
-                          </div>
-                          
-                      </div>
-
-                  </div>
-
-            </div>
-
-
-        </div>  
 
     </div>
 
@@ -119,7 +93,7 @@ const emit = defineEmits( ['showLoading', 'hideLoading', 'closeCarForm'] );
 
 import moment from 'moment';
 
-const props = defineProps( ['expressions', 'backendUrl', 'currentCountry', 'formHttpMethodApply', 'carIdEdit'] )
+const props = defineProps( ['expressions', 'backendUrl', 'currentCountry', 'formHttpMethodApply', 'recordIdSelected', 'imagesUrl'] )
 
 onMounted( () => {
   getCarFormPopulatedAndReady()
@@ -144,7 +118,7 @@ async function getCarFormPopulatedAndReady() {
     emit('showLoading')
 
     try {
-        let _route_ = `${props.backendUrl}/cars/${props.carIdEdit}`
+        let _route_ = `${props.backendUrl}/cars/${props.recordIdSelected}`
 
         await fetch(_route_, {method: 'GET'})
 
@@ -160,6 +134,9 @@ async function getCarFormPopulatedAndReady() {
           emit('hideLoading')
           $('#txtDescription').val( car.description )
           $('#txtPlate').val( car.plate )
+
+console.log('xxx='+props.imagesUrl + '-'+car.car_image)
+          $('#carPicture').attr('src', props.imagesUrl + car.car_image )
 
           putFocusInFirstInputText_AndOthersParticularitiesOfTheCarForm() 
         })
@@ -221,7 +198,7 @@ async function  performSaveCarRecord()  {
   if (props.formHttpMethodApply=='POST') 
     route += 'car'        
   if (props.formHttpMethodApply=='PATCH') 
-    route += `car/${props.carIdEdit}`   
+    route += `car/${props.recordIdSelected}`   
 
   // formHttpMethodApply= POST, PATCH ou DELETE
   setTimeout(() => {

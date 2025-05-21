@@ -111,12 +111,11 @@
                 </div>
           </div>
         </div>
-
       </div>
 
       <!-- car's picture -->
-      <div class="flex flex-row w-full gap-[10px] h-[200px] items-end">
-          <img id='carPicture'  alt='' style='width:400px;height:200px' >
+      <div class="flex flex-row w-full gap-[10px] h-[200px] items-end ">
+          <img id='carPicture'  alt='' style='width:400px;height:200px;border-white' >
        </div>
     </div>
 

@@ -58,7 +58,7 @@
 
                   <!-- the last column was printed above and the current record is active, now put the 3 action icons (edit, delete and change status) -->
                   <div v-if='index === columns.length-1 && record.active==1' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index" >
-                      <div className='actionIcon'  ><img alt='' @click='carIdEdit=record.id;showCarForm=true' src='../assets/images/edit.svg' /></div>
+                      <div className='actionIcon'  ><img alt='' @click='callRecordEdit(record.id)' src='../assets/images/edit.svg' /></div>
                       <div className='actionIcon'  ><img alt=''  src='../assets/images/delete.svg' /></div>
                       <div className='actionIcon' ><img alt='' src='../assets/images/activate.svg' /></div>
                   </div>   
@@ -83,7 +83,7 @@
     <CarForm 
         :expressions='expressions' 
         :backendUrl='props.backendUrl' 
-        :carIdEdit='carIdEdit'
+        :recordIdSelected='recordIdSelected'
         :imagesUrl='props.imagesUrl'
         :formHttpMethodApply = 'formHttpMethodApply'  
         @closeCarForm="showBookingForm=false" 
@@ -131,7 +131,7 @@ columns.push( {name: 'actions', width: '150px', title: '', id: 3} )
 
 
 // id of the current car being edited or viewed
-const carIdEdit = ref(null)
+const recordIdSelected = ref(null)
 
 // method being used with the booking form
 const formHttpMethodApply = ref(null)
@@ -191,5 +191,20 @@ async function fetchData() {
     slidingMessage('Fatal error= '+error, 3000)        
   })  
 }
+
+//***************************************************************************
+//*************************************************************************** 
+
+const callRecordEdit = (id) => {
+  recordIdSelected.value = id;
+
+  if (props.currentViewedDatatable === 'cars')   {  
+    showCarForm.value = true
+    formHttpMethodApply.value = 'PATCH'
+  }
+
+}
+
+
 
 </script>
