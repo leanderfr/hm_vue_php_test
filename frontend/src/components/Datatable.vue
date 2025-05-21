@@ -39,48 +39,37 @@
       </div>          
 
       <!-- display records from the current table -->
-      <div class="DatatableRows" v-for='record in records' :key="record"> 
+      <div v-if='records'>
+          <div  class="DatatableRows" v-for='record in records' :key="record"> 
 
-          <div :class="record.active ? 'DatatableRow' : 'DatatableRowInactiveRecord'" :key='record.id'  > 
-    
-            
-            <div v-if='j===length-1'>
+              <div :class="record.active ? 'DatatableRow' : 'DatatableRowInactiveRecord'"   >         
 
-                    <div v-if='record.active' className='actionColumn' :style="{width: col.width}"  >
-                        <div className='actionIcon'  ><img alt='' src='./assets/images/edit.svg' /></div>
-                        <div className='actionIcon'  ><img alt='' src='./assets/images/delete.svg' /></div>
-                        <div className='actionIcon' ><img alt='' src='./assets/images/activate.svg' /></div>
-                    </div>   
+                <template v-for='(column, index) in columns'   >         
 
-                    <div v-if='! record.active' className='actionColumn' :style="{width: col.width}"  >
-                        <div className='actionIconNull'>&nbsp;</div>
-                        <div className='actionIconNull'>&nbsp;</div>
-                        <div className='actionIcon' ><img alt='' src='./assets/images/activate.svg' /></div>
-                  </div> 
-              </div> 
+                  <div v-if='index < (columns.length-1)' :style="{width: column.width, paddingLeft: '5px'}" :key="'1tr-'+index"  >
+                    {{ record[column.fieldname] }}
+                  </div>
 
-              <div v-else>
-                  <div :style="{width: col.width, paddingLeft: '5px'}">Sim</div>
-              </div>
-    
+
+              </template>
             </div>
-
+          </div>
       </div>
 
-    </div>
-
   </div>
+</div>
 
 </template>
 
 
 <script setup>
 import { slidingMessage, forceHideTolltip  } from '../assets/js/utils.js'
-import { onMounted  } from 'vue';
+import { onMounted, ref  } from 'vue';
 
 const emit = defineEmits( ['showLoading', 'hideLoading','updateSelectedCar','setDatatableToDisplay','displaySchedule'] );
 const props = defineProps( ['currentViewedDatatable', 'currentCountry', 'backendUrl', 'imagesUrl', 'expressions' ] )
 
+const records = ref(null)  
 
 // colunas que serao exibidias dependendo da tabela sendo vista (_currentMenuItem)
 let columns = []
@@ -90,7 +79,8 @@ let title = ''
 
 if (props.currentViewedDatatable === 'cars')   {
   columns.push({ fieldname: "id", width: "5%", title: 'Id', id: 'col1', boolean: false },
-              { fieldname: "name", width: "calc(95% - 150px)", title: 'Nome', id: 'col2', boolean: false} )
+              { fieldname: "description", width: "calc(75% - 150px)", title: 'Nome', id: 'col2', boolean: false},
+              { fieldname: "plate", width: "20%", title: 'Nome', id: 'col2', boolean: false} )
   title = props.expressions.cars_table
 }
 
@@ -104,12 +94,12 @@ columns.push( {name: 'actions', width: '150px', title: '', id: 3} )
 
 onMounted( () => {
 
-  // the only way to make the 'bookingsTable' stop overflowing the parent div, was to put its height manually
+  // the only way to make the 'DatatableRows' stop overflowing the parent div, was to put its height manually
   // have no more time to make it with css now, but there may be a way with css
   // make this only once
   if ( $('.DatatableRows').height()=='0' ) {
-    let hgt1 = $('#scheduleToolbar').height() 
-    let hgt2 = $('#scheduleHeader').height()
+    let hgt1 = $('.datatableTitle').height() 
+    let hgt2 = $('#datatableToolbar').height()
     let hgtCONTAINER = $('#datatableContainer').height()
 
     $('.DatatableRows').height( hgtCONTAINER - hgt1 - hgt2 - 10)
@@ -126,8 +116,9 @@ onMounted( () => {
         position: { my: "left top", at: "left top-40", collision: "flipfit" }
       })
     }
-
   }, 500)    
+
+  fetchData()
 
 
 })
@@ -139,9 +130,7 @@ onMounted( () => {
 async function fetchData() {
   emit('showLoading')
 
-  let language = isUSASelected.value ? 'english' : 'portuguese';
-
-  await fetch(`${backendUrl.value}/${props.currentViewedDatatable}/${language}`)
+  await fetch(`${props.backendUrl}/${props.currentViewedDatatable}`)
 
   .then(response => {
     if (!response.ok) {
@@ -151,7 +140,7 @@ async function fetchData() {
   })
   .then((data) => {
     emit('hideLoading')
-    records = data;        
+    records.value = data;        
   })
   .catch((error) => {
     emit('hideLoading')

@@ -2122,12 +2122,14 @@ datatable main parts
 ****************************************************************************/
 
 .datatableTitle {
-  height: 30px;
+  height: 50px;
   font-size: 25px  ;
-  margin-bottom: 30px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  justify-items: center;
+  align-items: center;
+  padding-left:10px;
 }
 
 .datatableHeader {
@@ -2148,7 +2150,6 @@ datatable main parts
   width: 100%;
   color: black;
   align-items: center;
-  height: 100%;
   overflow: auto;
   border-bottom: solid 1px lightgray;
 }
