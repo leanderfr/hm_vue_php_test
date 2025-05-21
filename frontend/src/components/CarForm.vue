@@ -139,6 +139,8 @@ console.log('xxx='+props.imagesUrl + '-'+car.car_image)
           $('#carPicture').attr('src', props.imagesUrl + car.car_image )
 
           putFocusInFirstInputText_AndOthersParticularitiesOfTheCarForm() 
+
+
         })
 
 
