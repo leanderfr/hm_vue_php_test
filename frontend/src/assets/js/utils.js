@@ -174,14 +174,22 @@ const formatDate = (date) => {
 }
 
 /***********************************************************************************************************************
- faz uma janela ser arrastavel usando o getAndShowCarDetails
+make a div (window) be draggable
 ***********************************************************************************************************************/
 const makeWindowDraggable = (title_id, window_id) => {
   $(`#${window_id}`).draggable({ handle: `#${title_id}`, containment: '#backDrop' });
 }
 
+/***********************************************************************************************************************
+the jquery tooltip wont go away when user clicks on a div or button with a tooltip attached to it, 
+the code below solves this
+***********************************************************************************************************************/
+const forceHideTolltip = () => {
+  $('div[class^="ui-tooltip"]').remove();
+}
 
 //********************************************************************************************************************************
 //*******************************************************************************************************************************
 export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter, makeWindowDraggable, 
-      hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC, formatDate };
+      hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC, formatDate, forceHideTolltip };
+

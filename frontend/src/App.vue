@@ -52,7 +52,7 @@
             :backendUrl='backendUrl'    
             :imagesUrl = 'imagesUrl'
             :selectedCar='selectedCar'
-            @datatableToShow='datatableToShow'
+            @setDatatableToDisplay='setDatatableToDisplay'
             @showLoading="isLoading=true" 
             @hideLoading="isLoading=false" />
       </div>
@@ -61,7 +61,8 @@
       <div v-if='toDisplayDatatable' id='mainContainer'  >
 
         <Datatable
-            :datatableToDisplay='datatableToDisplay' 
+            :currentViewedDatatable = currentViewedDatatable
+            :setDatatableToDisplay='setDatatableToDisplay' 
             :expressions='expressions' 
             :currentCountry="isUSASelected ? 'usa' : 'brazil'" 
             :backendUrl='backendUrl'    
@@ -153,7 +154,7 @@
   const selectedCar = ref(0)
 
   // controls what datatable should be displayed
-  const datatableToDisplay = ref('')
+  const currentViewedDatatable = ref('')
 
   // controls if the schedule should be displayed
   const toDisplaySchedule = ref(true)
@@ -186,11 +187,11 @@
   //***************************************************************************
   //  user clicked in a given table in the schedule top bar
   //***************************************************************************
-  const datatableToShow = (datatable) => {
+  const setDatatableToDisplay = (datatable) => {
     toDisplaySchedule.value = false;
     toDisplayDatatable.value = true;
 
-    datatableToDisplay.value = datatable
+    currentViewedDatatable.value = datatable
   }
 
   //***************************************************************************

@@ -23,15 +23,15 @@
                 @click="emit('updateSelectedCar', 0)"  aria-hidden="true"></div>    
 
           <!-- back 1 week   -->
-          <div  class='btnBOOKING_LEFT_ARROW putPrettierTooltip'  :title="expressions.previous_week" @click="browseBookingCalendar(-7)" aria-hidden="true"></div>   
+          <div  class='btnBOOKING_LEFT_ARROW putPrettierTooltip'  :title="expressions.previous_week" @click="forceHideTolltip();browseBookingCalendar(-7)" aria-hidden="true"></div>   
           <!-- forward 1 week -->
-          <div  class='btnBOOKING_RIGHT_ARROW putPrettierTooltip' :title="expressions.next_week" @click="browseBookingCalendar(+7)" aria-hidden="true"></div>   
+          <div  class='btnBOOKING_RIGHT_ARROW putPrettierTooltip' :title="expressions.next_week" @click="forceHideTolltip();browseBookingCalendar(+7)" aria-hidden="true"></div>   
 
           <!-- cars table -->
-          <div  class='btnCARS_TABLE putPrettierTooltip' :title="expressions.cars" @click="emit('datatableToShow', 'cars')" aria-hidden="true"></div>   
+          <div  class='btnCARS_TABLE putPrettierTooltip' :title="expressions.cars" @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" aria-hidden="true"></div>   
 
           <!-- expressions table -->
-          <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' :title="expressions.expressions" @click="emit('datatableToShow', 'cars')" aria-hidden="true"></div>   
+          <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' :title="expressions.expressions" @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" aria-hidden="true"></div>   
 
       </div> 
 
@@ -96,12 +96,12 @@
 
 import { onMounted, ref , onUpdated  } from 'vue';
 import BookingForm from './BookingForm.vue';
-import { hourFormat, counter  } from './assets/js/utils.js'
+import { forceHideTolltip, hourFormat, counter  } from './assets/js/utils.js'
 
 //const showLoading = defineEmits( ['showLoading'] );
 //const hideLoading = defineEmits( ['hideLoading'] );
 
-const emit = defineEmits( ['showLoading', 'hideLoading','updateSelectedCar', 'datatableToShow'] );
+const emit = defineEmits( ['showLoading', 'hideLoading','updateSelectedCar', 'setDatatableToDisplay'] );
 
 const props = defineProps( ['expressions', 'currentCountry', 'backendUrl', 'imagesUrl', 'selectedCar' ] )
 
@@ -147,6 +147,7 @@ onMounted( () => {
   }, 500)    
 
 
+  // prepare de choose date button 
   $('.btnBOOKING_CALENDAR').on('click', function(event) {
     event.stopPropagation();
     datePicker.value.open();  
@@ -170,15 +171,15 @@ async function refreshBookingDatesAndContent() {
 
   emit('showLoading')
 
-  // the only way to make the 'bookingsTable' stop overflowing the parent div, was to put its height manually
+  // the only way to make the 'DatatableRows' stop overflowing the parent div, was to put its height manually
   // have no more time to make it with css now, but there may be a way with css
   // make this only once
-  if ( $('#bookingsTable').height()=='0' ) {
-    let hgt1 = $('#scheduleToolbar').height()
-    let hgt2 = $('#scheduleHeader').height()
-    let hgtCONTAINER = $('#scheduleContainer').height()
+  if ( $('.DatatableRows').height()=='0' ) {
+    let hgt1 = $('.datatableTitle').height()
+    let hgt2 = $('.datatableHeader').height()
+    let hgtCONTAINER = $('#datatableContainer').height()
 
-    $('#bookingsTable').height( hgtCONTAINER - hgt1 - hgt2 - 10)
+    $('.DatatableRows').height( hgtCONTAINER - hgt1 - hgt2 - 10)
   }
 
 
@@ -684,6 +685,8 @@ const newBookingRecord = (event, _id_) =>  {
 const closeBookingForm = () =>  {
   showBookingForm.value=false
 }
+
+
 
 
 
