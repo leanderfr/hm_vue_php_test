@@ -754,6 +754,18 @@ video {
   height: 100vh;
 }
 
+.h-\[10px\] {
+  height: 10px;
+}
+
+.h-\[20px\] {
+  height: 20px;
+}
+
+.h-\[1px\] {
+  height: 1px;
+}
+
 .max-h-full {
   max-height: 100%;
 }
@@ -2152,6 +2164,14 @@ datatable main parts
   align-items: center;
   overflow: auto;
   border-bottom: solid 1px lightgray;
+}
+
+#lavai {
+  display: flex;
+  flex-direction: column;
+  background-color: cyan;
+  width: 100%;
+  overflow-y: scroll;
 }
 
 .DatatableRow {

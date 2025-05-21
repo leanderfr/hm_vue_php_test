@@ -188,8 +188,33 @@ const forceHideTolltip = () => {
   $('div[class^="ui-tooltip"]').remove();
 }
 
+
+
+
+
+/*******************************************************************************/
+const divStillVisible = (div) => {
+    // Current distance from the top of the page
+    var windowScrollTopView = $(window).scrollTop();
+    
+    // Current distance from the top of the page, plus the height of the window
+    var windowBottomView = windowScrollTopView + $(window).height();
+ 
+    let $div = $('#'+div)
+    
+    // Element distance from top
+    var elemTop = $div.offset().top;
+            
+    let elemBottom = elemTop + $div.height()+60;
+   
+    
+    return ((elemBottom <= windowBottomView) && (elemTop >= windowScrollTopView ));
+}
+
+
+
 //********************************************************************************************************************************
 //*******************************************************************************************************************************
-export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter, makeWindowDraggable, 
+export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter, makeWindowDraggable, divStillVisible, 
       hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC, formatDate, forceHideTolltip };
 

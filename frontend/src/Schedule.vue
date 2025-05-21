@@ -1,4 +1,4 @@
-
+scheduleContainer
 <template>
 
   <div class='flex flex-col h-full ' id='scheduleContainer'>
@@ -52,7 +52,7 @@
     </div>
 
     <!-- loop to display times from 05:00 to 23:00  -->
-    <div class="w-full flex flex-col  overflow-y-scroll h-[0px]   border-gray-500 relative  border-2 " id='bookingsTable' alreadyFitToScreen='no'>  
+    <div class="w-full flex flex-col  overflow-y-scroll h-[1px]   border-gray-500 relative  border-2 " id='bookingsTable' alreadyFitToScreen='no'>  
 
       <div v-for="hour in counter(5, 23)" :key="hour" class="w-full flex flex-row  leading-[60px]  justify-center cursor-pointer border-b-2 border-gray-300 hover:bg-gray-100"  >
         <div class='w-[9%] tdBookingCell flex justify-center'>{{ hourFormat(hour, currentCountry) }}</div>
@@ -96,7 +96,7 @@
 
 import { onMounted, ref , onUpdated  } from 'vue';
 import BookingForm from './BookingForm.vue';
-import { forceHideTolltip, hourFormat, counter  } from './assets/js/utils.js'
+import { forceHideTolltip, hourFormat, counter, divStillVisible  } from './assets/js/utils.js'
 
 //const showLoading = defineEmits( ['showLoading'] );
 //const hideLoading = defineEmits( ['hideLoading'] );
@@ -169,29 +169,8 @@ let BookingCalendar_CurrentDate = _today_;
 
 async function refreshBookingDatesAndContent() { 
 
-console.log('exesssc...')
-
   emit('showLoading')
 
-  // the only way to make the 'DatatableRows' stop overflowing the parent div, was to put its height manually
-  // have no more time to make it with css now, but there may be a way with css
-  // make this only once
-  if ( $('#bookingsTable').attr('alreadyFitToScreen')=='no' ) {  
-    setTimeout(() => {
-      $('#bookingsTable').attr('alreadyFitToScreen', 'yes')
-
-    let hgt1 = $('#scheduleToolbar').height()
-    let hgt2 = $('#scheduleHeader').height()
-    let hgtCONTAINER = $('#scheduleContainer').height()
-
-    $('#bookingsTable').height( hgtCONTAINER - hgt1 - hgt2 - 10)
-
-    }, 500);
-
-  } 
-
-
-  
 
   // necessario abrir evento assincrono para exibir div ajax loading, caso contrario navegador nao atualiza a tela
   //setTimeout(() => {showLoadingGif(); }, 1);
@@ -407,6 +386,13 @@ console.log('exesssc...')
 
         // exibe as <div>'s de reserva 
         postItBookingDivs()
+
+        // strecth the div containing the records to the maximum
+        setTimeout(() => {
+            if( divStillVisible('bookingsTable') ) {
+              while ( divStillVisible('bookingsTable') ) { $('#bookingsTable').height( $('#bookingsTable').height()+5 );     }
+            }        
+        }, 300);
 
     })
 

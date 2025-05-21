@@ -40,7 +40,8 @@
 
       <!-- display records from the current table -->
       <div v-if='records'>
-          <div  class="DatatableRows" v-for='record in records' :key="record"> 
+        <div id='rowsContainer'>
+          <div  class="DatatableRows" v-for='record in records' :key="record" id="DatatableRows"> 
 
               <div :class="record.active ? 'DatatableRow' : 'DatatableRowInactiveRecord'"   >         
 
@@ -66,6 +67,7 @@
             </div>
           </div>
       </div>
+      </div>
 
   </div>
 </div>
@@ -74,7 +76,7 @@
 
 
 <script setup>
-import { slidingMessage, forceHideTolltip  } from '../assets/js/utils.js'
+import { slidingMessage, forceHideTolltip , divStillVisible } from '../assets/js/utils.js'
 import { onMounted, ref  } from 'vue';
 
 const emit = defineEmits( ['showLoading', 'hideLoading','updateSelectedCar','setDatatableToDisplay','displaySchedule'] );
@@ -88,9 +90,7 @@ let columns = []
 // car's datatable
 let title = ''
 
-console.log(1)
 if (props.currentViewedDatatable === 'cars')   {
-console.log(2)
   columns.push({ fieldname: "id", width: "5%", title: 'Id', id: 'col1', boolean: false },
               { fieldname: "description", width: "calc(75% - 150px)", title: props.expressions.description, id: 'col2', boolean: false},
               { fieldname: "plate", width: "20%", title: props.expressions.plate, id: 'col2', boolean: false} )
@@ -106,18 +106,7 @@ columns.push( {name: 'actions', width: '150px', title: '', id: 3} )
 //*****************************************************************************
 
 onMounted( () => {
-
-  // the only way to make the 'DatatableRows' stop overflowing the parent div, was to put its height manually
-  // have no more time to make it with css now, but there may be a way with css
-  // make this only once
-  if ( $('.DatatableRows').height()=='0' ) {
-    let hgt1 = $('.datatableTitle').height() 
-    let hgt2 = $('#datatableToolbar').height()
-    let hgtCONTAINER = $('#datatableContainer').height()
-
-    $('.DatatableRows').height( hgtCONTAINER - hgt1 - hgt2 - 10)
-  }
-
+    
 
   setTimeout( () => {
     // define tooltip of top buttons
@@ -154,6 +143,16 @@ async function fetchData() {
   .then((data) => {
     emit('hideLoading')
     records.value = data;        
+
+    // strecth the div containing the records to the maximum
+    setTimeout(() => {
+        if( divStillVisible('rowsContainer') ) {
+          while ( divStillVisible('rowsContainer') ) { $('#rowsContainer').height( $('#rowsContainer').height()+5 );     }
+        }        
+    }, 300);
+
+
+
   })
   .catch((error) => {
     emit('hideLoading')
