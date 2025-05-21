@@ -61,6 +61,7 @@
       <div v-if='toDisplayDatatable' id='mainContainer'  >
 
         <Datatable
+            :key='forceScheduleRedraw' 
             :currentViewedDatatable = currentViewedDatatable
             :setDatatableToDisplay='setDatatableToDisplay' 
             :expressions='expressions' 
