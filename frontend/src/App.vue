@@ -41,8 +41,10 @@
           @updateSelectedCar='updatedSelectedCar'            /> 
       </div>
 
+      <!-- mainContainer is the place where dynamic content is viewed/replaced/etc  -->
+
       <!-- display schedule only if theres at least 1 car and 1 expression  -->
-      <div v-if="cars.length!=0 && expressions.length!=0" class='mainContainer'  >
+      <div v-if="toDisplaySchedule && cars.length!=0 && expressions.length!=0" id='mainContainer'  >
         <Schedule 
             :key='forceScheduleRedraw' 
             :expressions='expressions' 
@@ -50,11 +52,25 @@
             :backendUrl='backendUrl'    
             :imagesUrl = 'imagesUrl'
             :selectedCar='selectedCar'
-            @updateSelectedCar='updatedSelectedCar'            
+            @datatableToShow='datatableToShow'
             @showLoading="isLoading=true" 
             @hideLoading="isLoading=false" />
-
       </div>
+
+      <!-- display datatable if user clicked in some type of record to list (cars or expressions)  -->
+      <div v-if='toDisplayDatatable' id='mainContainer'  >
+
+        <Datatable
+            :datatableToDisplay='datatableToDisplay' 
+            :expressions='expressions' 
+            :currentCountry="isUSASelected ? 'usa' : 'brazil'" 
+            :backendUrl='backendUrl'    
+            @showLoading="isLoading=true" 
+            @hideLoading="isLoading=false" 
+            @displaySchedule='displaySchedule'
+            :imagesUrl = 'imagesUrl' />
+      </div>
+
 
       <!-- footer toolbar   -->
       <div v-if="cars.length!=0 && expressions.length!=0" class='bottomToolbar'  >        
@@ -98,7 +114,7 @@
   import { ref, onMounted, watch  } from 'vue';
   import CarsBrowser from './CarsBrowser.vue';
   import Schedule from './Schedule.vue';
-
+  import Datatable from './components/Datatable.vue';
 
   // some nice effects using jquery
   import 'jquery-ui-bundle';
@@ -106,12 +122,19 @@
 
   import { prepareLoadingAnimation, slidingMessage , preparePuppyIcon } from './assets/js/utils.js'
 
-  // below, no time to solve why docker wont load locally, the solution was to load by sort of CDN, my own AWS repository
-  $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.js", function() {}) 
-  $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.date.js", function() {}) 
-  $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/legacy.js", function() {}) 
-  $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/multiDraggable.js", function() {}) 
-  $.getScript( "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/maskDateHour.js", function() {}) 
+  var scriptsToLoad = [
+      "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.js", 
+      "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.date.js",
+      "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/legacy.js",
+      "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/multiDraggable.js",
+      "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/maskDateHour.js"
+  ]
+
+  // load js files one after another, to avoid calling a function not loaded yet
+  loadScripts(scriptsToLoad).done(function() {
+      //console.log('read')
+  });
+
  
   const forceScheduleRedraw = ref(0)  
   const isUSASelected = ref(true)
@@ -119,22 +142,67 @@
   const cars = ref([])
   const isLoading = ref(true)
   const error = ref(null)
+
   // it changes depending if the app is running as a container (AWS EC2) or locally
-  //const backendUrl = ref('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com:8073')  
-  const backendUrl = ref('http://127.0.0.1')  
+  const backendUrl = ref('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com:8073')  
+  //const backendUrl = ref('http://127.0.0.1')  
 
   const imagesUrl = ref('https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine/')  
 
   // currently selected car (starts with -1= show schedule of all cars)
   const selectedCar = ref(0)
 
+  // controls what datatable should be displayed
+  const datatableToDisplay = ref('')
+
+  // controls if the schedule should be displayed
+  const toDisplaySchedule = ref(true)
+
+  // controls if some datatable should be displayed
+  const toDisplayDatatable = ref(false)
+
+
+
+
+
+  //******************************************************************************
+  // load js files one after another, to avoid calling a function not loaded yet
+  //******************************************************************************
+
+   function loadScripts(scripts) {
+       var promises = [];
+       scripts.forEach(function(script) {
+           promises.push($.getScript(script));
+       });
+       return $.when.apply($, promises);
+   }
 
   //***************************************************************************
   //***************************************************************************
   const updatedSelectedCar = (carId) => {
     selectedCar.value = carId
-console.log(selectedCar.value)
   }
+
+  //***************************************************************************
+  //  user clicked in a given table in the schedule top bar
+  //***************************************************************************
+  const datatableToShow = (datatable) => {
+    toDisplaySchedule.value = false;
+    toDisplayDatatable.value = true;
+
+    datatableToDisplay.value = datatable
+  }
+
+  //***************************************************************************
+  //  user clicked on the schedule button inside the datatalbe component
+  //***************************************************************************
+  const displaySchedule = () => {
+    toDisplaySchedule.value = true
+    toDisplayDatatable.value = false
+  }
+
+
+
 
   //***************************************************************************
   //***************************************************************************

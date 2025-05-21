@@ -1171,10 +1171,10 @@ video {
 }
 
 .bg-icon-calendar {
-  background-image: url("data:image/svg+xml,<svg width='54px' height='54px' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'> <path d='M52.618 13.061H12.142C9.20051 13.061 6.81598 15.4456 6.81598 18.387V47.501C6.81598 50.4425 9.20051 52.827 12.142 52.827H52.618C55.5595 52.827 57.944 50.4425 57.944 47.501V18.387C57.944 15.4456 55.5595 13.061 52.618 13.061Z' stroke='rgb(0,0,0)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M6.81598 24.423H57.944' stroke='rgb(0,0,0)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M21.018 10.22V15.901' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M43.742 10.22V15.901' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M13.714 34.22H19.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M13.714 42.22H19.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M29.713 34.22H35.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M45.714 34.22H51.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> </g></svg>");
+  background-image: url("data:image/svg+xml,<svg width='64px' height='64px' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' stroke='black'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'> <path d='M22 14V12C22 8.22876 22 6.34315 20.8284 5.17157C19.6569 4 17.7712 4 14 4H10C6.22876 4 4.34315 4 3.17157 5.17157C2 6.34315 2 8.22876 2 12V14C2 17.7712 2 19.6569 3.17157 20.8284C4.34315 22 6.22876 22 10 22H14' stroke='#1C274C' stroke-width='1.5' stroke-linecap='round'></path> <path opacity='0.5' d='M7 4V2.5' stroke='#1C274C' stroke-width='1.5' stroke-linecap='round'></path> <path opacity='0.5' d='M17 4V2.5' stroke='#1C274C' stroke-width='1.5' stroke-linecap='round'></path> <path opacity='0.5' d='M2 9H22' stroke='#1C274C' stroke-width='1.5' stroke-linecap='round'></path> <circle cx='18' cy='18' r='3' stroke='#1C274C' stroke-width='1.5'></circle> <path d='M20.5 20.5L22 22' stroke='#1C274C' stroke-width='1.5' stroke-linecap='round'></path> </g></svg>");
 }
 
-.bg-icon-div-car {
+.bg-icon-car {
   background-image: url("data:image/svg+xml,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' aria-hidden='true' role='img' class='iconify iconify--gis' preserveAspectRatio='xMidYMid meet' fill='black' stroke='black'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'><path d='M49.368 11.228c-11.646-.171-27.826.079-31.156 9.027l-8.184 19.204a2.85 2.85 0 0 0-1.37-.865l-3.296-.927a2.86 2.86 0 0 0-3.534 1.983l-1.72 6.104a2.86 2.86 0 0 0 1.983 3.535l3.297.927c.11.03.22.04.33.059c-.63 1.569-1.023 3.295-1.023 4.322v22.32c0 1.145.48 1.674 1.243 1.922v5.947a4.008 4.008 0 0 0 4.017 4.017H20.73a4.008 4.008 0 0 0 4.017-4.017v-5.729h50.504v5.729a4.01 4.01 0 0 0 4.018 4.017h10.775a4.01 4.01 0 0 0 4.019-4.017v-5.947c.763-.248 1.24-.777 1.24-1.922v-22.32c0-1.027-.393-2.753-1.022-4.322c.11-.018.22-.028.33-.06l3.297-.926a2.86 2.86 0 0 0 1.982-3.535l-1.717-6.104a2.861 2.861 0 0 0-3.536-1.983l-3.295.927a2.855 2.855 0 0 0-1.37.865l-8.185-19.204c-3.57-9.084-20.773-8.856-32.42-9.027zm33.358 29.444c.194.576-.386.96-.993.995c0 0-1.984.168-4.72.389c-2.082-4.864-6.92-8.292-12.525-8.292c-6.151 0-11.373 4.13-13.048 9.754c-.464.006-1.003.026-1.435.026c-10.596 0-31.738-1.877-31.738-1.877c-.607-.036-1.187-.419-.993-.995c8.142-24.821 8.385-22.955 32.275-22.694c23.891.26 24.03-1.513 33.177 22.694zm-18.238-2.217a8.886 8.886 0 0 1 7.447 3.991c-4.785.356-10.292.719-15.424.93a8.879 8.879 0 0 1 7.977-4.921zM9.407 46.511c.072.106.142.213.221.317h-.31zm5.294 6.234c2.096-.035 13.348 3.753 13.348 3.753c1.405.395 2.642 3.051 2.635 4.511c-.021 4.917-12.71 3.21-17.86 3.23a2.63 2.63 0 0 1-2.635-2.634V55.38c0-1.46 2.416-2.6 4.512-2.635zm70.598 0c2.096.034 4.512 1.175 4.512 2.635v6.225a2.63 2.63 0 0 1-2.635 2.635c-5.15-.02-17.839 1.686-17.86-3.23c-.007-1.46 1.23-4.117 2.635-4.512c0 0 11.252-3.788 13.348-3.753z' fill='black'></path></g></svg>");
 }
 
@@ -1182,7 +1182,7 @@ video {
   background-image: url("data:image/svg+xml,<svg width='24px' height='24px' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='rgb(0,0,0)'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'><line x1='32' y1='8' x2='32' y2='56'></line><line x1='56' y1='32' x2='8' y2='32'></line><polyline points='40 16 32 8 24 16'></polyline><polyline points='24 48 32 56 40 48'></polyline><polyline points='48 40 56 32 48 24'></polyline><polyline points='16 24 8 32 16 40'></polyline></g></svg>");
 }
 
-.bg-icon-div-expressions {
+.bg-icon-expressions {
   background-image: url("data:image/svg+xml,<svg width='24px' height='24px' viewBox='0 2 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'> <path opacity='0.5' d='M13 7L3 7' stroke='navy' stroke-width='1.5' stroke-linecap='round'></path> <path opacity='0.5' d='M10 12H3' stroke='navy' stroke-width='1.5' stroke-linecap='round'></path> <path opacity='0.5' d='M8 17H3' stroke='navy' stroke-width='1.5' stroke-linecap='round'></path> <path d='M11.3161 16.6922C11.1461 17.07 11.3145 17.514 11.6922 17.6839C12.07 17.8539 12.514 17.6855 12.6839 17.3078L11.3161 16.6922ZM16.5 7L17.1839 6.69223C17.0628 6.42309 16.7951 6.25 16.5 6.25C16.2049 6.25 15.9372 6.42309 15.8161 6.69223L16.5 7ZM20.3161 17.3078C20.486 17.6855 20.93 17.8539 21.3078 17.6839C21.6855 17.514 21.8539 17.07 21.6839 16.6922L20.3161 17.3078ZM19.3636 13.3636L20.0476 13.0559L19.3636 13.3636ZM13.6364 12.6136C13.2222 12.6136 12.8864 12.9494 12.8864 13.3636C12.8864 13.7779 13.2222 14.1136 13.6364 14.1136V12.6136ZM12.6839 17.3078L17.1839 7.30777L15.8161 6.69223L11.3161 16.6922L12.6839 17.3078ZM21.6839 16.6922L20.0476 13.0559L18.6797 13.6714L20.3161 17.3078L21.6839 16.6922ZM20.0476 13.0559L17.1839 6.69223L15.8161 7.30777L18.6797 13.6714L20.0476 13.0559ZM19.3636 12.6136H13.6364V14.1136H19.3636V12.6136Z' fill='navy'></path> </g></svg>");
 }
 
@@ -1192,6 +1192,10 @@ video {
 
 .bg-icon-right-arrow {
   background-image: url("data:image/svg+xml,<svg width='54px' height='54px' viewBox='0 -0.5 17 17' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='si-glyph si-glyph-arrow-thick-left' fill='rgb(0,0,0)' transform='rotate(180)'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'> <title>1210</title> <defs> </defs> <g stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'> <path d='M0.133,8.367 L6.073,13.713 C6.307,13.924 6.687,13.922 6.922,13.711 L6.927,9.983 L14.951,9.983 C15.504,9.983 15.951,9.544 15.951,9.001 L15.951,7.035 C15.951,6.492 15.504,6.053 14.951,6.053 L6.931,6.053 L6.936,2.243 C6.705,2.034 6.324,2.035 6.088,2.246 L0.134,7.603 C-0.099,7.816 -0.102,8.156 0.133,8.367 L0.133,8.367 Z' fill='rgb(128, 128, 128)' class='si-glyph-fill'> </path> </g> </g></svg>");
+}
+
+.bg-icon-schedule {
+  background-image: url("data:image/svg+xml,<svg width='54px' height='54px' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'> <path d='M52.618 13.061H12.142C9.20051 13.061 6.81598 15.4456 6.81598 18.387V47.501C6.81598 50.4425 9.20051 52.827 12.142 52.827H52.618C55.5595 52.827 57.944 50.4425 57.944 47.501V18.387C57.944 15.4456 55.5595 13.061 52.618 13.061Z' stroke='rgb(0,0,0)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M6.81598 24.423H57.944' stroke='rgb(0,0,0)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M21.018 10.22V15.901' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M43.742 10.22V15.901' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M13.714 34.22H19.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M13.714 42.22H19.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M29.713 34.22H35.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M45.714 34.22H51.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> </g></svg>");
 }
 
 .bg-auto {
@@ -1678,7 +1682,7 @@ input:checked + .slider_language:before {
   border-color: rgb(0 0 128 / var(--tw-border-opacity, 1));
 }
 
-.mainContainer {
+#mainContainer {
   display: flex;
   width: 100%;
   flex-grow: 1;
@@ -1804,7 +1808,7 @@ input:checked + .slider_language:before {
 }
 
 .btnCARS_TABLE {
-  /* icon-div-car is defined in tailwind.config.js */
+  /* icon-car is defined in tailwind.config.js */
   box-sizing: border-box;
   height: 3rem;
   width: 130px;
@@ -1825,7 +1829,7 @@ input:checked + .slider_language:before {
 }
 
 .btnEXPRESSIONS_TABLE {
-  /* icon-div-expressions is defined in tailwind.config.js */
+  /* icon-expressions is defined in tailwind.config.js */
   box-sizing: border-box;
   height: 3rem;
   width: 130px;
@@ -1841,6 +1845,27 @@ input:checked + .slider_language:before {
 }
 
 .btnEXPRESSIONS_TABLE:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity, 1));
+}
+
+.btnSCHEDULE_TABLE {
+  /* icon-schedule is defined in tailwind.config.js */
+  box-sizing: border-box;
+  height: 3rem;
+  width: 130px;
+  cursor: pointer;
+  border-radius: 0.375rem;
+  border-width: 2px;
+  border-color: transparent;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,<svg width='54px' height='54px' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'> <path d='M52.618 13.061H12.142C9.20051 13.061 6.81598 15.4456 6.81598 18.387V47.501C6.81598 50.4425 9.20051 52.827 12.142 52.827H52.618C55.5595 52.827 57.944 50.4425 57.944 47.501V18.387C57.944 15.4456 55.5595 13.061 52.618 13.061Z' stroke='rgb(0,0,0)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M6.81598 24.423H57.944' stroke='rgb(0,0,0)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M21.018 10.22V15.901' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M43.742 10.22V15.901' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M13.714 34.22H19.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M13.714 42.22H19.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M29.713 34.22H35.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> <path d='M45.714 34.22H51.047' stroke='rgb(66, 106, 178)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'></path> </g></svg>");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.btnSCHEDULE_TABLE:hover {
   --tw-border-opacity: 1;
   border-color: rgb(107 114 128 / var(--tw-border-opacity, 1));
 }
@@ -2092,6 +2117,94 @@ input[type="text"].text_formFieldValue:focus {
   border-color: green;
 }
 
+/****************************************************************************
+datatable main parts
+****************************************************************************/
+
+.datatableTitle {
+  height: 30px;
+  font-size: 25px  ;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.datatableHeader {
+  display: flex;
+  flex-direction: row;
+  background-color: black;
+  width: 100%;
+  color: white;
+  height: 40px;
+  align-items: center;
+  padding-left:10px;
+}
+
+.DatatableRows {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 100%;
+  color: black;
+  align-items: center;
+  height: 100%;
+  overflow: auto;
+  border-bottom: solid 1px lightgray;
+}
+
+.DatatableRow {
+  display: flex;
+  flex-direction: row;
+  width:100%;
+  cursor: pointer;
+  line-height: 40px;
+}
+
+.DatatableRow:hover {
+  background-color:  #FFC266
+}
+
+.actionColumn {
+  display: flex;
+  flex-direction: row;
+  padding-left: 5px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.actionIcon {
+  border: solid 1px transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:100%;
+  flex:1;
+}
+
+.actionIconNull {
+  border: solid 1px transparent;
+  display: flex;
+  height:100%;
+  flex:1;
+}
+
+.actionIcon:hover {
+  border: solid 1px navy;
+}
+
+/****************************************************************************
+****************************************************************************/
+
+.crudForm {
+  width: auto;
+  height: auto;
+  border: solid 1x gray;
+  border-radius: 5px;
+  background-color: white;
+  display:flex;
+}
+
 .hover\:border-2:hover {
   border-width: 2px;
 }
@@ -2120,5 +2233,6 @@ input[type="text"].text_formFieldValue:focus {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
 }
+
 
 

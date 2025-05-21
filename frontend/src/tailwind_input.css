@@ -227,7 +227,7 @@ align-items: center;
 
 
 
-.mainContainer {
+#mainContainer {
 @apply flex flex-col w-full grow 
 }
 .appBody {
@@ -243,7 +243,7 @@ align-items: center;
 .btnBOOKING_CALENDAR {
     /* icon-left-arrow is defined in tailwind.config.js */
     @apply cursor-pointer w-[130px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
-        bg-icon-calendar  bg-contain bg-center hover:border-gray-500 h-12;
+        bg-icon-schedule  bg-contain bg-center hover:border-gray-500 h-12;
 }
 
 .btnBOOKING_ALL_CARS {
@@ -270,16 +270,23 @@ align-items: center;
 }
 
 .btnCARS_TABLE {
-    /* icon-div-car is defined in tailwind.config.js */
+    /* icon-car is defined in tailwind.config.js */
     @apply cursor-pointer w-[130px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
-        bg-icon-div-car  bg-contain bg-center hover:border-gray-500 h-12;
+        bg-icon-car  bg-contain bg-center hover:border-gray-500 h-12;
 }
 
 .btnEXPRESSIONS_TABLE {
-    /* icon-div-expressions is defined in tailwind.config.js */
+    /* icon-expressions is defined in tailwind.config.js */
     @apply cursor-pointer w-[130px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
-        bg-icon-div-expressions  bg-contain bg-center hover:border-gray-500 h-12;
+        bg-icon-expressions  bg-contain bg-center hover:border-gray-500 h-12;
 }
+
+.btnSCHEDULE_TABLE {
+    /* icon-schedule is defined in tailwind.config.js */
+    @apply cursor-pointer w-[130px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
+        bg-icon-schedule  bg-contain bg-center hover:border-gray-500 h-12;
+}
+
 
 
 .tdBookingHeader {
@@ -452,5 +459,90 @@ input[type="text"].text_formFieldValue:focus {
     background-color: #ffffcc;
     border-color: green;
 }
+
+/****************************************************************************
+datatable main parts
+****************************************************************************/
+.datatableTitle {
+height: 30px;
+font-size: 25px  ;
+margin-bottom: 30px;
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+}
+.datatableHeader {
+  display: flex;
+  flex-direction: row;
+  background-color: black;
+  width: 100%;
+  color: white;
+  height: 40px;
+  align-items: center;
+  padding-left:10px;
+}
+
+.DatatableRows {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 100%;
+  color: black;
+  align-items: center;
+  height: 100%;
+  overflow: auto;
+  border-bottom: solid 1px lightgray;
+}
+
+.DatatableRow {
+  display: flex;
+  flex-direction: row;
+  width:100%;
+  cursor: pointer;
+  line-height: 40px;
+}
+.DatatableRow:hover {
+background-color:  #FFC266
+}
+.actionColumn {
+display: flex;
+flex-direction: row;
+padding-left: 5px;
+justify-content: space-between;
+align-items: center;
+}
+.actionIcon { 
+border: solid 1px transparent;
+display: flex;
+justify-content: center;
+align-items: center;
+height:100%;
+flex:1;
+}
+.actionIconNull { 
+border: solid 1px transparent;
+display: flex;
+height:100%;
+flex:1;
+}
+
+.actionIcon:hover { 
+border: solid 1px navy;
+}
+
+/****************************************************************************
+****************************************************************************/
+
+
+.crudForm {
+width: auto;
+height: auto;
+border: solid 1x gray;
+border-radius: 5px;
+background-color: white;
+display:flex;
+
+}
+
 
 

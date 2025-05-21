@@ -28,10 +28,10 @@
           <div  class='btnBOOKING_RIGHT_ARROW putPrettierTooltip' :title="expressions.next_week" @click="browseBookingCalendar(+7)" aria-hidden="true"></div>   
 
           <!-- cars table -->
-          <div  class='btnCARS_TABLE putPrettierTooltip' :title="expressions.cars" @click="browseBookingCalendar(+7)" aria-hidden="true"></div>   
+          <div  class='btnCARS_TABLE putPrettierTooltip' :title="expressions.cars" @click="emit('datatableToShow', 'cars')" aria-hidden="true"></div>   
 
           <!-- expressions table -->
-          <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' :title="expressions.expressions" @click="browseBookingCalendar(+7)" aria-hidden="true"></div>   
+          <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' :title="expressions.expressions" @click="emit('datatableToShow', 'cars')" aria-hidden="true"></div>   
 
       </div> 
 
@@ -101,7 +101,7 @@ import { hourFormat, counter  } from './assets/js/utils.js'
 //const showLoading = defineEmits( ['showLoading'] );
 //const hideLoading = defineEmits( ['hideLoading'] );
 
-const emit = defineEmits( ['showLoading', 'hideLoading','updateSelectedCar'] );
+const emit = defineEmits( ['showLoading', 'hideLoading','updateSelectedCar', 'datatableToShow'] );
 
 const props = defineProps( ['expressions', 'currentCountry', 'backendUrl', 'imagesUrl', 'selectedCar' ] )
 
