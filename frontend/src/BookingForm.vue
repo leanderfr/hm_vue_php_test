@@ -44,7 +44,7 @@
 
           <!-- pick up date/time -->
         <div class="flex flex-col w-[calc(40%-10px)] ">
-          <div class="flex flex-row w-full  ">  
+          <div class="flex flex-row w-full pb-2 ">  
             <div class='w-[69%]'>{{ expressions.pick_up_car }}:</div>
             <div class='w-[30%]'>{{ expressions._hour_ }}</div>
           </div>
@@ -53,7 +53,7 @@
 
               <div class="flex w-[70%] pr-3">  
                 
-                  <!-- data -->
+                  <!-- date -->
                   <div class='flex flex-col w-full'  >
                       <div class='flex flex-row w-full' >
                         <input type="text" autocomplete="off" sequence="1"   id="txtPickUpDate" :placeholder='expressions.date_placeholder'  maxlength='10' class='text_formFieldValue w-full' @focus="$event.target.select()" >  
@@ -62,7 +62,7 @@
 
               </div>
 
-              <!-- hora -->
+              <!-- hour -->
               <div class="flex w-[30%]">  
                 <div class='flex flex-col w-full'  >
                   <input type="text" autocomplete="off" sequence="2"  id="txtPickUpHour" :placeholder='expressions.hour_placeholder' maxlength='8' class='text_formFieldValue w-full' @focus="$event.target.select()" >
@@ -72,10 +72,10 @@
           </div>
         </div>
 
-          <!-- data/hora devolucao do veiculo -->
+          <!-- dropoff datetime  -->
         <div class="flex flex-col w-[calc(40%-10px)]">
 
-          <div class="flex flex-row w-full  ">  
+          <div class="flex flex-row w-full pb-2 ">  
             <div class='w-[69%]'>{{ expressions.drop_off_car }}:</div>
             <div class='w-[30%]'>{{ expressions._hour_ }}</div>
           </div>
@@ -83,7 +83,7 @@
 
                 <div class="flex w-[70%]  pr-3">  
 
-                    <!-- data -->
+                    <!-- date -->
                     <div class='flex flex-col w-full'  >
                         <div class='flex flex-row w-full' >
                             <input type="text" autocomplete="off" sequence="3"  id="txtDropOffDate" :placeholder='expressions.date_placeholder' maxlength='10' class='text_formFieldValue w-full' @focus="$event.target.select()" >
@@ -92,7 +92,7 @@
 
                 </div>  
 
-                <!-- hora -->
+                <!-- time -->
                 <div class="flex w-[30%]">  
                   <div class='flex flex-col w-full'  >
                       <input type="text" autocomplete="off" sequence="4"  id="txtDropOffHour" :placeholder='expressions.hour_placeholder' maxlength='5' class='text_formFieldValue w-full' @focus="$event.target.select()" >
@@ -102,10 +102,10 @@
           </div>
         </div>
 
-        <!-- nome motorista -->
-        <div class="flex flex-col w-[20%]">
-          <div class='w-full'>{{ expressions.driver_name }}:</div>
-          <div class="flex flex-row w-full">  
+        <!-- drivers name -->
+        <div class="flex flex-col w-[20%] ">
+          <div class='w-full pb-2'>{{ expressions.driver_name }}:</div>
+          <div class="flex flex-row w-full ">  
                 <div class="flex flex-col w-full">  
                   <input type="text" autocomplete="off" sequence="5"  id="txtDriverName" maxlength='50' class='text_formFieldValue w-full' @focus="$event.target.select()" >
                 </div>
@@ -114,41 +114,13 @@
 
       </div>
 
-      <!-- 1a linha, data/hora retirada e devolucao veiculo, nome do motorista -->
-      <div class="flex flex-row w-full gap-[10px] h-[350px] items-end">
-
-            <!-- putWhiteTooltip  nao temm propriedades CSS, é usado somente para endereçar TOOLTIP no jscript!   -->
-
-            <!-- logo fabricante, modelo carro, foto carro -->
-            <div class="flex w-[60%] h-full ">
-
-                  <div class="w-full flex  items-start  flex-col pt-3 pl-3 h-full   ">
-
-                      <!--  foto do carro --> 
-                      <div class="flex flex-row w-full h-[80%] justify-center "> 
-
-                          <div class="bg-no-repeat bg-center bg-contain w-full h-full items-center flex justify-center" id='carDetails_Picture'>
-                          
-<!--                                  {#if $imagesStillLoading} 
-                                  <img id='carDetails_Picture'  alt=''  class='gifImageLoading' src='loading.gif'>
-                              {/if}
--->
-
-
-                          </div>
-                          
-                      </div>
-
-                  </div>
-
-            </div>
-
-
-        </div>  
-
+      <!-- car's picture -->
+      <div class="flex flex-row w-full gap-[10px] h-[200px] items-end">
+          <img id='carPicture'  alt='' style='width:400px;height:200px' >
+       </div>
     </div>
 
-    <!-- botoes salvar/sair -->
+    <!-- save / cancel buttons -->
     <div class="flex flex-row w-full justify-between px-6 border-t-[1px] border-t-gray-300 py-2">
       <button  id="btnCLOSE" class="btnCANCEL" @click="emit('closeBookingForm')" >{{ expressions.button_cancel }}</button>
 
@@ -170,7 +142,7 @@ const emit = defineEmits( ['showLoading', 'hideLoading', 'closeBookingForm'] );
 
 import moment from 'moment';
 
-const props = defineProps( ['expressions', 'backendUrl', 'currentCountry', 'formHttpMethodApply', 'bookingIdEdit'] )
+const props = defineProps( ['expressions', 'backendUrl', 'currentCountry', 'formHttpMethodApply', 'bookingIdEdit', 'imagesUrl'] )
 
 onMounted( () => {
   getBookingFormPopulatedAndReady()
@@ -215,9 +187,10 @@ async function getBookingFormPopulatedAndReady() {
           $('#txtDropOffHour').val( booking.dropoff_hour )
           $('#txtDriverName').val( booking.driver_name )
 
+          $('#carPicture').attr('src', props.imagesUrl + booking.car_image )
+
           putFocusInFirstInputText_AndOthersParticularitiesOfTheBookingForm() 
         })
-
 
     } 
     catch(err) {
@@ -261,7 +234,7 @@ const putFocusInFirstInputText_AndOthersParticularitiesOfTheBookingForm = () => 
 
 
 /********************************************************************************************************************************************************
- valida dados do formulario e se tudo ok, tenta gravar
+ validate data from the form and if its ok, try to save it
 ********************************************************************************************************************************************************/
 async function  performSaveBookingRecord()  {
 

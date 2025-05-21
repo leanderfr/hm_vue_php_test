@@ -30,7 +30,7 @@
 
       <div class='datatableTitle' >
         <div style='padding-left:10px'> {{ title }} </div>
-        <div style='padding-top: 10px; padding-right:20px;font-size: 14px'>Legenda: <span style=' background-color: red'>&nbsp;&nbsp;&nbsp;</span>= {{expressions.inactive}}</div>
+        <div style='padding-top: 10px; padding-right:20px;font-size: 14px'>{{expressions.legend}}: <span style=' background-color: red'>&nbsp;&nbsp;&nbsp;</span>= {{expressions.inactive}}</div>
       </div>
 
       <!-- loop to display each column -->
@@ -43,24 +43,31 @@
         <div id='rowsContainer'>
           <div  class="DatatableRows" v-for='record in records' :key="record" id="DatatableRows"> 
 
+              <!-- if the record status= true (activate), row will be normal color, otherwise (inactive), color will be red -->
               <div :class="record.active ? 'DatatableRow' : 'DatatableRowInactiveRecord'"   >         
 
+                <!-- loop through the columns -->
                 <template v-for='(column, index) in columns'   >         
 
-                  <div v-if='index < (columns.length-1)' :style="{width: column.width, paddingLeft: '15px'}" :key="'1tr-'+index"  >
+                  <div v-if='index < (columns.length-1)'  
+                      :style="{width: column.width, paddingLeft: '15px'}" 
+                      :key="'1tr-'+index" 
+                      :class="record.active==0 ? 'text-red-500 font-bold' : 'text-black'"  >
                     {{ record[column.fieldname] }}
                   </div>
 
-                  <div v-if='index === columns.length-1 && record.active' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index" >
-                      <div className='actionIcon'  ><img alt='' src='../assets/images/edit.svg' /></div>
-                      <div className='actionIcon'  ><img alt='' src='../assets/images/delete.svg' /></div>
+                  <!-- the last column was printed above and the current record is active, now put the 3 action icons (edit, delete and change status) -->
+                  <div v-if='index === columns.length-1 && record.active==1' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index" >
+                      <div className='actionIcon'  ><img alt='' @click='carIdEdit=record.id;showCarForm=true' src='../assets/images/edit.svg' /></div>
+                      <div className='actionIcon'  ><img alt=''  src='../assets/images/delete.svg' /></div>
                       <div className='actionIcon' ><img alt='' src='../assets/images/activate.svg' /></div>
                   </div>   
 
-                  <div v-if='index === columns.length-1 && ! record.active' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index"  >
+                  <!-- the last column was printed above and the current record is inactive, put only the icon to reactivate -->
+                  <div v-if='index === columns.length-1 && record.active==0' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index"  >
                       <div className='actionIconNull'>&nbsp;</div>
                       <div className='actionIconNull'>&nbsp;</div>
-                      <div className='actionIcon' ><img alt='' src='./assets/images/activate.svg' /></div>
+                      <div className='actionIcon' ><img alt='' src='../assets/images/activate.svg' /></div>
                   </div> 
 
               </template>
@@ -70,6 +77,23 @@
       </div>
 
   </div>
+
+
+  <div v-if="showCarForm" id='backDrop' class='w-full h-full  absolute flex items-center justify-center left-0 top-0 z-10 bg-[rgba(0,0,0,0.5)]' @click.self='showCarForm=false' aria-hidden="true"  >  
+    <CarForm 
+        :expressions='expressions' 
+        :backendUrl='props.backendUrl' 
+        :carIdEdit='carIdEdit'
+        :imagesUrl='props.imagesUrl'
+        :formHttpMethodApply = 'formHttpMethodApply'  
+        @closeCarForm="showBookingForm=false" 
+        @showLoading="emit('showLoading')" 
+        @hideLoading="emit('hideLoading')" 
+        @refreshDatatable = "refreshDatatable"   />
+  </div>
+
+
+
 </div>
 
 </template>
@@ -78,11 +102,16 @@
 <script setup>
 import { slidingMessage, forceHideTolltip , divStillVisible } from '../assets/js/utils.js'
 import { onMounted, ref  } from 'vue';
+import CarForm from './CarForm.vue';
 
 const emit = defineEmits( ['showLoading', 'hideLoading','updateSelectedCar','setDatatableToDisplay','displaySchedule'] );
 const props = defineProps( ['currentViewedDatatable', 'currentCountry', 'backendUrl', 'imagesUrl', 'expressions' ] )
 
+// records that are gonna be showed in the datatable
 const records = ref(null)  
+
+// controls if the edit form need to be opened
+const showCarForm = ref(false)  
 
 // colunas que serao exibidias dependendo da tabela sendo vista (_currentMenuItem)
 let columns = []
@@ -97,14 +126,20 @@ if (props.currentViewedDatatable === 'cars')   {
   title = props.expressions.cars_table
 }
 
-
 // ultima coluna, acoes (editar, excluir, etc)
 columns.push( {name: 'actions', width: '150px', title: '', id: 3} )
 
 
-//*****************************************************************************
-//*****************************************************************************
+// id of the current car being edited or viewed
+const carIdEdit = ref(null)
 
+// method being used with the booking form
+const formHttpMethodApply = ref(null)
+
+
+
+//*****************************************************************************
+//*****************************************************************************
 onMounted( () => {
     
 
@@ -121,10 +156,7 @@ onMounted( () => {
   }, 500)    
 
   fetchData()
-
-
 })
-
 
 
 //***************************************************************************
@@ -132,7 +164,7 @@ onMounted( () => {
 async function fetchData() {
   emit('showLoading')
 
-  await fetch(`${props.backendUrl}/${props.currentViewedDatatable}`)
+  await fetch(`${props.backendUrl}/${props.currentViewedDatatable}/all`)
 
   .then(response => {
     if (!response.ok) {

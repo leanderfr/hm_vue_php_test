@@ -77,6 +77,7 @@ scheduleContainer
           :backendUrl='backendUrl' 
           :currentCountry='currentCountry' 
           :bookingIdEdit='bookingIdEdit'
+          :imagesUrl='props.imagesUrl'
           :formHttpMethodApply = 'formHttpMethodApply'  
           @closeBookingForm="showBookingForm=false" 
           @showLoading="emit('showLoading')" 
@@ -109,7 +110,6 @@ const props = defineProps( ['expressions', 'currentCountry', 'backendUrl', 'imag
 const datePicker = ref(null)
 const showBookingForm = ref(false)
 
-
 // id of the current booking being edited or viewed
 const bookingIdEdit = ref(null)
 
@@ -119,9 +119,6 @@ const formHttpMethodApply = ref(null)
 // the post it <div> of the reservation can be moved or clicked, when it is being dragged, the variable 'draggingBookingDivYet', 
 // deactivate temporarely the 'click'  event
 let draggingBookingDivYet = false
-
-// the current record ID being viewed/edit
-let currentBookingFormRecordId
 
 
 

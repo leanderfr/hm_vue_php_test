@@ -272,7 +272,7 @@
   //***************************************************************************
   //*************************************************************************** 
   async function fetchCars() {
-    await fetch(`${backendUrl.value}/cars`)
+    await fetch(`${backendUrl.value}/cars/active`)
 
     .then(response => {
       if (!response.ok) {
