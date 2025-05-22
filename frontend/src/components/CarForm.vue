@@ -77,7 +77,7 @@
 
       <button  id="btnUPLOAD" class="btnUPLOAD" @click="console.log('clicou');fileCarImage.click()" >{{ expressions.upload_image }}</button>
 
-      <button  id="btnSAVE" class="btnSAVE" @click="performSaveCarRecord()" aria-hidden="true">{{ expressions.button_save }}</button>
+      <button  id="btnSAVE" class="btnSAVE" @click="saveCar()" aria-hidden="true">{{ expressions.button_save }}</button>
     </div>
 
     <!-- upload button, hidden and will be 'clicked' programtically when user clicks the upload button -->
@@ -203,7 +203,7 @@ const putFocusInFirstInputText_AndOthersParticularitiesOfTheCarForm = () => {
 /********************************************************************************************************************************************************
  validate dado data from the form and try to save it
 ********************************************************************************************************************************************************/
-async function  performSaveCarRecord()  {
+async function  saveCar()  {
 
   let toDo = props.formHttpMethodApply=='POST' ? 'insert' : 'update'
   let error = ''

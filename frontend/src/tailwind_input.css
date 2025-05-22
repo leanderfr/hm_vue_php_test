@@ -433,6 +433,12 @@ button.btnUPLOAD {
  bg-icon-button-upload  bg-auto bg-no-repeat  bg-position-left-corner-icon  pt-[2px] pl-9 rounded-[6px];
 }
 
+button.btnDELETE {
+    @apply bg-red-500 border-transparent border-[1px] text-white  text-center h-[30px] cursor-pointer w-auto  hover:border-red-950
+ bg-icon-button-delete  bg-auto bg-no-repeat  bg-position-left-corner-icon  pt-[2px] pl-9 rounded-[6px] px-[20px] min-w-[150px];
+}
+
+
 
 
 /****************************************************************************

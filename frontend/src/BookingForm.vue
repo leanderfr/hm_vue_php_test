@@ -123,7 +123,9 @@
     <div class="flex flex-row w-full justify-between px-6 border-t-[1px] border-t-gray-300 py-2">
       <button  id="btnCLOSE" class="btnCANCEL" @click="emit('closeBookingForm')" >{{ expressions.button_cancel }}</button>
 
-      <button  id="btnSAVE" class="btnSAVE" @click="performSaveBookingRecord()" aria-hidden="true">{{ expressions.button_book_car }}</button>
+      <button  id="btnDELETE" class="btnDELETE" @click="deleteBooking()" aria-hidden="true">{{ expressions.button_delete }}</button>
+
+      <button  id="btnSAVE" class="btnSAVE" @click="saveBooking()" aria-hidden="true">{{ expressions.button_book_car }}</button>
     </div>
 
 
@@ -170,7 +172,7 @@ onMounted( () => {
 //************************************************************************************************************************************************************
 //************************************************************************************************************************************************************
 const userNeedsHelp = () => {
-  slidingMessage(props.expressions.user_needs_help, 3000)
+  slidingMessage(props.expressions.user_needs_help, 2000)
 }
 
 
@@ -255,7 +257,7 @@ const putFocusInFirstInputText_AndOthersParticularitiesOfTheBookingForm = () => 
 /********************************************************************************************************************************************************
  validate data from the form and if its ok, try to save it
 ********************************************************************************************************************************************************/
-async function  performSaveBookingRecord()  {
+async function  saveBooking()  {
 
   let error = ''
 
@@ -324,7 +326,7 @@ async function  performSaveBookingRecord()  {
 
   // show any error detected
   if (error!='') {
-    slidingMessage(error, 3000)
+    slidingMessage(error, 2000)
     return;
   }
 
@@ -361,7 +363,7 @@ async function  performSaveBookingRecord()  {
   // drop off date must be greater than pick up
   let datesDifference = ( dropoffAlmostReady - pickupAlmostReady ) / 36e5;
   if (datesDifference < 0) {
-    slidingMessage(props.expressions.dropoff_greater_error, 3000)
+    slidingMessage(props.expressions.dropoff_greater_error, 2000)
     $('#txtDropOffDate').focus() 
     return
   }
@@ -374,7 +376,7 @@ async function  performSaveBookingRecord()  {
   let datesDifference2 = ( pickupAlmostReady - minimumDate ) / 36e5;
 
   if (datesDifference1 < 0 || datesDifference2 < 0) {
-    slidingMessage(props.expressions.booking_hour_advance, 3000)
+    slidingMessage(props.expressions.booking_hour_advance, 2000)
     $('#txtDropOffDate').focus() 
     return
   }
@@ -413,22 +415,58 @@ async function  performSaveBookingRecord()  {
     return response.text()
   })
   .then((msg) => {
-    slidingMessage(props.expressions.boooking_recorded, 3000)        
+    slidingMessage(props.expressions.booking_recorded, 2000)        
     emit('hideLoading')
     setTimeout(() => {
       emit('closeBookingForm')  
       emit('refreshBookingDatesAndContent')  
 
-    }, 3100);
+    }, 2100);
     
   })
   .catch((error) => {
     emit('hideLoading')
-    slidingMessage('Fatal error= '+error, 3000)        
+    slidingMessage('Fatal error= '+error, 2000)        
   })  
 
 }
 
+
+
+
+
+/********************************************************************************************************************************************************
+********************************************************************************************************************************************************/
+async function  deleteBooking()  {
+
+  setTimeout(() => {
+    emit('showLoading')    
+  }, 10);
+
+  await fetch(`${props.backendUrl}/booking/${props.bookingIdEdit}`, {method: 'DELETE'})
+
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    return response.text()
+  })
+  .then((msg) => {
+    slidingMessage(props.expressions.booking_deleted, 2000)        
+    emit('hideLoading')
+    setTimeout(() => {
+      emit('closeBookingForm')  
+      emit('refreshBookingDatesAndContent')  
+
+    }, 2100);
+    
+  })
+  .catch((error) => {
+    emit('hideLoading')
+    slidingMessage('Fatal error= '+error, 2000)        
+  })  
+
+}
 
 
 </script>
