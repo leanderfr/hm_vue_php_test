@@ -113,10 +113,16 @@ onMounted( () => {
  user changes the car image, updates img src in the preview div
 *******************************************************************************************************************************************************/
 const carImageChanged = async () =>  { 
-
 $('#carPicture').attr('src', window.URL.createObjectURL( document.getElementById('fileCarImage').files[0] )) 
-
 }
+
+/********************************************************************************************************************************************************
+reset content of the <img> to avoid problem with the onchange event
+*******************************************************************************************************************************************************/
+const resetImage = async () =>  { 
+$('#carPicture').attr('src', '')
+}
+
 
 //************************************************************************************************************************************************************
 //************************************************************************************************************************************************************
@@ -202,7 +208,6 @@ async function  performSaveCarRecord()  {
   let toDo = props.formHttpMethodApply=='POST' ? 'insert' : 'update'
   let error = ''
 
-  
   if ( $('#txtDescription').val().trim().length < 3 )  error = props.expressions.missing_car_description
   if ( $('#txtPlate').val().trim().length < 3 )  error = props.expressions.missing_driver_name
 

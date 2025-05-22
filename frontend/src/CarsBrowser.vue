@@ -7,7 +7,7 @@
     <template v-if='cars.length!=0' >
         <div class='carCard' :class='{carCardSelected: props.selectedCar==car.id}' v-for='car in cars' :key='car.id' 
             :style="{ 
-              backgroundImage: `url(https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine/car_${car.id}.png)` ,
+              backgroundImage: `url(https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine/car_${car.id}.png?${strToAvoidCache})` ,
               backgroundRepeat: 'no-repeat',
               backgroundSize: '140px 90px',
               backgroundPositionY: 'center'
@@ -30,6 +30,7 @@ import { slidingMessage } from './assets/js/utils.js'
 const props = defineProps( ['selectedCar', 'backendUrl'] )
 
 const cars = ref([])
+const strToAvoidCache = ref('')
 
 // user clicks a car card
 const emit = defineEmits(['setNewSelectedCar','hideLoading','showLoading']);
@@ -38,6 +39,8 @@ const emit = defineEmits(['setNewSelectedCar','hideLoading','showLoading']);
 //*****************************************************************************
 //*****************************************************************************
 onMounted( () => {
+  strToAvoidCache.value = (Math.random() + 1).toString(36).substring(7);
+    
   fetchCars();
 })
     

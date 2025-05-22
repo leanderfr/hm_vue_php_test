@@ -49,6 +49,7 @@
       <!-- display schedule only if theres at least 1 car and 1 expression  -->
       <!-- Schedule needs JS files ready  (neededJsLoaded) -->
       <div v-if="toDisplaySchedule && neededJsLoaded && expressions.length!=0" id='mainContainer'  >
+        <!-- if the user clicks in the 'NO FILTER' icon in the schedule screeen, setNewSelectedCar will be 0 -->
         <Schedule 
             :key='toRefreshSchedule' 
             :expressions='expressions' 
@@ -66,7 +67,7 @@
       <div v-if='toDisplayDatatable' id='mainContainer'  >
 
         <Datatable  
-            :key='toRefreshDatatable' 
+            :key='toRefreshDatatable'
             :currentViewedDatatable = currentViewedDatatable
             :setDatatableToDisplay='setDatatableToDisplay' 
             :expressions='expressions' 
@@ -178,7 +179,6 @@
   //***************************************************************************
   const setNewSelectedCar = (carId) => {
     selectedCar.value = carId
-    toRefreshSchedule.value++
   }
 
   //***************************************************************************
@@ -273,7 +273,7 @@
   // schedule based on the new car id
   //*************************************************************************** 
   watch([selectedCar], () => {
-    toRefreshDatatable.value++
+    toRefreshSchedule.value++
     },
     { immediate: false }
   )
