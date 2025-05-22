@@ -428,6 +428,12 @@ button.btnSAVE {
  bg-icon-button-save  bg-auto bg-no-repeat  bg-position-left-corner-icon  pt-[2px] pl-9 rounded-[6px];
 }
 
+button.btnUPLOAD {
+    @apply bg-gray-300 border-transparent border-[1px] text-black  text-center h-[30px] cursor-pointer w-[170px] hover:border-black
+ bg-icon-button-upload  bg-auto bg-no-repeat  bg-position-left-corner-icon  pt-[2px] pl-9 rounded-[6px];
+}
+
+
 
 /****************************************************************************
  input type text

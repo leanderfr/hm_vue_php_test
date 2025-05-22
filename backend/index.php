@@ -23,7 +23,7 @@ header("HTTP/1.0 200 OK");
 
 require 'setup.php';
 require 'functions.php';
-require 'aws/aws-autoloader.php';  // AWS S3 handler
+require __DIR__.'/vendor/autoload.php';
 require "Router.php";
 require "handlers/Expressions.php";  
 require "handlers/Cars.php";  

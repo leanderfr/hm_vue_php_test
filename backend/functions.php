@@ -1,5 +1,9 @@
 <?php
 
+use Aws\S3\S3Client;
+
+use Aws\S3\Exception\S3Exception as S3;
+
 //*********************************************************************************
 // informs the received route is incorrect
 //*********************************************************************************
@@ -143,6 +147,49 @@ function executeCrudQueryAndReturnResult($sql, $needToReturnId = false  ) {
 
   } catch(Exception $e)  {
     internalError( mysqli_error($dbConnection) );
+  }
+}
+
+
+//***********************************************************************
+// write car image file in the AWS S3 repository
+//***********************************************************************
+function uploadImageToAWS_S3($fileName, $recordId)  {
+
+  global $AWS_S3_APIKEY, $AWS_S3_SECRETKEY, $AWS_S3_BUCKET, $AWS_S3_IMAGES_FOLDER;
+
+  // file name locally written 
+  $localFile = "car_$recordId.png";
+
+  if (! move_uploaded_file( $_FILES[$fileName]['tmp_name'], $localFile))  
+    internalError( 'Image upload failed => '.$localFile);
+
+  
+try {
+    $s3Client = new S3Client([
+        'region' => 'sa-east-1',
+        'version' => 'latest',
+        'suppress_php_deprecation_warning' => true,
+        'credentials' => [
+            'key' => $AWS_S3_APIKEY,
+            'secret' => $AWS_S3_SECRETKEY
+        ]
+    ]);
+
+} catch(S3 $e) {
+    die('err='. $e->getMessage());
+ }
+
+  try {
+      $result = $s3Client->putObject([
+        'Bucket' => $AWS_S3_BUCKET,
+        'Key'    => "$AWS_S3_IMAGES_FOLDER/$localFile",
+        'Body'   => fopen($localFile, 'r'),
+
+      ]);
+  }
+  catch (S3Exception $e) {
+      internalError( $e->getMessage() );
   }
 
 }

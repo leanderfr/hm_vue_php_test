@@ -75,8 +75,15 @@
     <div class="flex flex-row w-full justify-between px-6 border-t-[1px] border-t-gray-300 py-2">
       <button  id="btnCLOSE" class="btnCANCEL" @click="emit('closeCarForm')" >{{ expressions.button_cancel }}</button>
 
+      <button  id="btnUPLOAD" class="btnUPLOAD" @click="console.log('clicou');fileCarImage.click()" >{{ expressions.upload_image }}</button>
+
       <button  id="btnSAVE" class="btnSAVE" @click="performSaveCarRecord()" aria-hidden="true">{{ expressions.button_save }}</button>
     </div>
+
+    <!-- upload button, hidden and will be 'clicked' programtically when user clicks the upload button -->
+    <input type="file" accept="image/png" style="width: 0px; height: 0px; overflow: hidden;"  @change='carImageChanged' ref="fileCarImage" id="fileCarImage" >
+
+
 
 
   </div> 
@@ -87,17 +94,29 @@
 
 
 <script setup>
-import { onMounted  } from 'vue';
+import { onMounted, ref  } from 'vue';
 import { makeWindowDraggable, slidingMessage, dateToIsoStringConsideringLocalUTC, formatDate  } from '../assets/js/utils.js'
 const emit = defineEmits( ['showLoading', 'hideLoading', 'closeCarForm','refreshDatatable'] );
 
 import moment from 'moment';
+
+const fileCarImage = ref(null)
 
 const props = defineProps( ['expressions', 'backendUrl', 'currentCountry', 'formHttpMethodApply', 'currentId', 'imagesUrl'] )
 
 onMounted( () => {
   getCarFormPopulatedAndReady()
 })
+
+
+/********************************************************************************************************************************************************
+ user changes the car image, updates img src in the preview div
+*******************************************************************************************************************************************************/
+const carImageChanged = async () =>  { 
+
+$('#carPicture').attr('src', window.URL.createObjectURL( document.getElementById('fileCarImage').files[0] )) 
+
+}
 
 //************************************************************************************************************************************************************
 //************************************************************************************************************************************************************
@@ -180,11 +199,15 @@ const putFocusInFirstInputText_AndOthersParticularitiesOfTheCarForm = () => {
 ********************************************************************************************************************************************************/
 async function  performSaveCarRecord()  {
 
+  let toDo = props.formHttpMethodApply=='POST' ? 'insert' : 'update'
   let error = ''
 
   
   if ( $('#txtDescription').val().trim().length < 3 )  error = props.expressions.missing_car_description
   if ( $('#txtPlate').val().trim().length < 3 )  error = props.expressions.missing_driver_name
+
+  // check if user has chosen any image when adding record
+  if (typeof $('#fileCarImage')[0].files[0]=='undefined' && toDo=='insert')   error = props.expressions.choose_an_image
 
 
   // show any error detected
@@ -196,6 +219,10 @@ async function  performSaveCarRecord()  {
   var formData = new FormData(); 
   formData.append('description', $('#txtDescription').val())
   formData.append('plate', $('#txtPlate').val())
+  // if user doenst choose image, the backend will bypass the update of the image
+  if (typeof $('#fileCarImage')[0].files[0]!='undefined')   
+    formData.append('image', $('#fileCarImage')[0].files[0]); 
+
 
   let route = ''
   if (props.formHttpMethodApply=='POST') 

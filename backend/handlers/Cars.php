@@ -77,7 +77,6 @@ class Cars
       http_response_code(500);   
       die( 'Method not allowed' );
     }
-
   	if ($car_id!='' && ! is_numeric($car_id))   routeError();
 
     // verify request
@@ -111,11 +110,31 @@ class Cars
       }
     }
 
+
+
     if ($dataError!='') internalError( $dataError );
 
-    $carId = $_POST['car_id'];
     $description =   $_POST['description'];
     $plate = $_POST['plate'];
+
+    // is image ok  
+    // the front end already checked if the user chose an image when adding record, what's impeditive to go on
+    // if the users didnt choose an image when updating record, bypass the image recording
+    $bypassImage = true;
+    if ( isset($_FILES['image']['tmp_name']) )  {
+      $imgInfo = getimagesize($_FILES['image']['tmp_name']);
+
+  //    if ($imgInfo === FALSE) 
+  //      internalError( 'File erro');
+
+      if ($imgInfo[2] !== IMAGETYPE_PNG) 
+        internalError( 'Image must be PNG');
+
+      if ($_FILES['image']['size'] > 1500000) 
+        internalError( 'Max size 1.5 MB');
+
+      $bypassImage = false;
+    }    
 
     // if no ID's been informed, its a POST, new record
     if ($car_id=='')    {
@@ -134,6 +153,11 @@ class Cars
 
     // execute query and get the ID of the just handled record (third param)
     $result = executeCrudQueryAndReturnResult($crudSql, true);    
+
+    // uploads the image to AWS S3
+    if (! $bypassImage)      {
+      uploadImageToAWS_S3('image', $car_id);
+    }
 
     http_response_code(200);   // 200= it was ok
     if ($dbOperation == 'update')   die( '__success__' );

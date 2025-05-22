@@ -11,13 +11,14 @@ $database = 'hiring_machine';
 $AWS_S3_APIKEY = 'AKIA5MSUBQX4PGLJV4NH';
 $AWS_S3_SECRETKEY = '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';
 $AWS_S3_BUCKET = 'devs-app';
-$AWS_S3_IMAGES_FOLDER= 'rentacar_images';
-$AWS_S3_URL = 'https://devs-app.s3.sa-east-1.amazonaws.com/rentacar_images/';
+$AWS_S3_IMAGES_FOLDER= 'hiring_machine';
+$AWS_S3_URL = 'https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine/';
 
 $LOCAL_TMP_FOLDER= '/tmp';
 
 // show errors when developing
-if ( strpos($_SERVER['HTTP_HOST'], 'localhost')!==false ) {
+if ( strpos($_SERVER['HTTP_HOST'], 'localhost')!==false ||
+  strpos($_SERVER['HTTP_HOST'], '127.0.0.1')!==false ) {
 
   ini_set('display_errors', '1');
   ini_set('display_startup_errors', '1');
