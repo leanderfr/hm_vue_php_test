@@ -5,7 +5,7 @@
 
     <!-- car images hosted in AWS S3 -->
     <template v-if='cars.length!=0' >
-        <div class='carCard' :class='{carCardSelected: props.selectedCar==car.id}' v-for='car in cars' :key='car.id' 
+        <div :id="'carCard' + car.id" class='carCard' :class='{carCardSelected: props.selectedCar==car.id}' v-for='car in cars' :key='car.id' 
             :style="{ 
               backgroundImage: `url(https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine/car_${car.id}.png?${strToAvoidCache})` ,
               backgroundRepeat: 'no-repeat',

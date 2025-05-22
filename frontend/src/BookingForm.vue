@@ -135,16 +135,36 @@
 
 
 <script setup>
-import { onMounted  } from 'vue';
+import { onMounted, ref  } from 'vue';
 import { makeWindowDraggable, slidingMessage, dateToIsoStringConsideringLocalUTC, formatDate  } from './assets/js/utils.js'
 const emit = defineEmits( ['showLoading', 'hideLoading', 'closeBookingForm'] );
 
 import moment from 'moment';
 
+// carId will be obtained from the currently (selected) carCard in the top of the window (carsBrowser)
+const carId = ref(null)
+
 const props = defineProps( ['expressions', 'backendUrl', 'currentCountry', 'formHttpMethodApply', 'bookingIdEdit', 'imagesUrl'] )
 
+//************************************************************************************************************************************************************
+//************************************************************************************************************************************************************
 onMounted( () => {
   getBookingFormPopulatedAndReady()
+
+  // if it's adding new booking, pull the image from the current selected car (carsBrowser) and put it in the booking form 
+  if (props.formHttpMethodApply=='POST'  ) {
+    // get the ID of the currently selected car (in component 'carsBrowser')
+    let currentCard = $('.carCardSelected').attr('id')
+
+    carId.value = currentCard.replace(/^\D+/g, '')   // numeric part   
+
+    // display in the booking form, the image thats being displayed along with the selected car (CarsBrowser)
+    let imgSrc = $('.carCardSelected').css('backgroundImage')
+    imgSrc = imgSrc.substring( imgSrc.indexOf("https://"),  imgSrc.lastIndexOf('")') )
+
+    $('#carPicture').attr('src', imgSrc )
+  }
+
 })
 
 //************************************************************************************************************************************************************
@@ -365,8 +385,11 @@ async function  performSaveBookingRecord()  {
   formData.append('pickup_datetime', formatDate(pickupAlmostReady))    //  iso8601 datetime format
   
   formData.append('driver_name', $('#txtDriverName').val())
-  formData.append('car_id', 1)
 
+  // get the ID of the currently selected car (in component 'carsBrowser')
+  // if it is update of the record carId.value will be null, doesnt need it
+  if (carId.value)  
+      formData.append('car_id', carId.value) 
 
   let route = ''
   if (props.formHttpMethodApply=='POST') 

@@ -13,7 +13,7 @@ scheduleContainer
       <!-- action buttons -->
       <div class="flex flex-row pt-1">
           <!-- new booking -->
-          <div  class='btnBOOKING_ADD_CAR_RESERVATION putPrettierTooltip'  :title="expressions.new_booking"   @click="forceHideTolltip();newBookingRecord" aria-hidden="true"></div>   
+          <div  class='btnBOOKING_ADD_CAR_RESERVATION putPrettierTooltip'  :title="expressions.new_booking"   @click="forceHideTolltip();newBookingRecord()" aria-hidden="true"></div>   
 
           <!-- display calendar -->
           <div  class='btnBOOKING_CALENDAR putPrettierTooltip' :title="expressions.choose_date" @click="forceHideTolltip();showCalendar=true" aria-hidden="true"></div>    
@@ -663,7 +663,6 @@ const editBookingRecord = (event, _id_) =>  {
  open booking form in blank to insert record
 ****************************************************************************************************/
 const newBookingRecord = (event, _id_) =>  {
-  event.stopPropagation();
   formHttpMethodApply.value = 'POST'
   bookingIdEdit.value = ''
 
