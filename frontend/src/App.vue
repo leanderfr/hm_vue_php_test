@@ -36,22 +36,25 @@
       <!-- horizontal cars browser -->
       <div class='carsBrowserContainer' v-if="cars.lenght!=0" >
         <CarsBrowser 
+          :key='toRefreshCarsBrowser' 
           :cars='cars'  
           :selectedCar='selectedCar' 
-          @updateSelectedCar='updatedSelectedCar'            /> 
+          @setNewSelectedCar='setNewSelectedCar'            /> 
       </div>
 
       <!-- mainContainer is the place where dynamic content is viewed/replaced/etc  -->
 
       <!-- display schedule only if theres at least 1 car and 1 expression  -->
-      <div v-if="toDisplaySchedule && cars.length!=0 && expressions.length!=0" id='mainContainer'  >
+      <!-- Schedule needs JS files ready  (neededJsLoaded) -->
+      <div v-if="toDisplaySchedule && neededJsLoaded && cars.length!=0 && expressions.length!=0" id='mainContainer'  >
         <Schedule 
-            :key='forceScheduleRedraw' 
+            :key='toRefreshSchedule' 
             :expressions='expressions' 
             :currentCountry="isUSASelected ? 'usa' : 'brazil'" 
             :backendUrl='backendUrl'    
             :imagesUrl = 'imagesUrl'
             :selectedCar='selectedCar'
+            @setNewSelectedCar='setNewSelectedCar'
             @setDatatableToDisplay='setDatatableToDisplay'
             @showLoading="isLoading=true" 
             @hideLoading="isLoading=false" />
@@ -60,16 +63,17 @@
       <!-- display datatable if user clicked in some type of record to list (cars or expressions)  -->
       <div v-if='toDisplayDatatable' id='mainContainer'  >
 
-        <Datatable
-            :key='forceScheduleRedraw' 
+        <Datatable  
+            :key='toRefreshDatatable' 
             :currentViewedDatatable = currentViewedDatatable
             :setDatatableToDisplay='setDatatableToDisplay' 
             :expressions='expressions' 
             :currentCountry="isUSASelected ? 'usa' : 'brazil'" 
             :backendUrl='backendUrl'    
             @showLoading="isLoading=true" 
-            @hideLoading="isLoading=false" 
-            @displaySchedule='displaySchedule'
+            @hideLoading="isLoading=false"     
+            @toDisplaySchedule='displaySchedule'   
+            @toRefreshCarsBrowser="console.log('ref'+toRefreshCarsBrowser);toRefreshCarsBrowser++"
             :imagesUrl = 'imagesUrl' />
       </div>
 
@@ -102,10 +106,7 @@
     <div class='_doggy_2' id='divDoggy_2'></div>
     <div v-if='isUSASelected' class='_doggy_3_english' id='divDoggy_3'></div>
     <div v-if='! isUSASelected' class='_doggy_3_portuguese' id='divDoggy_3'></div>
-
-
   </div>
-
 
 
 </template>
@@ -113,7 +114,7 @@
 
 <!-- composition API , way cleaner then options API -->
 <script setup>
-  import { ref, onMounted, watch  } from 'vue';
+  import { ref, onMounted, watch, onBeforeMount  } from 'vue';
   import CarsBrowser from './CarsBrowser.vue';
   import Schedule from './Schedule.vue';
   import Datatable from './components/Datatable.vue';
@@ -124,21 +125,13 @@
 
   import { prepareLoadingAnimation, slidingMessage , preparePuppyIcon } from './assets/js/utils.js'
 
-  var scriptsToLoad = [
-      "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.js", 
-      "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.date.js",
-      "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/legacy.js",
-      "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/multiDraggable.js",
-      "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/maskDateHour.js"
-  ]
 
-  // load js files one after another, to avoid calling a function not loaded yet
-  loadScripts(scriptsToLoad).done(function() {
-      //console.log('read')
-  });
+  const neededJsLoaded = ref(false)   
 
- 
-  const forceScheduleRedraw = ref(0)  
+  const toRefreshCarsBrowser = ref(0)  
+  const toRefreshDatatable = ref(0)  
+  const toRefreshSchedule = ref(0)  
+
   const isUSASelected = ref(true)
   const expressions = ref([])
   const cars = ref([])
@@ -151,16 +144,16 @@
 
   const imagesUrl = ref('https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine/')  
 
-  // currently selected car (starts with -1= show schedule of all cars)
+  // currently selected car (starts with 0= show schedule of all cars)
   const selectedCar = ref(0)
 
-  // controls what datatable should be displayed
+  // which datatable should be displayed (cars, expressions, etc)
   const currentViewedDatatable = ref('')
 
-  // controls if the schedule should be displayed
+  // if the schedule should be displayed
   const toDisplaySchedule = ref(true)
 
-  // controls if some datatable should be displayed
+  // if some datatable should be displayed
   const toDisplayDatatable = ref(false)
 
 
@@ -180,9 +173,11 @@
    }
 
   //***************************************************************************
+  // user changes current selected car in the CarsBrowser component
   //***************************************************************************
-  const updatedSelectedCar = (carId) => {
+  const setNewSelectedCar = (carId) => {
     selectedCar.value = carId
+    toRefreshSchedule.value++
   }
 
   //***************************************************************************
@@ -204,6 +199,26 @@
   }
 
 
+  //***************************************************************************
+  // load crucial js before anything
+  //***************************************************************************
+  onBeforeMount( () => {
+
+    var scriptsToLoad = [
+        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.js", 
+        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.date.js",
+        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/legacy.js",
+        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/multiDraggable.js",
+        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/maskDateHour.js"
+    ]
+
+    loadScripts(scriptsToLoad).done(function() {
+      neededJsLoaded.value=true
+    });
+
+
+
+  })
 
 
   //***************************************************************************
@@ -215,7 +230,8 @@
       };
 
 
-      // for now, I have no resolution to re(draw) components but refresh the whole window
+      // for now, when user resizes window, I have no solution but but refreshing the whole window
+      // if I had time I would make it responsive using sm md ld breakpoint modifiers of tailwind
       window.onresize = (event) => {
         setTimeout(() => {
           window.location.reload();  
@@ -228,19 +244,23 @@
       isLoading.value = true
 
       Promise.all( [fetchExpressions(), fetchCars()] ).then(() => {
-        isLoading.value = false
+          // here I wont close the loading animation, one of the components will do it - schedule or datatable, whichever finished loading first
+          //  isLoading.value = false        
       })
   })
 
   //***************************************************************************
   // if user changes current language, (re) fetch expressions (port/english)
+  // and force reload of impacted components 
   //*************************************************************************** 
-  watch([isUSASelected, selectedCar], () => {
+  watch([isUSASelected], () => { 
       isLoading.value = true;
 
       Promise.all( [fetchExpressions()] ).then(() => {
         isLoading.value = false
-        forceScheduleRedraw.value++;
+        // components that use expressions directly
+        toRefreshDatatable.value++
+        toRefreshSchedule.value++
       })        
     },
     { immediate: false }
@@ -248,8 +268,21 @@
 
 
   //***************************************************************************
+  // if user changes current car in cars browser, force refresh of 
+  // schedule based on the new car id
   //*************************************************************************** 
-  async function fetchExpressions() {
+  watch([selectedCar], () => {
+    toRefreshDatatable.value++
+    },
+    { immediate: false }
+  )
+
+
+
+
+  //***************************************************************************
+  //*************************************************************************** 
+  async function fetchExpressions()  {
     let language = isUSASelected.value ? 'english' : 'portuguese';
 
     await fetch(`${backendUrl.value}/expressions/${language}`)
@@ -282,6 +315,7 @@
     })
     .then((data) => {
       cars.value = data;        
+
     })
     .catch((error) => {
       isLoading.value = false;
@@ -311,7 +345,6 @@ const onKeyDown = (e) =>  {
   }
 
   
-
 
   // if user presses F2 or Esc, being any form edit screen opened
   if (e.which == 27 || e.which == 113)   { 

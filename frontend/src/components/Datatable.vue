@@ -16,7 +16,7 @@
           <div class="flex flex-row pt-1">
 
               <!-- schedule  -->
-              <div  class='btnSCHEDULE_TABLE putPrettierTooltip' :title="expressions.schedule" @click="forceHideTolltip();emit('displaySchedule')" aria-hidden="true"></div>   
+              <div  class='btnSCHEDULE_TABLE putPrettierTooltip' :title="expressions.schedule" @click="forceHideTolltip();emit('toDisplaySchedule')" aria-hidden="true"></div>   
 
               <!-- cars table -->
               <div  class='btnCARS_TABLE putPrettierTooltip' :title="expressions.cars" @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" aria-hidden="true"></div>   
@@ -58,16 +58,16 @@
 
                   <!-- the last column was printed above and the current record is active, now put the 3 action icons (edit, delete and change status) -->
                   <div v-if='index === columns.length-1 && record.active==1' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index" >
-                      <div className='actionIcon'  ><img alt='' @click='callRecordEdit(record.id)' src='../assets/images/edit.svg' /></div>
-                      <div className='actionIcon'  ><img alt=''  @click='callRecordDelete' src='../assets/images/delete.svg' /></div>
-                      <div className='actionIcon' ><img alt='' @click='callRecordChangeStatus(record.id)' src='../assets/images/activate.svg' /></div>
+                      <div className='actionIcon'  ><img alt='' @click='openEditForm(record.id)' src='../assets/images/edit.svg' /></div>
+                      <div className='actionIcon'  ><img alt=''  @click='deleteRecord' src='../assets/images/delete.svg' /></div>
+                      <div className='actionIcon' ><img alt='' @click='changeStatus(record.id)' src='../assets/images/activate.svg' /></div>
                   </div>   
 
                   <!-- the last column was printed above and the current record is inactive, put only the icon to reactivate -->
                   <div v-if='index === columns.length-1 && record.active==0' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index"  >
                       <div className='actionIconNull'>&nbsp;</div>
                       <div className='actionIconNull'>&nbsp;</div>
-                      <div className='actionIcon' ><img alt='' src='../assets/images/activate.svg' /></div>
+                      <div className='actionIcon' ><img alt='' @click='changeStatus(record.id)'  src='../assets/images/activate.svg' /></div>
                   </div> 
 
               </template>
@@ -83,7 +83,7 @@
     <CarForm 
         :expressions='expressions' 
         :backendUrl='props.backendUrl' 
-        :recordIdSelected='recordIdSelected'
+        :currentId='currentId'
         :imagesUrl='props.imagesUrl'
         :formHttpMethodApply = 'formHttpMethodApply'  
         @closeCarForm="showBookingForm=false" 
@@ -104,7 +104,7 @@ import { slidingMessage, forceHideTolltip , divStillVisible } from '../assets/js
 import { onMounted, ref  } from 'vue';
 import CarForm from './CarForm.vue';
 
-const emit = defineEmits( ['showLoading', 'hideLoading','updateSelectedCar','setDatatableToDisplay','displaySchedule'] );
+const emit = defineEmits( ['showLoading', 'hideLoading','setDatatableToDisplay','displaySchedule', 'toRefreshCarsBrowser'] );
 const props = defineProps( ['currentViewedDatatable', 'currentCountry', 'backendUrl', 'imagesUrl', 'expressions' ] )
 
 // records that are gonna be showed in the datatable
@@ -131,7 +131,7 @@ columns.push( {name: 'actions', width: '150px', title: '', id: 3} )
 
 
 // id of the current car being edited or viewed
-const recordIdSelected = ref(null)
+const currentId = ref(null)
 
 // method being used with the booking form
 const formHttpMethodApply = ref(null)
@@ -195,8 +195,8 @@ async function fetchData() {
 //***************************************************************************
 // user click in a given record to edit 
 //*************************************************************************** 
-const callRecordEdit = (id) => {
-  recordIdSelected.value = id;
+const openEditForm = (id) => {
+  currentId.value = id;
 
   if (props.currentViewedDatatable === 'cars')   {  
     showCarForm.value = true
@@ -207,26 +207,44 @@ const callRecordEdit = (id) => {
 //***************************************************************************
 // user click in a given record to change its status (active/inactive)
 //*************************************************************************** 
-const callRecordChangeStatus = (id) => {
-  recordIdSelected.value = id;
+async function changeStatus (id) {
 
+  let route = ''
   if (props.currentViewedDatatable === 'cars')   {  
-    showCarForm.value = true
-    formHttpMethodApply.value = 'PATCH'
+    route = `${props.backendUrl}/${props.currentViewedDatatable}/status/${id}`
   }
+
+  emit('showLoading')
+
+  await fetch(route, {method: 'POST'})
+
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    return response.text()
+  })
+  .then((data) => {
+    slidingMessage(props.expressions.status_changed, 3000)         
+    emit('hideLoading')
+    // ask App.vue to refresh cars list, once one record's been activate/deactivated
+    emit('toRefreshCarsBrowser') 
+  })
+  .catch((error) => {
+    emit('hideLoading')
+    slidingMessage('Fatal error= '+error, 3000)        
+  })  
 }
 
 
 //***************************************************************************
 // user click in a given record to delete
 //*************************************************************************** 
-const callRecordDelete = (id) => {
+const deleteRecord = (id) => {
 
   slidingMessage(props.expressions.unavailable_option, 3000)        
 
 }
-
-
 
 
 </script>

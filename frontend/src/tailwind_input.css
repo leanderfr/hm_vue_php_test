@@ -218,11 +218,11 @@ align-items: center;
 }
 
 .carCard {
-  @apply bg-[#E6F0FF] hover:border-gray-700 hover:border-2 cursor-pointer justify-center pr-2
-      border-transparent border-2 flex flex-col h-full w-[230px] pl-2 text-right text-gray-500
+  @apply bg-[#E6F0FF] hover:border-gray-700 hover:border-[3px] cursor-pointer justify-center pr-2
+      border-transparent border-[3px] flex flex-col h-full w-[230px] pl-2 text-right text-gray-500
 }
 .carCardSelected { 
-  @apply border-[navy] border-2
+  @apply border-[navy] border-[3px]
 }
 
 

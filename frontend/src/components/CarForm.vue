@@ -93,7 +93,7 @@ const emit = defineEmits( ['showLoading', 'hideLoading', 'closeCarForm'] );
 
 import moment from 'moment';
 
-const props = defineProps( ['expressions', 'backendUrl', 'currentCountry', 'formHttpMethodApply', 'recordIdSelected', 'imagesUrl'] )
+const props = defineProps( ['expressions', 'backendUrl', 'currentCountry', 'formHttpMethodApply', 'currentId', 'imagesUrl'] )
 
 onMounted( () => {
   getCarFormPopulatedAndReady()
@@ -118,7 +118,7 @@ async function getCarFormPopulatedAndReady() {
     emit('showLoading')
 
     try {
-        let _route_ = `${props.backendUrl}/cars/${props.recordIdSelected}`
+        let _route_ = `${props.backendUrl}/cars/${props.currentId}`
 
         await fetch(_route_, {method: 'GET'})
 
@@ -135,7 +135,6 @@ async function getCarFormPopulatedAndReady() {
           $('#txtDescription').val( car.description )
           $('#txtPlate').val( car.plate )
 
-console.log('xxx='+props.imagesUrl + '-'+car.car_image)
           $('#carPicture').attr('src', props.imagesUrl + car.car_image )
 
           putFocusInFirstInputText_AndOthersParticularitiesOfTheCarForm() 
@@ -200,7 +199,7 @@ async function  performSaveCarRecord()  {
   if (props.formHttpMethodApply=='POST') 
     route += 'car'        
   if (props.formHttpMethodApply=='PATCH') 
-    route += `car/${props.recordIdSelected}`   
+    route += `car/${props.currentId}`   
 
   // formHttpMethodApply= POST, PATCH ou DELETE
   setTimeout(() => {

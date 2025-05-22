@@ -9,18 +9,19 @@ scheduleContainer
       <!-- current year -->
       <div class="flex flex-row text-[30px] font-bold pt-3 pl-6" id='currentYear'></div>
 
+
       <!-- action buttons -->
       <div class="flex flex-row pt-1">
           <!-- new booking -->
-          <div  class='btnBOOKING_ADD_CAR_RESERVATION putPrettierTooltip'  :title="expressions.new_booking"   @click="newBookingRecord" aria-hidden="true"></div>   
+          <div  class='btnBOOKING_ADD_CAR_RESERVATION putPrettierTooltip'  :title="expressions.new_booking"   @click="forceHideTolltip();newBookingRecord" aria-hidden="true"></div>   
 
           <!-- display calendar -->
-          <div  class='btnBOOKING_CALENDAR putPrettierTooltip' :title="expressions.choose_date" @click="showCalendar=true" aria-hidden="true"></div>    
+          <div  class='btnBOOKING_CALENDAR putPrettierTooltip' :title="expressions.choose_date" @click="forceHideTolltip();showCalendar=true" aria-hidden="true"></div>    
 
           <!-- display all the cars reservations -->
           <div  class='btnBOOKING_ALL_CARS putPrettierTooltip'  :class="{btnBOOKING_ALL_CARS_ACTIVE: props.selectedCar==0}"
                 :title="expressions.display_all_cars" 
-                @click="emit('updateSelectedCar', 0)"  aria-hidden="true"></div>    
+                @click="forceHideTolltip();emit('setNewSelectedCar', 0)"  aria-hidden="true"></div>    
 
           <!-- back 1 week   -->
           <div  class='btnBOOKING_LEFT_ARROW putPrettierTooltip'  :title="expressions.previous_week" @click="forceHideTolltip();browseBookingCalendar(-7)" aria-hidden="true"></div>   
@@ -102,7 +103,7 @@ import { forceHideTolltip, hourFormat, counter, divStillVisible  } from './asset
 //const showLoading = defineEmits( ['showLoading'] );
 //const hideLoading = defineEmits( ['hideLoading'] );
 
-const emit = defineEmits( ['showLoading', 'hideLoading','updateSelectedCar', 'setDatatableToDisplay'] );
+const emit = defineEmits( ['showLoading', 'hideLoading','setNewSelectedCar', 'setDatatableToDisplay'] );
 
 const props = defineProps( ['expressions', 'currentCountry', 'backendUrl', 'imagesUrl', 'selectedCar' ] )
 

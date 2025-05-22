@@ -12,7 +12,7 @@
           backgroundPositionY: 'center'
 
         }" 
-        @click="emit('updateSelectedCar', car.id)"   >
+        @click="emit('setNewSelectedCar', car.id)"   >
         <span>{{car.description}}</span>
         <span>{{car.plate}}</span>
     </div>
@@ -23,10 +23,21 @@
 
 
 <script setup>
+import { onMounted  } from 'vue';
 const props = defineProps( ['cars', 'selectedCar'] )
 
 // user clicks a car card
-const emit = defineEmits(['updateSelectedCar']);
+const emit = defineEmits(['setNewSelectedCar']);
+
+
+//*****************************************************************************
+//*****************************************************************************
+onMounted( () => {
+    
+console.log('broiw de novo')
+  
+
+  })
 </script>
 
 
