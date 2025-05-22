@@ -2,7 +2,7 @@
 <template>
 
 <!-- car form container  -->
-<div  class="flex flex-col w-[95%] max-w-[1300px] overflow-hidden pt-8 "  id='carRecordForm'>
+<div  class="flex flex-col w-[95%] max-w-[1300px] overflow-hidden pt-8 "  id='carForm'>
 
   <div  class="flex flex-col w-full bg-white relative rounded-lg"  >
 
@@ -29,7 +29,7 @@
             &nbsp;&nbsp;[ ? ]&nbsp;&nbsp;
           </div>
 
-          <div class='divWINDOW_BUTTON mr-6'  @click="this.$emit('closeCarForm')"  aria-hidden="true" > 
+          <div class='divWINDOW_BUTTON mr-6'  @click="emit('closeCarForm')"  aria-hidden="true" > 
             &nbsp;&nbsp;[ X ]&nbsp;&nbsp;
           </div>
       </div>
@@ -51,10 +51,10 @@
 
           <div class="flex flex-row w-full pb-2 gap-6 ">  
             <div class='w-1/2'>
-              <input type="text" autocomplete="off" sequence="1"   id="txtDescription" maxlength='100' class='text_formFieldValue w-full' @focus="$event.target.select()" >  
+              <input type="text" autocomplete="off" sequence="1"   id="txtDescription" maxlength='100' class='text_formFieldValue w-full'  >  
             </div>
             <div class='w-1/2'>
-              <input type="text" autocomplete="off" sequence="2"   id="txtPlate" maxlength='50' class='text_formFieldValue w-full' @focus="$event.target.select()" >  
+              <input type="text" autocomplete="off" sequence="2"   id="txtPlate" maxlength='50' class='text_formFieldValue w-full'  >  
             </div>
           </div>
 
@@ -89,7 +89,7 @@
 <script setup>
 import { onMounted  } from 'vue';
 import { makeWindowDraggable, slidingMessage, dateToIsoStringConsideringLocalUTC, formatDate  } from '../assets/js/utils.js'
-const emit = defineEmits( ['showLoading', 'hideLoading', 'closeCarForm'] );
+const emit = defineEmits( ['showLoading', 'hideLoading', 'closeCarForm','refreshDatatable'] );
 
 import moment from 'moment';
 
@@ -168,7 +168,7 @@ const putFocusInFirstInputText_AndOthersParticularitiesOfTheCarForm = () => {
     $('#txtDescription').focus()    
   }, 500);
 
-  makeWindowDraggable('divWINDOW_TOP', 'carRecordForm')
+  makeWindowDraggable('divWINDOW_TOP', 'carForm')
 }
 
 
@@ -194,19 +194,21 @@ async function  performSaveCarRecord()  {
   }
 
   var formData = new FormData(); 
+  formData.append('description', $('#txtDescription').val())
+  formData.append('plate', $('#txtPlate').val())
 
   let route = ''
   if (props.formHttpMethodApply=='POST') 
-    route += 'car'        
+    route += 'cars'        
   if (props.formHttpMethodApply=='PATCH') 
-    route += `car/${props.currentId}`   
+    route += `cars/${props.currentId}`   
 
   // formHttpMethodApply= POST, PATCH ou DELETE
   setTimeout(() => {
     emit('showLoading')    
   }, 10);
   
-  // PHP doesnt work weel with PATCH (laravel does), need to send all with POST here
+  // PHP doesnt work well with PATCH (laravel does), need to send all with POST here
   await fetch(`${props.backendUrl}/${route}`, {method: 'POST', body: formData})
 
   .then(response => {
@@ -216,13 +218,13 @@ async function  performSaveCarRecord()  {
     return response.text()
   })
   .then((msg) => {
-    slidingMessage(props.expressions.car_recorded, 3000)        
+    slidingMessage(props.expressions.car_recorded, 2000)        
     emit('hideLoading')
     setTimeout(() => {
       emit('closeCarForm')  
-//      emit('refreshBookingDatesAndContent')  
+      emit('refreshDatatable')  
 
-    }, 3100);
+    }, 2100);
     
   })
   .catch((error) => {

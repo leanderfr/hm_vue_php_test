@@ -58,16 +58,16 @@
 
                   <!-- the last column was printed above and the current record is active, now put the 3 action icons (edit, delete and change status) -->
                   <div v-if='index === columns.length-1 && record.active==1' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index" >
-                      <div className='actionIcon'  ><img alt='' @click='openEditForm(record.id)' src='../assets/images/edit.svg' /></div>
-                      <div className='actionIcon'  ><img alt=''  @click='deleteRecord' src='../assets/images/delete.svg' /></div>
-                      <div className='actionIcon' ><img alt='' @click='changeStatus(record.id)' src='../assets/images/activate.svg' /></div>
+                      <div className='actionIcon' @click='openEditForm(record.id)' ><img alt=''  src='../assets/images/edit.svg' /></div>
+                      <div className='actionIcon'  @click='deleteRecord'><img alt=''   src='../assets/images/delete.svg' /></div>
+                      <div className='actionIcon' @click='changeStatus(record.id)'><img alt=''  src='../assets/images/activate.svg' /></div>
                   </div>   
 
                   <!-- the last column was printed above and the current record is inactive, put only the icon to reactivate -->
                   <div v-if='index === columns.length-1 && record.active==0' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index"  >
                       <div className='actionIconNull'>&nbsp;</div>
                       <div className='actionIconNull'>&nbsp;</div>
-                      <div className='actionIcon' ><img alt='' @click='changeStatus(record.id)'  src='../assets/images/activate.svg' /></div>
+                      <div className='actionIcon' @click='changeStatus(record.id)'><img alt=''   src='../assets/images/activate.svg' /></div>
                   </div> 
 
               </template>
@@ -86,10 +86,10 @@
         :currentId='currentId'
         :imagesUrl='props.imagesUrl'
         :formHttpMethodApply = 'formHttpMethodApply'  
-        @closeCarForm="showBookingForm=false" 
+        @closeCarForm="showCarForm=false"  
         @showLoading="emit('showLoading')" 
         @hideLoading="emit('hideLoading')" 
-        @refreshDatatable = "refreshDatatable"   />
+        @refreshDatatable = "fetchData();emit('toRefreshCarsBrowser');"   />
   </div>
 
 
@@ -226,7 +226,7 @@ async function changeStatus (id) {
   })
   .then((data) => {
     slidingMessage(props.expressions.status_changed, 3000)         
-    emit('hideLoading')
+    fetchData()
     // ask App.vue to refresh cars list, once one record's been activate/deactivated
     emit('toRefreshCarsBrowser') 
   })

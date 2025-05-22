@@ -54,9 +54,34 @@ $router->addGet("/expressions/{language}", function($language) use($handlerExpre
 //********************************************************************
 // cars
 //********************************************************************
-$router->addGet("/cars", function() use($handlerCars)  {  
+$router->addGet("/cars/active", function() use($handlerCars)  {  
+  $handlerCars->getOnlyActive();
+});
+$router->addGet("/cars/all", function() use($handlerCars)  {  
   $handlerCars->getAll();
 });
+
+// same route, different method
+if ( $_SERVER['REQUEST_METHOD'] === 'GET'  ) {
+  $router->addGet("/cars/{id}", function($id) use($handlerCars)  {  
+    $handlerCars->getCarById($id);
+  });
+}
+if ( $_SERVER['REQUEST_METHOD'] === 'POST'  ) {
+  $router->addPost("/cars/{id}", function($id) use($handlerCars)  {  
+    $handlerCars->postCar($id);
+  });
+}
+
+$router->addPost("/cars/status/{id}", function($id) use($handlerCars)  {  
+  $handlerCars->ChangeStatus($id);
+});
+
+
+
+
+
+
 
 
 //********************************************************************

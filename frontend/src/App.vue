@@ -34,11 +34,13 @@
       </div>
 
       <!-- horizontal cars browser -->
-      <div class='carsBrowserContainer' v-if="cars.lenght!=0" >
+      <div class='carsBrowserContainer' >
         <CarsBrowser 
           :key='toRefreshCarsBrowser' 
-          :cars='cars'  
           :selectedCar='selectedCar' 
+          :backendUrl='backendUrl'    
+          @showLoading="isLoading=true" 
+          @hideLoading="isLoading=false"
           @setNewSelectedCar='setNewSelectedCar'            /> 
       </div>
 
@@ -46,7 +48,7 @@
 
       <!-- display schedule only if theres at least 1 car and 1 expression  -->
       <!-- Schedule needs JS files ready  (neededJsLoaded) -->
-      <div v-if="toDisplaySchedule && neededJsLoaded && cars.length!=0 && expressions.length!=0" id='mainContainer'  >
+      <div v-if="toDisplaySchedule && neededJsLoaded && expressions.length!=0" id='mainContainer'  >
         <Schedule 
             :key='toRefreshSchedule' 
             :expressions='expressions' 
@@ -79,7 +81,7 @@
 
 
       <!-- footer toolbar   -->
-      <div v-if="cars.length!=0 && expressions.length!=0" class='bottomToolbar'  >        
+      <div v-if="expressions.length!=0" class='bottomToolbar'  >        
       </div>
 
 
@@ -133,8 +135,7 @@
   const toRefreshSchedule = ref(0)  
 
   const isUSASelected = ref(true)
-  const expressions = ref([])
-  const cars = ref([])
+  const expressions = ref([])  
   const isLoading = ref(true)
   const error = ref(null)
 
@@ -243,7 +244,7 @@
 
       isLoading.value = true
 
-      Promise.all( [fetchExpressions(), fetchCars()] ).then(() => {
+      Promise.all( [fetchExpressions()] ).then(() => {
           // here I wont close the loading animation, one of the components will do it - schedule or datatable, whichever finished loading first
           //  isLoading.value = false        
       })
@@ -279,7 +280,6 @@
 
 
 
-
   //***************************************************************************
   //*************************************************************************** 
   async function fetchExpressions()  {
@@ -302,26 +302,6 @@
     })  
   }
 
-  //***************************************************************************
-  //*************************************************************************** 
-  async function fetchCars() {
-    await fetch(`${backendUrl.value}/cars/active`)
-
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      return response.json()
-    })
-    .then((data) => {
-      cars.value = data;        
-
-    })
-    .catch((error) => {
-      isLoading.value = false;
-      slidingMessage('Fatal error= '+error, 3000)        
-    })  
-  }
 
 
 /************************************************************************************************************************************************************
@@ -348,16 +328,15 @@ const onKeyDown = (e) =>  {
 
   // if user presses F2 or Esc, being any form edit screen opened
   if (e.which == 27 || e.which == 113)   { 
-        let bookingRecordForm = typeof $('#bookingRecordForm').attr("id")
+        let bookingForm = typeof $('#bookingForm').attr("id")
+        let carForm = typeof $('#carForm').attr("id")
 
         // triggers close button
-        if (bookingRecordForm != 'undefined')  {
+        if (bookingForm != 'undefined' ||  carForm != 'undefined')  {
           if (e.which == 27)   $('#btnCLOSE').trigger('click')
 
-          // the following forms contain the button 'F2= save'
-          if (bookingRecordForm != 'undefined')  {
-            if (e.which == 113)   $('#btnSAVE').trigger('click')   // f2 foi pressionado
-          }
+          // 'F2= save'
+          if (e.which == 113)   $('#btnSAVE').trigger('click')   // f2 foi pressionado
         }
   }
 }

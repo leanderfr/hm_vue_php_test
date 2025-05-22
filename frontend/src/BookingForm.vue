@@ -2,7 +2,7 @@
 <template>
 
 <!-- booking form container  -->
-<div  class="flex flex-col w-[95%] max-w-[1300px] overflow-hidden pt-8 "  id='bookingRecordForm'>
+<div  class="flex flex-col w-[95%] max-w-[1300px] overflow-hidden pt-8 "  id='bookingForm'>
 
   <div  class="flex flex-col w-full bg-white relative rounded-lg"  >
 
@@ -225,7 +225,7 @@ const putFocusInFirstInputText_AndOthersParticularitiesOfTheBookingForm = () => 
     $('#txtPickUpDate').focus()    
   }, 500);
 
-  makeWindowDraggable('divWINDOW_TOP', 'bookingRecordForm')
+  makeWindowDraggable('divWINDOW_TOP', 'bookingForm')
 }
 
 

@@ -27,11 +27,11 @@ class Bookings
           " left join cars on bookings.car_id = cars.id " .
           " where 1=1 ";
 
-  // car_id = -1, frontend asks to list all cars reservations, no filter
-	if ($car_id == '-1') {		
+  // car_id = 0, frontend asks to list all cars reservations, no filter
+	if ($car_id == '0') {		
 	}
 	// user defined which car to list
-	if ($car_id != '-1') {
+	if ($car_id != '0') {
 		$sql .= " and bookings.car_id = $car_id ";
   }
 
