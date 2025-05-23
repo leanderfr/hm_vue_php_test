@@ -531,6 +531,17 @@ padding-left:10px;
   padding-left:10px;
 }
 
+#rowsContainer {
+overflow-y: scroll;
+height:30px;
+}
+
+.datatableColumn {
+overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis; 
+
+}
 .DatatableRows {
   display: flex;
   flex-direction: column;
@@ -589,8 +600,6 @@ border: solid 1px navy;
 
 /****************************************************************************
 ****************************************************************************/
-
-
 .crudForm {
 width: auto;
 height: auto;

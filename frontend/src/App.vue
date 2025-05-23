@@ -77,6 +77,7 @@
             @hideLoading="isLoading=false"     
             @toDisplaySchedule='displaySchedule'   
             @toRefreshCarsBrowser="toRefreshCarsBrowser++"
+            @setDatatableToDisplay='setDatatableToDisplay'
             :imagesUrl = 'imagesUrl' />
       </div>
 
@@ -187,6 +188,8 @@
   const setDatatableToDisplay = (datatable) => {
     toDisplaySchedule.value = false;
     toDisplayDatatable.value = true;
+
+    toRefreshDatatable.value++
 
     currentViewedDatatable.value = datatable
   }

@@ -19,7 +19,11 @@
               <div  class='btnSCHEDULE_TABLE putPrettierTooltip' :title="expressions.schedule" @click="forceHideTolltip();emit('toDisplaySchedule')" aria-hidden="true"></div>   
 
               <!-- cars table -->
-              <div  class='btnCARS_TABLE putPrettierTooltip' :title="expressions.cars" @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" aria-hidden="true"></div>   
+              <div  class='btnCARS_TABLE putPrettierTooltip' 
+                :title="expressions.cars" 
+                @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" 
+                aria-hidden="true"></div>   
+
 
               <!-- expressions table -->
               <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' :title="expressions.expressions" @click="forceHideTolltip();emit('setDatatableToDisplay', 'expressions')" aria-hidden="true"></div>   
@@ -64,7 +68,7 @@
       </div>          
 
       <!-- display records from the current table -->
-      <div v-if='records'>
+      <template v-if='records'>
         <div id='rowsContainer'>
           <div  class="DatatableRows" v-for='record in records' :key="record" id="DatatableRows"> 
 
@@ -77,29 +81,30 @@
                   <div v-if='index < (columns.length-1)'  
                       :style="{width: column.width, paddingLeft: '15px'}" 
                       :key="'1tr-'+index" 
-                      :class="record.active==0 ? 'text-red-500 font-bold' : 'text-black'"  >
+                     :class="record.active==0 ? 'text-red-500 font-bold' : 'text-black'"  
+                     class='datatableColumn'  >
                     {{ record[column.fieldname] }}
                   </div>
 
                   <!-- the last column was printed above and the current record is active, now put the 3 action icons (edit, delete and change status) -->
-                  <div v-if='index === columns.length-1 && record.active==1' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index" >
-                      <div className='actionIcon' @click='editForm(record.id)' ><img alt=''  src='../assets/images/edit.svg' /></div>
-                      <div className='actionIcon'  @click='deleteRecord'><img alt=''   src='../assets/images/delete.svg' /></div>
-                      <div className='actionIcon' @click='changeStatus(record.id)'><img alt=''  src='../assets/images/active.svg' /></div>
+                  <div v-if='index === columns.length-1 && record.active==1' class='actionColumn' :style="{width: column.width}" :key="'1tr-'+index" >
+                      <div class='actionIcon' @click='editForm(record.id)' ><img alt=''  src='../assets/images/edit.svg' /></div>
+                      <div class='actionIcon'  @click='deleteRecord'><img alt=''   src='../assets/images/delete.svg' /></div>
+                      <div class='actionIcon' @click='changeStatus(record.id)'><img alt=''  src='../assets/images/active.svg' /></div>
                   </div>   
 
                   <!-- the last column was printed above and the current record is inactive, put only the icon to reactivate -->
-                  <div v-if='index === columns.length-1 && record.active==0' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index"  >
-                      <div className='actionIconNull'>&nbsp;</div>
-                      <div className='actionIconNull'>&nbsp;</div>
-                      <div className='actionIcon' @click='changeStatus(record.id)'><img alt=''   src='../assets/images/inactive.svg' /></div>
+                  <div v-if='index === columns.length-1 && record.active==0' class='actionColumn' :style="{width: column.width}" :key="'1tr-'+index"  >
+                      <div class='actionIconNull'>&nbsp;</div>
+                      <div class='actionIconNull'>&nbsp;</div>
+                      <div class='actionIcon' @click='changeStatus(record.id)'><img alt=''   src='../assets/images/inactive.svg' /></div>
                   </div> 
 
               </template>
             </div>
           </div>
       </div>
-      </div>
+      </template>
 
   </div>
 
@@ -212,6 +217,7 @@ watch([currentStatus], () => {
 async function fetchData() {
   emit('showLoading')
 
+  $('#rowsContainer').height('0')
   // if no status set, fetch all records
   let realStatus = currentStatus.value
   if (realStatus==='') realStatus='all'

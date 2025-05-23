@@ -2402,6 +2402,17 @@ datatable main parts
   padding-left:10px;
 }
 
+#rowsContainer {
+  overflow-y: scroll;
+  height:30px;
+}
+
+.datatableColumn {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .DatatableRows {
   display: flex;
   flex-direction: column;
