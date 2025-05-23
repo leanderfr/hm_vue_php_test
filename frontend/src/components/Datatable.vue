@@ -193,7 +193,7 @@ const currentId = ref(null)
 const formHttpMethodApply = ref(null)
 
 // which type of status should be viewed at the moment, active or inactive
-const currentStatus = ref('active')  
+const currentStatus = ref('')  
 
 
 
@@ -298,10 +298,7 @@ const editForm = (id='') => {
 //*************************************************************************** 
 async function changeStatus (id) {
 
-  let route = ''
-  if (props.currentViewedDatatable === 'cars')   {  
-    route = `${props.backendUrl}/${props.currentViewedDatatable}/status/${id}`
-  }
+  let route = `${props.backendUrl}/${props.currentViewedDatatable}/status/${id}`
 
   emit('showLoading')
 

@@ -331,11 +331,12 @@ const onKeyDown = (e) =>  {
 
   // if user presses F2 or Esc, being any form edit screen opened
   if (e.which == 27 || e.which == 113)   { 
-        let bookingForm = typeof $('#bookingForm').attr("id")
-        let carForm = typeof $('#carForm').attr("id")
+        let editionForm = typeof $('#bookingForm').attr("id")!='undefined' || 
+                          typeof $('#carForm').attr("id")!='undefined' || 
+                          typeof $('#expressionForm').attr("id")!='undefined'
 
         // triggers close button
-        if (bookingForm != 'undefined' ||  carForm != 'undefined')  {
+        if (editionForm)  {
           if (e.which == 27)   $('#btnCLOSE').trigger('click')
 
           // 'F2= save'
