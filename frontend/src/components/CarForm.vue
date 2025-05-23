@@ -200,7 +200,7 @@ const putFocusInFirstInputText_AndOthersParticularitiesOfTheCarForm = () => {
 
 
 /********************************************************************************************************************************************************
- validate dado data from the form and try to save it
+ validate data from the form and try to save it
 ********************************************************************************************************************************************************/
 async function saveCar()  {
 

@@ -123,6 +123,19 @@
   </div>
 
 
+  <div v-if="showExpressionForm" id='backDrop' class='w-full h-full  absolute flex items-center justify-center left-0 top-0 z-10 bg-[rgba(0,0,0,0.5)]' @click.self='showExpressionForm=false' aria-hidden="true"  >  
+    <ExpressionForm 
+        :expressions='expressions' 
+        :backendUrl='props.backendUrl' 
+        :currentId='currentId'
+        :formHttpMethodApply = 'formHttpMethodApply'  
+        @closeExpressionForm="showExpressionForm=false"  
+        @showLoading="emit('showLoading')" 
+        @hideLoading="emit('hideLoading')" 
+        @refreshDatatable = "fetchData();emit('toRefreshExpreCarsBrowser');"   />
+  </div>
+
+
 
 </div>
 
@@ -133,6 +146,7 @@
 import { slidingMessage, forceHideTolltip , divStillVisible } from '../assets/js/utils.js'
 import { onMounted, ref, watch  } from 'vue';
 import CarForm from './CarForm.vue';
+import ExpressionForm from './ExpressionForm.vue';
 
 const emit = defineEmits( ['showLoading', 'hideLoading','setDatatableToDisplay','displaySchedule', 'toRefreshCarsBrowser'] );
 const props = defineProps( ['currentViewedDatatable', 'currentCountry', 'backendUrl', 'imagesUrl', 'expressions' ] )
@@ -140,8 +154,11 @@ const props = defineProps( ['currentViewedDatatable', 'currentCountry', 'backend
 // records that are gonna be showed in the datatable
 const records = ref(null)  
 
-// controls if the edit form need to be opened
+// controls if the car form need to be opened
 const showCarForm = ref(false)  
+
+// controls if the expression form need to be opened
+const showExpressionForm = ref(false)
 
 // colunas que serao exibidias dependendo da tabela sendo vista (_currentMenuItem)
 let columns = []
@@ -263,11 +280,17 @@ async function fetchData() {
 const editForm = (id='') => {
   currentId.value = id;
 
-  if (props.currentViewedDatatable === 'cars')   {  
+  if (id=='') formHttpMethodApply.value = 'POST'  // add record
+  else formHttpMethodApply.value = 'PATCH'  // update record
+
+  if (props.currentViewedDatatable === 'cars')   { 
     showCarForm.value = true
-    if (id=='') formHttpMethodApply.value = 'POST'  // add record
-    else formHttpMethodApply.value = 'PATCH'  // update record
   }
+
+  if (props.currentViewedDatatable === 'expressions')   {  
+    showExpressionForm.value = true
+  }
+
 }
 
 //***************************************************************************
