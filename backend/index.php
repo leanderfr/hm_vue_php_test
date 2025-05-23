@@ -46,38 +46,42 @@ $router = new Router;
 
 //********************************************************************
 // expressions (english/portuguese)
+// resultformat =>  json , returns as an array of json,     reference, returns as a simple keyed array,  expressions.tablename, expresssions.title, etc
 //********************************************************************
-$router->addGet("/expressions/{language}", function($language) use($handlerExpressions) {  
-  $handlerExpressions->getAll($language);
+$router->addGet("/expressions/{resultformat}/{country}/{status}", function($resultformat, $country, $status) use($handlerExpressions) {  
+  $handlerExpressions->getExpressions($resultformat, $country, $status);
 });
 
 //********************************************************************
 // cars
 //********************************************************************
-$router->addGet("/cars/active", function() use($handlerCars)  {  
-  $handlerCars->getOnlyActive();
-});
-$router->addGet("/cars/all", function() use($handlerCars)  {  
-  $handlerCars->getAll();
-});
+if ( $_SERVER['REQUEST_METHOD'] === 'GET'  )  {
+    $router->addGet("/cars/{status}", function($status) use($handlerCars)  {  
+      $handlerCars->getCars($status);
+    });
 
-// same route, different method
-if ( $_SERVER['REQUEST_METHOD'] === 'GET'  ) {
-  $router->addGet("/cars/{id}", function($id) use($handlerCars)  {  
-    $handlerCars->getCarById($id);
-  });
+    // same route, different method
+    $router->addGet("/cars/{id}", function($id) use($handlerCars)  {  
+      $handlerCars->getCarById($id);
+    });
 }
+
 if ( $_SERVER['REQUEST_METHOD'] === 'POST'  ) {
-  $router->addPost("/cars/{id}", function($id) use($handlerCars)  {  
-    $handlerCars->postCar($id);
-  });
+    // update
+    $router->addPost("/cars/{id}", function($id) use($handlerCars)  {  
+      $handlerCars->postCar($id);
+    });
+
+    // insert
+    $router->addPost("/cars", function() use($handlerCars)  {  
+      $handlerCars->postCar();
+    });
+
+    // change status
+    $router->addPost("/cars/status/{id}", function($id) use($handlerCars)  {  
+      $handlerCars->ChangeStatus($id);
+    });
 }
-
-$router->addPost("/cars/status/{id}", function($id) use($handlerCars)  {  
-  $handlerCars->ChangeStatus($id);
-});
-
-
 
 
 
@@ -86,38 +90,49 @@ $router->addPost("/cars/status/{id}", function($id) use($handlerCars)  {
 
 //********************************************************************
 // bookings 
-// the country is needed to inform the format of the date
+// the country is needed to inform the format of the date to be 
+// retrieved in the database
 //********************************************************************
-$router->addGet("/bookings/{country}/{car_id}/{firstday}/{lastday}", 
-      function($country, $car_id, $firstday, $lastday) use($handlerBookings)  {  
+if ( $_SERVER['REQUEST_METHOD'] === 'GET'  )  {
 
-  $handlerBookings->getByCarIdAndPeriod( $country, $car_id, $firstday, $lastday );
-});
+    $router->addGet("/products/{id}", function($id) {
+        echo "This is the page for product $id";
+    });
+    $router->addGet("/products/{id}/orders/{order_id}", function($id, $order_id) {
+        echo "This is the page for product $id, and order $order_id";
+      die();
+    });
 
-$router->addGet("/bookings/{country}/{booking_id}", function($country, $booking_id) use($handlerBookings)  {  
-  $handlerBookings->getBookingById( $country, $booking_id );
-});
+    $router->addGet("/bookings/{country}/{car_id}/{firstday}/{lastday}", 
+          function($country, $car_id, $firstday, $lastday) use($handlerBookings)  {  
 
-$router->addPost("/booking/{booking_id}", function($booking_id) use($handlerBookings)  {  
-  $handlerBookings->postBooking($booking_id);
-});
+      $handlerBookings->getByCarIdAndPeriod( $country, $car_id, $firstday, $lastday );
+    });
 
-$router->addPost("/booking", function() use($handlerBookings)  {  
-  $handlerBookings->postBooking();
-});
+    $router->addGet("/bookings/{country}/{id}", function($country, $id) use($handlerBookings)  {  
+      $handlerBookings->getBookingById( $country, $id );
+    });
+}
+
+// same route, different methods
+if ( $_SERVER['REQUEST_METHOD'] === 'POST'  )  {
+  // patch (update) record
+  $router->addPost("/booking/{booking_id}", function($id) use($handlerBookings)  {     
+    $handlerBookings->postBooking($id);
+  });
+  // new record
+  $router->addPost("/booking", function($id) use($handlerBookings)  {  
+    $handlerBookings->postBooking($id);
+  });
+}
+
+if ( $_SERVER['REQUEST_METHOD'] === 'DELETE'  ) {
+  $router->addDelete("/booking/{id}", function($id) use($handlerBookings)  {  
+    $handlerBookings->deleteBooking($id);
+  });
+}
 
 
-
-
-
-
-$router->addGet("/products/{id}", function($id) {
-    echo "This is the page for product $id";
-});
-$router->addGet("/products/{id}/orders/{order_id}", function($id, $order_id) {
-    echo "This is the page for product $id, and order $order_id";
-  die();
-});
 $router->dispatch($path);
 
 //********************************************************************

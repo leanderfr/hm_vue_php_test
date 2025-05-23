@@ -3,26 +3,18 @@
 class Cars
 {
 
-  public function getOnlyActive(): void   {
+  public function getCars($status): void   {
     if ( $_SERVER['REQUEST_METHOD'] !== 'GET' ) {
       http_response_code(500);   
       die( 'Method not allowed' );
     }
-    $sql =  "select description, concat('car_', id, '.png') as car_image, id, plate, ifnull(active, false) as active ".
-            "from cars  ".
-            "where ifnull(active, false)= true and deleted_at is null ";
 
-    executeFetchQueryAndReturnJsonResult( $sql, false);
-  }
-
-  public function getAll(): void   {
-    if ( $_SERVER['REQUEST_METHOD'] !== 'GET' ) {
-      http_response_code(500);   
-      die( 'Method not allowed' );
-    }
     $sql =  "select description, concat('car_', id, '.png') as car_image, id, plate, ifnull(active, false) as active ".
             "from cars  ".
             "where deleted_at is null ";
+
+    if ($status=='active') $sql .= 'and ifnull(active, false)=true';
+    if ($status=='inactive') $sql .= 'and ifnull(active, false)=false';
 
     executeFetchQueryAndReturnJsonResult( $sql, false);
   }
@@ -77,6 +69,7 @@ class Cars
       http_response_code(500);   
       die( 'Method not allowed' );
     }
+    // update doenst need the car id
   	if ($car_id!='' && ! is_numeric($car_id))   routeError();
 
     // verify request
@@ -110,8 +103,6 @@ class Cars
       }
     }
 
-
-
     if ($dataError!='') internalError( $dataError );
 
     $description =   $_POST['description'];
@@ -138,8 +129,8 @@ class Cars
 
     // if no ID's been informed, its a POST, new record
     if ($car_id=='')    {
-      $crudSql = "insert into cars(description, plate, created_at, updated_at) ". 
-                "select '$description', '$plate', now(), now() "; 
+      $crudSql = "insert into cars(description, plate, created_at, updated_at, active) ". 
+                "select '$description', '$plate', now(), now(), true "; 
       $dbOperation = 'insert';
     }
 
@@ -153,7 +144,10 @@ class Cars
 
     // execute query and get the ID of the just handled record (third param)
     $result = executeCrudQueryAndReturnResult($crudSql, true);    
-
+    // if it was a POST, obtain the car id  (__success__|record id)
+    if ($car_id=='') {
+      $car_id = explode("|", $result)[1];
+    }
     // uploads the image to AWS S3
     if (! $bypassImage)      {
       uploadImageToAWS_S3('image', $car_id);

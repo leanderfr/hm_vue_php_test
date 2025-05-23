@@ -164,7 +164,7 @@ class Bookings
       $crudSql = "update bookings set pickup_datetime='$pickupDatetime', dropoff_datetime='$dropoffDatetime', driver_name='$driverName', updated_at=now() ". 
                 "where id = $booking_id ";
       $dbOperation = 'update';
-    }
+    } 
     $dbConnection -> autocommit(true);    // record without need to transaction
 
     // execute query and get the ID of the just handled record (third param)
@@ -175,4 +175,29 @@ class Bookings
     else die( $result );    // __success__|id registro
 
   }
+
+
+
+  //***************************************************************************************************************************************
+  //***************************************************************************************************************************************
+  public function deleteBooking($id=''): void   {
+    global $dbConnection;
+
+    if ( $_SERVER['REQUEST_METHOD'] !== 'DELETE'  ) {
+      http_response_code(500);   
+      die( 'Method not allowed' );
+    }
+
+
+  	if (! is_numeric($id))   routeError();
+
+    $crudSql = "update bookings set deleted_at=now() where id = $id ";
+    $dbConnection -> autocommit(true);    // record without need to transaction
+
+    $result = executeCrudQueryAndReturnResult($crudSql);    
+
+    http_response_code(200);   // 200= it was ok
+    die( '__success__' );
 }
+
+} 
