@@ -29,10 +29,16 @@ scheduleContainer
           <div  class='btnBOOKING_RIGHT_ARROW putPrettierTooltip' :title="expressions.next_week" @click="forceHideTolltip();browseBookingCalendar(+7)" aria-hidden="true"></div>   
 
           <!-- cars table -->
-          <div  class='btnCARS_TABLE putPrettierTooltip' :title="expressions.cars" @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" aria-hidden="true"></div>   
+          <div  class='btnCARS_TABLE putPrettierTooltip' 
+              :title="expressions.cars" 
+              @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" 
+              aria-hidden="true"></div>   
 
           <!-- expressions table -->
-          <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' :title="expressions.expressions" @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" aria-hidden="true"></div>   
+          <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' 
+              :title="expressions.expressions" 
+              @click="forceHideTolltip();emit('setDatatableToDisplay', 'expressions')" 
+              aria-hidden="true"></div>   
 
       </div> 
 

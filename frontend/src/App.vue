@@ -76,7 +76,7 @@
             @showLoading="isLoading=true" 
             @hideLoading="isLoading=false"     
             @toDisplaySchedule='displaySchedule'   
-            @toRefreshCarsBrowser="console.log('ref'+toRefreshCarsBrowser);toRefreshCarsBrowser++"
+            @toRefreshCarsBrowser="toRefreshCarsBrowser++"
             :imagesUrl = 'imagesUrl' />
       </div>
 
@@ -283,9 +283,9 @@
   //***************************************************************************
   //*************************************************************************** 
   async function fetchExpressions()  {
-    let language = isUSASelected.value ? 'english' : 'portuguese';
+    let country = isUSASelected.value ? 'usa' : 'brazil';
 
-    await fetch(`${backendUrl.value}/expressions/${language}`)
+    await fetch(`${backendUrl.value}/expressions/reference/${country}/active`)
 
     .then(response => {
       if (!response.ok) {

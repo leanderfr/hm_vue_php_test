@@ -33,22 +33,22 @@
         <div class='gap-5 flex flex-row'>
 
           <div v-if="currentStatus=='active'" class='btnTABLE_ONLY_ACTIVE_RECORDS_ON putPrettierTooltip' 
-                  :title="expressions.add_record" 
+                  :title="expressions.only_active" 
                   @click="forceHideTolltip();currentStatus=''" 
                   aria-hidden="true"></div>   
 
           <div v-else class='btnTABLE_ONLY_ACTIVE_RECORDS_OFF putPrettierTooltip' 
-                :title="expressions.add_record" 
+                :title="expressions.only_active" 
                 @click="forceHideTolltip();currentStatus='active'" 
                 aria-hidden="true"></div>   
 
           <div v-if="currentStatus=='inactive'" class='btnTABLE_ONLY_INACTIVE_RECORDS_ON putPrettierTooltip' 
-                :title="expressions.add_record" 
+                :title="expressions.only_inactive" 
                 @click="forceHideTolltip();currentStatus=''" 
                 aria-hidden="true"></div>   
 
           <div v-else class='btnTABLE_ONLY_INACTIVE_RECORDS_OFF putPrettierTooltip' 
-              :title="expressions.add_record" 
+              :title="expressions.only_inactive" 
                   @click="forceHideTolltip();currentStatus='inactive'" 
               aria-hidden="true"></div>   
 
@@ -151,6 +151,15 @@ if (props.currentViewedDatatable === 'cars')   {
   title = props.expressions.cars_table
 }
 
+if (props.currentViewedDatatable === 'expressions')   {
+  columns.push({ fieldname: "id", width: "5%", title: 'Id', id: 'col1', boolean: false },
+              { fieldname: "item", width: "calc(25% - 150px)", title: props.expressions.item, id: 'col2', boolean: false},
+              { fieldname: "english", width: "35%", title: props.expressions.field_english, id: 'col3', boolean: false},
+              { fieldname: "portuguese", width: "35%", title: props.expressions.field_portuguese, id: 'col4', boolean: false} )
+  title = props.expressions.expressions_table
+}
+
+
 // ultima coluna, acoes (editar, excluir, etc)
 columns.push( {name: 'actions', width: '150px', title: '', id: 3} )
 
@@ -203,8 +212,19 @@ watch([currentStatus], () => {
 async function fetchData() {
   emit('showLoading')
 
-  await fetch(`${props.backendUrl}/${props.currentViewedDatatable}/all`)
+  // if no status set, fetch all records
+  let realStatus = currentStatus.value
+  if (realStatus==='') realStatus='all'
 
+  // 1 exception, expressions must inform what country/language
+  let route
+  if ( props.currentViewedDatatable === 'expressions')   
+    route = `${props.backendUrl}/expressions/json/${props.currentCountry}/${realStatus}`
+
+  else 
+    route = `${props.backendUrl}/${props.currentViewedDatatable}/${realStatus}`
+
+  await fetch(route) 
   .then(response => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
