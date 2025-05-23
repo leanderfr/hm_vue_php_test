@@ -211,10 +211,27 @@ const divStillVisible = (div) => {
     return ((elemBottom <= windowBottomView) && (elemTop >= windowScrollTopView ));
 }
 
+/************************************************************************************************************************************************************
+scroll a horizontal div by scrolling the mouse wheel, which theorically should be only to vertical divs
+************************************************************************************************************************************************************/
+const toWheelCarsBrowser = e => {
+
+  if (e.type == "wheel") {
+    var getDelta = e.deltaY;
+    let divId = 'carsBrowserContainer'
+
+    if (getDelta>0) 
+      $(`#${divId}`).scrollLeft( $(`#${divId}`).scrollLeft() + 100 )
+    else 
+      $(`#${divId}`).scrollLeft( $(`#${divId}`).scrollLeft() - 100 )
+  };
+}
+
 
 
 //********************************************************************************************************************************
 //*******************************************************************************************************************************
 export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter, makeWindowDraggable, divStillVisible, 
-      hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC, formatDate, forceHideTolltip };
+      hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC, formatDate, forceHideTolltip,
+      toWheelCarsBrowser };
 

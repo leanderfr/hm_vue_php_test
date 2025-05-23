@@ -333,7 +333,6 @@ async function  saveBooking()  {
 
   var formData = new FormData(); 
 
-
   let pickUpHour, pickUpMinute, dropOffHour, dropOffMinute, pickupAlmostReady, dropoffAlmostReady
 
   

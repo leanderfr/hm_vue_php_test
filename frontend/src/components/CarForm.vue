@@ -39,10 +39,9 @@
     <!-- form fields below -->
     <div class="flex flex-col w-full h-auto  px-4 my-6" >
 
-      <!-- pick up/drop off date/time, driver name -->
+      <!-- description of the car and the plate -->
       <div class="flex flex-row w-full gap-[10px] border-b-2 pb-4">
 
-          <!-- pick up date/time -->
         <div class="flex flex-col w-full ">
           <div class="flex flex-row w-full pb-2  gap-6">   
             <div class='w-1/2'>{{ expressions.description }}:</div>
@@ -203,13 +202,13 @@ const putFocusInFirstInputText_AndOthersParticularitiesOfTheCarForm = () => {
 /********************************************************************************************************************************************************
  validate dado data from the form and try to save it
 ********************************************************************************************************************************************************/
-async function  saveCar()  {
+async function saveCar()  {
 
   let toDo = props.formHttpMethodApply=='POST' ? 'insert' : 'update'
   let error = ''
 
   if ( $('#txtDescription').val().trim().length < 3 )  error = props.expressions.missing_car_description
-  if ( $('#txtPlate').val().trim().length < 3 )  error = props.expressions.missing_driver_name
+  if ( $('#txtPlate').val().trim().length < 3 )  error = props.expressions.missing_car_plate
 
   // check if user has chosen any image when adding record
   if (typeof $('#fileCarImage')[0].files[0]=='undefined' && toDo=='insert')   error = props.expressions.choose_an_image

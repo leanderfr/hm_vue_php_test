@@ -30,7 +30,32 @@
 
       <div class='datatableTitle' >
         <div style='padding-left:10px'> {{ title }} </div>
-        <div style='padding-top: 10px; padding-right:20px;font-size: 14px'>{{expressions.legend}}: <span style=' background-color: red'>&nbsp;&nbsp;&nbsp;</span>= {{expressions.inactive}}</div>
+        <div class='gap-5 flex flex-row'>
+
+          <div v-if="currentStatus=='active'" class='btnTABLE_ONLY_ACTIVE_RECORDS_ON putPrettierTooltip' 
+                  :title="expressions.add_record" 
+                  @click="forceHideTolltip();currentStatus=''" 
+                  aria-hidden="true"></div>   
+
+          <div v-else class='btnTABLE_ONLY_ACTIVE_RECORDS_OFF putPrettierTooltip' 
+                :title="expressions.add_record" 
+                @click="forceHideTolltip();currentStatus='active'" 
+                aria-hidden="true"></div>   
+
+          <div v-if="currentStatus=='inactive'" class='btnTABLE_ONLY_INACTIVE_RECORDS_ON putPrettierTooltip' 
+                :title="expressions.add_record" 
+                @click="forceHideTolltip();currentStatus=''" 
+                aria-hidden="true"></div>   
+
+          <div v-else class='btnTABLE_ONLY_INACTIVE_RECORDS_OFF putPrettierTooltip' 
+              :title="expressions.add_record" 
+                  @click="forceHideTolltip();currentStatus='inactive'" 
+              aria-hidden="true"></div>   
+
+          <div  class='btnTABLE_NEW_RECORD putPrettierTooltip' :title="expressions.add_record" @click="editForm();" aria-hidden="true"></div>   
+
+
+        </div>
       </div>
 
       <!-- loop to display each column -->
@@ -58,16 +83,16 @@
 
                   <!-- the last column was printed above and the current record is active, now put the 3 action icons (edit, delete and change status) -->
                   <div v-if='index === columns.length-1 && record.active==1' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index" >
-                      <div className='actionIcon' @click='openEditForm(record.id)' ><img alt=''  src='../assets/images/edit.svg' /></div>
+                      <div className='actionIcon' @click='editForm(record.id)' ><img alt=''  src='../assets/images/edit.svg' /></div>
                       <div className='actionIcon'  @click='deleteRecord'><img alt=''   src='../assets/images/delete.svg' /></div>
-                      <div className='actionIcon' @click='changeStatus(record.id)'><img alt=''  src='../assets/images/activate.svg' /></div>
+                      <div className='actionIcon' @click='changeStatus(record.id)'><img alt=''  src='../assets/images/active.svg' /></div>
                   </div>   
 
                   <!-- the last column was printed above and the current record is inactive, put only the icon to reactivate -->
                   <div v-if='index === columns.length-1 && record.active==0' className='actionColumn' :style="{width: column.width}" :key="'1tr-'+index"  >
                       <div className='actionIconNull'>&nbsp;</div>
                       <div className='actionIconNull'>&nbsp;</div>
-                      <div className='actionIcon' @click='changeStatus(record.id)'><img alt=''   src='../assets/images/activate.svg' /></div>
+                      <div className='actionIcon' @click='changeStatus(record.id)'><img alt=''   src='../assets/images/inactive.svg' /></div>
                   </div> 
 
               </template>
@@ -101,7 +126,7 @@
 
 <script setup>
 import { slidingMessage, forceHideTolltip , divStillVisible } from '../assets/js/utils.js'
-import { onMounted, ref  } from 'vue';
+import { onMounted, ref, watch  } from 'vue';
 import CarForm from './CarForm.vue';
 
 const emit = defineEmits( ['showLoading', 'hideLoading','setDatatableToDisplay','displaySchedule', 'toRefreshCarsBrowser'] );
@@ -136,6 +161,9 @@ const currentId = ref(null)
 // method being used with the booking form
 const formHttpMethodApply = ref(null)
 
+// which type of status should be viewed at the moment, active or inactive
+const currentStatus = ref('active')  
+
 
 
 //*****************************************************************************
@@ -157,6 +185,17 @@ onMounted( () => {
 
   fetchData()
 })
+
+
+//***************************************************************************
+// if user changes current status, refresh table base on the last choice
+//*************************************************************************** 
+watch([currentStatus], () => { 
+  fetchData()
+  },
+  { immediate: false }
+)
+
 
 
 //***************************************************************************
@@ -193,14 +232,15 @@ async function fetchData() {
 }
 
 //***************************************************************************
-// user click in a given record to edit 
+// user click in a given record to edit or ask to add new record (id='')
 //*************************************************************************** 
-const openEditForm = (id) => {
+const editForm = (id='') => {
   currentId.value = id;
 
   if (props.currentViewedDatatable === 'cars')   {  
     showCarForm.value = true
-    formHttpMethodApply.value = 'PATCH'
+    if (id=='') formHttpMethodApply.value = 'POST'  // add record
+    else formHttpMethodApply.value = 'PATCH'  // update record
   }
 }
 

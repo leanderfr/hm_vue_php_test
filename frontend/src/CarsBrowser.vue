@@ -1,7 +1,7 @@
 
 <template>
 
-  <div class='carsBrowser'> 
+  <div class='carsBrowser' id='carsBrowser' > 
 
     <!-- car images hosted in AWS S3 -->
     <template v-if='cars.length!=0' >
@@ -26,7 +26,7 @@
 
 <script setup>
 import { onMounted, ref  } from 'vue';
-import { slidingMessage } from './assets/js/utils.js'
+import { slidingMessage, toWheelCarsBrowser } from './assets/js/utils.js'
 const props = defineProps( ['selectedCar', 'backendUrl'] )
 
 const cars = ref([])

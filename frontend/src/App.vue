@@ -34,7 +34,7 @@
       </div>
 
       <!-- horizontal cars browser -->
-      <div class='carsBrowserContainer' >
+      <div class='carsBrowserContainer' id='carsBrowserContainer' style='scrollbar-width: thin;' @wheel='toWheelCarsBrowser'>
         <CarsBrowser 
           :key='toRefreshCarsBrowser' 
           :selectedCar='selectedCar' 
@@ -126,7 +126,7 @@
   import 'jquery-ui-bundle';
   import 'jquery-ui-bundle/jquery-ui.min.css';
 
-  import { prepareLoadingAnimation, slidingMessage , preparePuppyIcon } from './assets/js/utils.js'
+  import { toWheelCarsBrowser, prepareLoadingAnimation, slidingMessage , preparePuppyIcon } from './assets/js/utils.js'
 
 
   const neededJsLoaded = ref(false)   

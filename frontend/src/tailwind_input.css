@@ -209,8 +209,9 @@ align-items: center;
     width: 90%;
 }
 
+
 .carsBrowserContainer {
-@apply w-full  h-[100px] border-t-[1px] border-gray-400 border-b-[1px] flex 
+@apply w-full  h-[100px] border-t-[1px] border-gray-400 border-b-[1px] flex overflow-x-auto 
 }
 
 .carsBrowser {
@@ -424,20 +425,54 @@ button.btnCANCEL {
 
 
 button.btnSAVE {
+    /* icon-button-save is defined in tailwind.config.js */
     @apply bg-blue-500 border-transparent border-[1px] text-white  text-center h-[30px] cursor-pointer w-[170px] hover:border-red-950
  bg-icon-button-save  bg-auto bg-no-repeat  bg-position-left-corner-icon  pt-[2px] pl-9 rounded-[6px];
 }
 
 button.btnUPLOAD {
+    /* icon-button-upload is defined in tailwind.config.js */
     @apply bg-gray-300 border-transparent border-[1px] text-black  text-center h-[30px] cursor-pointer w-[170px] hover:border-black
  bg-icon-button-upload  bg-auto bg-no-repeat  bg-position-left-corner-icon  pt-[2px] pl-9 rounded-[6px];
 }
 
 button.btnDELETE {
+    /* icon-button-delete is defined in tailwind.config.js */
     @apply bg-red-500 border-transparent border-[1px] text-white  text-center h-[30px] cursor-pointer w-auto  hover:border-red-950
  bg-icon-button-delete  bg-auto bg-no-repeat  bg-position-left-corner-icon  pt-[2px] pl-9 rounded-[6px] px-[20px] min-w-[150px];
 }
 
+.btnTABLE_NEW_RECORD {
+    /* icon-new-record is defined in tailwind.config.js */
+    @apply cursor-pointer w-[70px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
+        bg-icon-new-record  bg-contain bg-center hover:border-gray-500 h-9;
+}
+
+.btnTABLE_ONLY_ACTIVE_RECORDS_ON {
+  /* ON= with border */
+  /* icon-only-active-records is defined in tailwind.config.js */
+  @apply cursor-pointer w-[70px] box-border border-2 border-gray-500  rounded-md bg-transparent bg-no-repeat 
+      bg-icon-only-active-records  bg-contain bg-center hover:border-gray-500 h-9;
+}
+/* OFF= without border */
+.btnTABLE_ONLY_ACTIVE_RECORDS_OFF {
+    /* icon-only-active-records is defined in  tailwind.config.js */
+    @apply cursor-pointer w-[70px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
+        bg-icon-only-active-records  bg-contain bg-center hover:border-gray-500 h-9;
+}
+
+.btnTABLE_ONLY_INACTIVE_RECORDS_ON {
+    /* ON= with borders */
+    /* icon-only-inactive-records is defined in  tailwind.config.js */
+    @apply cursor-pointer w-[70px] box-border border-2 border-gray-500  rounded-md bg-transparent bg-no-repeat 
+        bg-icon-only-inactive-records  bg-contain bg-center hover:border-gray-500 h-9;
+}
+/* OFF= without borders */
+.btnTABLE_ONLY_INACTIVE_RECORDS_OFF {
+    /* icon-only-inactive-records is defined in tailwind.config.js */
+    @apply cursor-pointer w-[70px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
+        bg-icon-only-inactive-records  bg-contain bg-center hover:border-gray-500 h-9;
+}
 
 
 

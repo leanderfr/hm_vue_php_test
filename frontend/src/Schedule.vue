@@ -98,7 +98,7 @@ scheduleContainer
 
 import { onMounted, ref , onUpdated  } from 'vue';
 import BookingForm from './BookingForm.vue';
-import { forceHideTolltip, hourFormat, counter, divStillVisible  } from './assets/js/utils.js'
+import { slidingMessage, forceHideTolltip, hourFormat, counter, divStillVisible  } from './assets/js/utils.js'
 
 //const showLoading = defineEmits( ['showLoading'] );
 //const hideLoading = defineEmits( ['hideLoading'] );
@@ -663,6 +663,14 @@ const editBookingRecord = (event, _id_) =>  {
  open booking form in blank to insert record
 ****************************************************************************************************/
 const newBookingRecord = (event, _id_) =>  {
+  // only allow adding booking if there's a car selected to which attach the booking
+  let currentCard = $('.carCardSelected').attr('id')
+
+  if (typeof currentCard=='undefined') {
+    slidingMessage(props.expressions.need_car_selected, 2000)        
+    return 
+  }
+
   formHttpMethodApply.value = 'POST'
   bookingIdEdit.value = ''
 
