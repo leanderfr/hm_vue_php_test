@@ -228,6 +228,26 @@ const toWheelCarsBrowser = e => {
 }
 
 
+/***********************************************************************************************************************************************************/
+// scroll a div until finding a given child element
+// for example, after writing a record, scrolls until show it in the datatable div
+/***********************************************************************************************************************************************************/
+export const scrollUntilElementVisible = (element_id) => {
+
+  if (typeof $("#" + element_id).attr("id") == "undefined") return; // check it exists
+
+  let container_div = $("#" + element_id).scrollParent(); // find its parent
+
+  // elementnecessarily  has to have an ID
+  let element = document.getElementById(element_id);
+
+  element.scrollIntoView();
+
+  let posY = container_div.scrollTop();
+  container_div.scrollTop(posY - 15); // scrolls back a little because scrollIntoView exxagerate
+}
+
+
 
 //********************************************************************************************************************************
 //*******************************************************************************************************************************
