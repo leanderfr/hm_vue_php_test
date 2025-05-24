@@ -188,7 +188,7 @@ async function getBookingFormPopulatedAndReady() {
     emit('showLoading')
 
     try {
-        let _route_ = `${props.backendUrl}/bookings/${props.currentCountry}/${props.bookingIdEdit}`
+        let _route_ = `${props.backendUrl}/booking/${props.currentCountry}/${props.bookingIdEdit}`
 
         await fetch(_route_, {method: 'GET'})
 
@@ -396,7 +396,7 @@ async function  saveBooking()  {
   if (props.formHttpMethodApply=='POST') 
     route += 'booking'        
   if (props.formHttpMethodApply=='PATCH') 
-    route += `bookings/${props.bookingIdEdit}`   
+    route += `booking/${props.bookingIdEdit}`   
 
   // formHttpMethodApply= POST, PATCH ou DELETE
   setTimeout(() => {
@@ -442,7 +442,7 @@ async function  deleteBooking()  {
     emit('showLoading')    
   }, 10);
 
-  await fetch(`${props.backendUrl}/bookings/${props.bookingIdEdit}`, {method: 'DELETE'})
+  await fetch(`${props.backendUrl}/booking/${props.bookingIdEdit}`, {method: 'DELETE'})
 
   .then(response => {
     if (!response.ok) {

@@ -35,8 +35,6 @@ require "handlers/Bookings.php";
 //********************************************************************
 $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
-$params = explode("/", $path);
-
 // prepare handlers
 $handlerExpressions = new Expressions;
 $handlerCars = new Cars;
@@ -57,7 +55,7 @@ if ($getRequest) {
     $handlerExpressions->getExpressions($resultformat, $country, $status);
   });
 
-  $router->Get("/expressions/{id}", function($id) use($handlerExpressions)  {  
+  $router->Get("/expression/{id}", function($id) use($handlerExpressions)  {  
     $handlerExpressions->getExpressionById($id);
   });
 
@@ -65,7 +63,7 @@ if ($getRequest) {
     $handlerCars->getCars($status);
   });
 
-  $router->Get("/cars/{id}", function($id) use($handlerCars)  {  
+  $router->Get("/car/{id}", function($id) use($handlerCars)  {  
     $handlerCars->getCarById($id);
   });
 
@@ -87,19 +85,19 @@ if ($getRequest) {
 //*********************************************************************************************************************************************************
 // update record, bookings cannot be updated, just created or deleted
 if ($patchRequest) {
-    $router->Patch("/expressions/{id}", function($id) use($handlerExpressions)  {  
+    $router->Patch("/expression/{id}", function($id) use($handlerExpressions)  {  
       $handlerExpressions->postOrPatchExpression($id);
     });
 
-    $router->Patch("/cars/{id}", function($id) use($handlerCars)  {  
+    $router->Patch("/car/{id}", function($id) use($handlerCars)  {  
       $handlerCars->postOrPatchCar($id);
     });
 
-    $router->Patch("/cars/status/{id}", function($id) use($handlerCars)  {  
+    $router->Patch("/car/status/{id}", function($id) use($handlerCars)  {  
       $handlerCars->ChangeStatus($id);
     });
 
-    $router->Patch("/expressions/status/{id}", function($id) use($handlerCars)  {  
+    $router->Patch("/expression/status/{id}", function($id) use($handlerCars)  {  
       $handlerCars->ChangeStatus($id);
     });
 
@@ -109,17 +107,17 @@ if ($patchRequest) {
 
 //*********************************************************************************************************************************************************
 // add record
-if ($postRequest) {
-    $router->Post("/expressions", function() use($handlerExpressions)  {  
-      $handlerExpressions->postOrpostOrPatchExpression();
+if ($postRequest)  {
+    $router->Post("/expression", function() use($handlerExpressions)  {  
+      $handlerExpressions->postOrPatchExpression();
     });
 
-    $router->Post("/cars", function() use($handlerCars)  {  
-      $handlerCars->postOrpostOrPatchCar();
+    $router->Post("/car", function() use($handlerCars)  {  
+      $handlerCars->postOrPatchCar();
     });
 
-    $router->Post("/bookings", function() use($handlerBookings)  {  
-      $handlerBookings->postOrPatchBooking();
+    $router->Post("/booking", function() use($handlerBookings)  {  
+      $handlerBookings->postBooking();
     });
 }
 
@@ -128,12 +126,10 @@ if ($postRequest) {
 // only bookings can be deleted, cars and expressions only deactivated
 if ($deleteRequest) {
 
-    $router->Delete("/bookings/{booking_id}", function($id) use($handlerBookings)  {     
+    $router->Delete("/booking/{booking_id}", function($id) use($handlerBookings)  {     
       $handlerBookings->deleteBooking($id);
     });
-
 }
-
 
 
 $router->dispatch($path);

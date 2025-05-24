@@ -13,7 +13,8 @@ class Cars
             "where deleted_at is null ";
 
     if ($status=='active') $sql .= 'and ifnull(active, false)=true';
-    if ($status=='inactive') $sql .= 'and ifnull(active, false)=false';
+    else if ($status=='inactive') $sql .= 'and ifnull(active, false)=false';
+    else $sql .= ' and 1=2';  // no status received
 
     executeFetchQueryAndReturnJsonResult( $sql, false);
   }
@@ -28,8 +29,6 @@ class Cars
 
     executeFetchQueryAndReturnJsonResult( $sql, true);
   }
-
-
 
 
   //***************************************************************************************************************************************
@@ -55,7 +54,7 @@ class Cars
 
   //***************************************************************************************************************************************
   //***************************************************************************************************************************************
-  public function postOrpostOrPatchCar($car_id=''): void   {
+  public function postOrPatchCar($car_id=''): void   {
     global $dbConnection;
 
     // update doenst need the car id

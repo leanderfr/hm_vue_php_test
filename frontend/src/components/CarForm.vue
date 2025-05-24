@@ -142,7 +142,7 @@ async function getCarFormPopulatedAndReady() {
     emit('showLoading')
 
     try {
-        let _route_ = `${props.backendUrl}/cars/${props.currentId}`
+        let _route_ = `${props.backendUrl}/car/${props.currentId}`
 
         await fetch(_route_, {method: 'GET'})
 

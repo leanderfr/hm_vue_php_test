@@ -113,7 +113,7 @@ async function getExpressionFormPopulatedAndReady() {
     emit('showLoading')
 
     try {
-        let _route_ = `${props.backendUrl}/expressions/${props.currentId}`
+        let _route_ = `${props.backendUrl}/expression/${props.currentId}`
 
         await fetch(_route_, {method: 'GET'})
 
@@ -193,9 +193,9 @@ async function saveExpression()  {
 
   let route = ''
   if (props.formHttpMethodApply=='POST') 
-    route += 'expressions'        
+    route += 'expression'        
   if (props.formHttpMethodApply=='PATCH') 
-    route += `expressions/${props.currentId}`   
+    route += `expression/${props.currentId}`   
 
   // formHttpMethodApply= POST, PATCH ou DELETE
   setTimeout(() => {

@@ -30,7 +30,8 @@ class Router
 
     public function dispatch(string $path): void
     {
-        foreach ($this->routes as $route => $handler) {
+
+       foreach ($this->routes as $route => $handler) {
 
             $pattern = preg_replace("#\{\w+\}#", "([^\/]+)", $route);
 
@@ -48,6 +49,6 @@ class Router
         http_response_code(500);   // 500= erro interno
         // I wont give much details
         //echo "Page not found, invalid route or invalid method";
-        echo "Page not found";
+        echo "Missing route";
     }
 }

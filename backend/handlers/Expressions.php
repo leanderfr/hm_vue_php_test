@@ -23,8 +23,8 @@ class Expressions
               "where deleted_at is null ";
 
     if ($status=='active') $sql .= 'and ifnull(active, false)=true';
-    if ($status=='inactive') $sql .= 'and ifnull(active, false)=false';
-
+    else if ($status=='inactive') $sql .= 'and ifnull(active, false)=false';
+    else $sql .= ' and 1=2';  // no status received
 
     // 3th parameter, true= specific to 'expressions', it prepares the result specific way to ease frontend's life
     if ( $resultformat=='reference')
@@ -71,7 +71,7 @@ class Expressions
 
   //***************************************************************************************************************************************
   //***************************************************************************************************************************************
-  public function postOrpostOrPatchExpression($expression_id=''): void   {
+  public function postOrPatchExpression($expression_id=''): void   {
     global $dbConnection;
 
     // update doenst need the expression id
