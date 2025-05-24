@@ -127,7 +127,7 @@
   import 'jquery-ui-bundle';
   import 'jquery-ui-bundle/jquery-ui.min.css';
 
-  import { toWheelCarsBrowser, prepareLoadingAnimation, slidingMessage , preparePuppyIcon } from './assets/js/utils.js'
+  import { toWheelCarsBrowser, prepareLoadingAnimation, slidingMessage , preparePuppyIcon, loadScripts } from './assets/js/utils.js'
 
 
   const neededJsLoaded = ref(false)   
@@ -163,18 +163,6 @@
 
 
 
-  //******************************************************************************
-  // load js files one after another, to avoid calling a function not loaded yet
-  //******************************************************************************
-
-   function loadScripts(scripts) {
-       var promises = [];
-       scripts.forEach(function(script) {
-           promises.push($.getScript(script));
-       });
-       return $.when.apply($, promises);
-   }
-
   //***************************************************************************
   // user changes current selected car in the CarsBrowser component
   //***************************************************************************
@@ -209,19 +197,13 @@
   onBeforeMount( () => {
 
     var scriptsToLoad = [
-        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.js", 
-        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.date.js",
-        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/legacy.js",
         "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/multiDraggable.js",
         "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/maskDateHour.js"
     ]
 
     loadScripts(scriptsToLoad).done(function() {
-      neededJsLoaded.value=true
+      neededJsLoaded.value=true        
     });
-
-
-
   })
 
 

@@ -102,9 +102,9 @@ scheduleContainer
 
 <script setup>
 
-import { onMounted, ref , onUpdated  } from 'vue';
+import { onMounted, ref , onBeforeMount  } from 'vue';
 import BookingForm from './BookingForm.vue';
-import { slidingMessage, forceHideTolltip, hourFormat, counter, divStillVisible  } from './assets/js/utils.js'
+import { slidingMessage, forceHideTolltip, hourFormat, counter, divStillVisible, loadScripts  } from './assets/js/utils.js'
 
 //const showLoading = defineEmits( ['showLoading'] );
 //const hideLoading = defineEmits( ['hideLoading'] );
@@ -130,12 +130,30 @@ let draggingBookingDivYet = false
 
 
 
+  //***************************************************************************
+  // load crucial js before anything
+  //***************************************************************************
+  onBeforeMount( () => {
+
+    var scriptsToLoad = [
+        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.js", 
+        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.date.js",
+        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/legacy.js",
+    ]
+
+    loadScripts(scriptsToLoad).done(function() {
+      
+    });
+  })
+
 //*****************************************************************************
 //*****************************************************************************
 
 onMounted( () => {
   refreshBookingDatesAndContent()  // start displaying dates from current week and its reservations
-  prepareCalendar()
+  setTimeout(() => {
+    prepareCalendar()  
+  }, 1000);  
 
   setTimeout( () => {
     // define tooltip of top buttons

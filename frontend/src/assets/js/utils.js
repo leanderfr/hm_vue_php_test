@@ -249,9 +249,21 @@ export const scrollUntilElementVisible = (element_id) => {
 
 
 
+//******************************************************************************
+// load js files one after another, to avoid calling a function not loaded yet
+//******************************************************************************
+  function loadScripts(scripts) {
+      var promises = [];
+      scripts.forEach(function(script) {
+          promises.push($.getScript(script));
+      });
+      return $.when.apply($, promises);
+  }
+
+
 //********************************************************************************************************************************
 //*******************************************************************************************************************************
 export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter, makeWindowDraggable, divStillVisible, 
-      hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC, formatDate, forceHideTolltip,
+      hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC, formatDate, forceHideTolltip, loadScripts,
       toWheelCarsBrowser };
 
