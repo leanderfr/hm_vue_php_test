@@ -230,9 +230,9 @@ async function saveCar()  {
 
   let route = ''
   if (props.formHttpMethodApply=='POST') 
-    route += 'cars'        
+    route += 'car'        
   if (props.formHttpMethodApply=='PATCH') 
-    route += `cars/${props.currentId}`   
+    route += `car/${props.currentId}`   
 
   // formHttpMethodApply= POST, PATCH ou DELETE
   setTimeout(() => {

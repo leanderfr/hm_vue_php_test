@@ -24,7 +24,10 @@ class Expressions
 
     if ($status=='active') $sql .= 'and ifnull(active, false)=true';
     else if ($status=='inactive') $sql .= 'and ifnull(active, false)=false';
+    else if ($status=='all') $sql .= '';
     else $sql .= ' and 1=2';  // no status received
+
+    $sql .= ' order by item';
 
     // 3th parameter, true= specific to 'expressions', it prepares the result specific way to ease frontend's life
     if ( $resultformat=='reference')
@@ -83,6 +86,16 @@ class Expressions
                 ['string', 'portuguese', 5, 50] 
               ];
 
+    // if it is posting ($expression_id==''), get the usual $_POST from php
+    if ($expression_id=='')    {
+      $_FIELDS = $_POST;
+    }
+
+    // otherwise, use the PHP 8.4 request_parse_body() 
+    else {
+      [$_FIELDS] = request_parse_body();
+    }
+
     $dataError = '';
     for ($i=0; $i < count($fields); $i++)  {
 
@@ -91,7 +104,7 @@ class Expressions
       $minSize = $fields[$i][2];
       $maxSize = $fields[$i][3];
 
-      $fieldValue = $_POST[$fieldName];
+      $fieldValue = $_FIELDS[$fieldName];
 
       // is numeric
       if ($fields[$i][0] == 'int') {
@@ -112,9 +125,9 @@ class Expressions
 
     if ($dataError!='') internalError( $dataError );
 
-    $item =   $_POST['item'];
-    $english =   $_POST['english'];
-    $portuguese =   $_POST['portuguese'];
+    $item =   addslashes($_FIELDS['item']);
+    $english =   addslashes($_FIELDS['english']);
+    $portuguese =   addslashes($_FIELDS['portuguese']);
 
     // if no ID's been informed, its a POST, new record
     if ($expression_id=='')    {

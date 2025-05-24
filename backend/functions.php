@@ -1,7 +1,6 @@
 <?php
 
 use Aws\S3\S3Client;
-
 use Aws\S3\Exception\S3Exception as S3;
 
 //*********************************************************************************
@@ -87,7 +86,8 @@ function executeFetchQueryAndReturnJsonResult($sql, $simplifyJSON=false, $toRetu
     $expressions = array();
 
     while($row = mysqli_fetch_assoc($result))    {
-      $expressions[$row["item"]] =  htmlentities($row["expression"]) ;
+      //$expressions[$row["item"]] =  htmlentities($row["expression"], ENT_COMPAT, 'UTF-8'); ;
+      $expressions[$row["item"]] =  $row["expression"];
     }
     die( json_encode($expressions) );     
   }
@@ -161,11 +161,10 @@ function uploadImageToAWS_S3($fileName, $recordId)  {
   // file name locally written 
   $localFile = "car_$recordId.png";
 
-  if (! move_uploaded_file( $_FILES[$fileName]['tmp_name'], $localFile))  
-    internalError( 'Image upload failed => '.$localFile);
-
+  if (! move_uploaded_file( $_FILES[$fileName]['tmp_name'], "tmp/$localFile"))  
+    internalError( "Image upload failed => tmp/$localFile");
   
-try {
+  try {
     $s3Client = new S3Client([
         'region' => 'sa-east-1',
         'version' => 'latest',
@@ -175,7 +174,7 @@ try {
             'secret' => $AWS_S3_SECRETKEY
         ]
     ]);
-
+ 
 } catch(S3 $e) {
     die('err='. $e->getMessage());
  }
@@ -184,11 +183,11 @@ try {
       $result = $s3Client->putObject([
         'Bucket' => $AWS_S3_BUCKET,
         'Key'    => "$AWS_S3_IMAGES_FOLDER/$localFile",
-        'Body'   => fopen($localFile, 'r'),
+        'Body'   => fopen("tmp/$localFile", 'r'),
 
       ]);
   }
-  catch (S3Exception $e) {
+  catch (S3 $e) {
       internalError( $e->getMessage() );
   }
 

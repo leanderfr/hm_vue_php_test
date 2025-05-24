@@ -14,7 +14,10 @@ class Cars
 
     if ($status=='active') $sql .= 'and ifnull(active, false)=true';
     else if ($status=='inactive') $sql .= 'and ifnull(active, false)=false';
+    else if ($status=='all') $sql .= '';
     else $sql .= ' and 1=2';  // no status received
+
+    $sql .= ' order by description';
 
     executeFetchQueryAndReturnJsonResult( $sql, false);
   }
@@ -64,6 +67,17 @@ class Cars
     $fields = [ ['string', 'description', 5, 100]  ,
                 ['string', 'plate', 5, 20] ];
 
+
+    // if it is posting ($car_id==''), get the usual $_POST from php
+    if ($car_id=='')    {
+      $_FIELDS = $_POST;
+    }
+
+    // otherwise, use the PHP 8.4 request_parse_body() 
+    else {
+      [$_FIELDS, $_FILES] = request_parse_body();
+    }
+
     $dataError = '';
     for ($i=0; $i < count($fields); $i++)  {
 
@@ -72,7 +86,7 @@ class Cars
       $minSize = $fields[$i][2];
       $maxSize = $fields[$i][3];
 
-      $fieldValue = $_POST[$fieldName];
+      $fieldValue = $_FIELDS[$fieldName];
 
       // is numeric
       if ($fields[$i][0] == 'int') {
@@ -93,8 +107,8 @@ class Cars
 
     if ($dataError!='') internalError( $dataError );
 
-    $description =   $_POST['description'];
-    $plate = $_POST['plate'];
+    $description =   addslashes($_FIELDS['description']);
+    $plate = ($_FIELDS['plate']);
 
     // is image ok  
     // the front end already checked if the user chose an image when adding record, what's impeditive to go on
@@ -137,6 +151,7 @@ class Cars
       $car_id = explode("|", $result)[1];
     }
     // uploads the image to AWS S3
+
     if (! $bypassImage)      {
       uploadImageToAWS_S3('image', $car_id);
     }

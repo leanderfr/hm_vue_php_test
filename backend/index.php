@@ -74,7 +74,7 @@ if ($getRequest) {
   });
 
   // need to inform country, because of the date format used in the query
-  $router->Get("/bookings/{country}/{id}", function($country, $id) use($handlerBookings)  {  
+  $router->Get("/booking/{country}/{id}", function($country, $id) use($handlerBookings)  {  
     $handlerBookings->getBookingById( $country, $id );
   });
 
@@ -89,17 +89,18 @@ if ($patchRequest) {
       $handlerExpressions->postOrPatchExpression($id);
     });
 
+    $router->Patch("/expressions/status/{id}", function($id) use($handlerExpressions)  {  
+      $handlerExpressions->ChangeStatus($id);
+    });
+
     $router->Patch("/car/{id}", function($id) use($handlerCars)  {  
       $handlerCars->postOrPatchCar($id);
     });
 
-    $router->Patch("/car/status/{id}", function($id) use($handlerCars)  {  
+    $router->Patch("/cars/status/{id}", function($id) use($handlerCars)  {  
       $handlerCars->ChangeStatus($id);
     });
 
-    $router->Patch("/expression/status/{id}", function($id) use($handlerCars)  {  
-      $handlerCars->ChangeStatus($id);
-    });
 
 
 }
