@@ -3,13 +3,12 @@
 class Expressions
 {
 
-  public function getExpressions(string $resultformat, string $country, string $status): void   {
-    if ( $_SERVER['REQUEST_METHOD'] !== 'GET' ) {
-      http_response_code(500);   
-      die( 'Method not allowed1' );
-    }
+  //***************************************************************************************************************************************
+  //***************************************************************************************************************************************
 
-    if ($country!='usa' && $country!='country' )   routeError();
+  public function getExpressions(string $resultformat, string $country, string $status): void   {
+
+    if ($country!='usa' && $country!='brazil' )   routeError();
 
     $language = $country=='usa' ? 'english' : 'portuguese';
 
@@ -33,6 +32,116 @@ class Expressions
 
     if ( $resultformat=='json')
       executeFetchQueryAndReturnJsonResult( $sql, false, false );
+  }
+
+  //***************************************************************************************************************************************
+  //***************************************************************************************************************************************
+
+  public function getExpressionById($id): void   {
+    $sql =  "select item, english, portuguese  ".
+            "from expressions  ".
+            "where id=$id ";
+
+    executeFetchQueryAndReturnJsonResult( $sql, true);
+  }
+
+
+
+
+
+  //***************************************************************************************************************************************
+  //***************************************************************************************************************************************
+  public function changeStatus($id): void   {
+    global $dbConnection;
+
+    if (! is_numeric($id)) {
+      internalError( 'Not numeric' );
+    }
+
+    $crudSql = "update expressions set active = if(active, false, true) where id = $id ";
+    $dbConnection -> autocommit(true);    // record without need to transaction
+
+    $result = executeCrudQueryAndReturnResult($crudSql, true);    
+
+    http_response_code(200);   // 200= it was ok
+    die( '__success__' );
+  }
+
+
+
+  //***************************************************************************************************************************************
+  //***************************************************************************************************************************************
+  public function postOrpostOrPatchExpression($expression_id=''): void   {
+    global $dbConnection;
+
+    // update doenst need the expression id
+  	if ($expression_id!='' && ! is_numeric($expression_id))   routeError();
+
+    // verify request
+    $fields = [ ['string', 'item', 5, 100]  ,
+                ['string', 'english', 5, 50],
+                ['string', 'portuguese', 5, 50] 
+              ];
+
+    $dataError = '';
+    for ($i=0; $i < count($fields); $i++)  {
+
+      $fieldType = $fields[$i][0];
+      $fieldName = $fields[$i][1];
+      $minSize = $fields[$i][2];
+      $maxSize = $fields[$i][3];
+
+      $fieldValue = $_POST[$fieldName];
+
+      // is numeric
+      if ($fields[$i][0] == 'int') {
+        if (! is_numeric($fieldValue)) {
+          $dataError = 'Not numeric';
+          break;
+        }
+      }
+
+      // min / max sizes
+      if ($fieldType=='string') {
+          if ( strlen($fieldValue) < $minSize || strlen($fieldValue) > $maxSize )  {
+            $dataError = $fieldName . ' - String size error';
+            break;
+          }
+      }
+    }
+
+    if ($dataError!='') internalError( $dataError );
+
+    $item =   $_POST['item'];
+    $english =   $_POST['english'];
+    $portuguese =   $_POST['portuguese'];
+
+    // if no ID's been informed, its a POST, new record
+    if ($expression_id=='')    {
+      $crudSql = "insert into expressions(item, english, portuguese, created_at, updated_at, active) ". 
+                "select '$item', '$english', '$portuguese', now(), now(), true "; 
+      $dbOperation = 'insert';
+    }
+
+    // if ID's been informed, its a PATCH, update
+    else {
+      $crudSql = "update expressions set item='$item', english='$english', portuguese='$portuguese', updated_at=now() ". 
+                "where id = $expression_id ";
+      $dbOperation = 'update';
+    }
+    $dbConnection -> autocommit(true);    // record without need to transaction
+
+    // execute query and get the ID of the just handled expression
+    $result = executeCrudQueryAndReturnResult($crudSql, true);    
+
+    // if it was a POST, obtain the id  (__success__|record id)
+    if ($expression_id=='') {
+      $expression_id = explode("|", $result)[1];
+    }
+
+    http_response_code(200);   // 200= it was ok
+    if ($dbOperation == 'update')   die( '__success__' );
+    else die( $result );    // __success__|id registro
 
   }
 

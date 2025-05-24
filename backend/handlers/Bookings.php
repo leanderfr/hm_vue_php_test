@@ -5,14 +5,10 @@ class Bookings
 
   //***************************************************************************************************************************************
   //***************************************************************************************************************************************
-  public function getByCarIdAndPeriod(string $country, string $car_id, string $firstday, string $lastday): void   {
-    if ( $_SERVER['REQUEST_METHOD'] !== 'GET' ) {
-      http_response_code(500);   
-      die( 'Method not allowed1' );
-    }
+  public function getBookingsByCarIdAndPeriod(string $country, string $car_id, string $firstday, string $lastday): void   {
 
-    if ($country!='brazil' && $country!='usa' )   routeError();
-  	if (! is_numeric($car_id))   routeError();
+    if ($country!='brazil' && $country!='usa' )   routeError('country');
+  	if (! is_numeric($car_id))   routeError('id');
  
     // generates random string to concatenate with the link to the car image and avoid browser cache 
     $tempLink = rand(10000,99999);
@@ -74,10 +70,6 @@ class Bookings
   //***************************************************************************************************************************************
   //***************************************************************************************************************************************
   public function getBookingById(string $country, string $booking_id): void   {
-    if ( $_SERVER['REQUEST_METHOD'] !== 'GET' ) {
-      http_response_code(500);   
-      die( 'Method not allowed1' );
-    }
 
     if ($country!='brazil' && $country!='usa' )   routeError();
   	if (! is_numeric($booking_id))   routeError();
@@ -104,13 +96,9 @@ class Bookings
 
   //***************************************************************************************************************************************
   //***************************************************************************************************************************************
-  public function postBooking($booking_id=''): void   {
+  public function postOrPatchBooking($booking_id=''): void   {
     global $dbConnection;
 
-    if ( $_SERVER['REQUEST_METHOD'] !== 'POST'  ) {
-      http_response_code(500);   
-      die( 'Method not allowed' );
-    }
 
     // verify request
     $fields = [ ['int', 'car_id', 1, 6]  ,  
@@ -182,11 +170,6 @@ class Bookings
   //***************************************************************************************************************************************
   public function deleteBooking($id=''): void   {
     global $dbConnection;
-
-    if ( $_SERVER['REQUEST_METHOD'] !== 'DELETE'  ) {
-      http_response_code(500);   
-      die( 'Method not allowed' );
-    }
 
 
   	if (! is_numeric($id))   routeError();

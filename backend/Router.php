@@ -5,17 +5,23 @@ class Router
 {
     private array $routes = [];
 
-    public function addGet(string $path, Closure $handler): void
+    public function Get(string $path, Closure $handler): void
     {
         $this->routes[$path] = $handler;
     }
 
-    public function addPost(string $path, Closure $handler): void
+    public function Post(string $path, Closure $handler): void
     {
         $this->routes[$path] = $handler;
     }
 
-    public function addDelete(string $path, Closure $handler): void
+    public function Patch(string $path, Closure $handler): void
+    {
+        $this->routes[$path] = $handler;
+    }
+
+
+    public function Delete(string $path, Closure $handler): void
     {
         $this->routes[$path] = $handler;
     }
@@ -39,6 +45,9 @@ class Router
             }
         }
 
-        echo "Page not found or invalid route";
+        http_response_code(500);   // 500= erro interno
+        // I wont give much details
+        //echo "Page not found, invalid route or invalid method";
+        echo "Page not found";
     }
 }

@@ -3,11 +3,10 @@
 class Cars
 {
 
+  //***************************************************************************************************************************************
+  //***************************************************************************************************************************************
+  
   public function getCars($status): void   {
-    if ( $_SERVER['REQUEST_METHOD'] !== 'GET' ) {
-      http_response_code(500);   
-      die( 'Method not allowed' );
-    }
 
     $sql =  "select description, concat('car_', id, '.png') as car_image, id, plate, ifnull(active, false) as active ".
             "from cars  ".
@@ -19,11 +18,10 @@ class Cars
     executeFetchQueryAndReturnJsonResult( $sql, false);
   }
 
+  //***************************************************************************************************************************************
+  //***************************************************************************************************************************************
+
   public function getCarById($id): void   {
-    if ( $_SERVER['REQUEST_METHOD'] !== 'GET' ) {
-      http_response_code(500);   
-      die( 'Method not allowed' );
-    }
     $sql =  "select description, concat('car_', id, '.png') as car_image, id, plate, ifnull(active, false) as active ".
             "from cars  ".
             "where id=$id ";
@@ -38,11 +36,6 @@ class Cars
   //***************************************************************************************************************************************
   public function changeStatus($id): void   {
     global $dbConnection;
-
-    if ( $_SERVER['REQUEST_METHOD'] !== 'POST'  ) {
-      http_response_code(500);   
-      die( 'Method not allowed' );
-    }
 
 
     if (! is_numeric($id)) {
@@ -62,19 +55,15 @@ class Cars
 
   //***************************************************************************************************************************************
   //***************************************************************************************************************************************
-  public function postCar($car_id=''): void   {
+  public function postOrpostOrPatchCar($car_id=''): void   {
     global $dbConnection;
 
-    if ( $_SERVER['REQUEST_METHOD'] !== 'POST'  ) {
-      http_response_code(500);   
-      die( 'Method not allowed' );
-    }
     // update doenst need the car id
   	if ($car_id!='' && ! is_numeric($car_id))   routeError();
 
     // verify request
-    $fields = [ ['description', 'description', 5, 100]  ,
-                ['plate', 'plate', 5, 20] ];
+    $fields = [ ['string', 'description', 5, 100]  ,
+                ['string', 'plate', 5, 20] ];
 
     $dataError = '';
     for ($i=0; $i < count($fields); $i++)  {
@@ -142,7 +131,7 @@ class Cars
     }
     $dbConnection -> autocommit(true);    // record without need to transaction
 
-    // execute query and get the ID of the just handled record (third param)
+    // execute query and get the ID of the just handled record
     $result = executeCrudQueryAndReturnResult($crudSql, true);    
     // if it was a POST, obtain the car id  (__success__|record id)
     if ($car_id=='') {

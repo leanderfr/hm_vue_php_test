@@ -44,93 +44,96 @@ $handlerBookings = new Bookings;
 
 $router = new Router;
 
-//********************************************************************
-// expressions (english/portuguese)
-// resultformat =>  json , returns as an array of json,     reference, returns as a simple keyed array,  expressions.tablename, expresssions.title, etc
-//********************************************************************
-$router->addGet("/expressions/{resultformat}/{country}/{status}", function($resultformat, $country, $status) use($handlerExpressions) {  
-  $handlerExpressions->getExpressions($resultformat, $country, $status);
-});
+$getRequest = $_SERVER['REQUEST_METHOD']==='GET';
+$postRequest = $_SERVER['REQUEST_METHOD']==='POST';
+$patchRequest = $_SERVER['REQUEST_METHOD']==='PATCH';
+$deleteRequest = $_SERVER['REQUEST_METHOD']==='DELETE';
 
-//********************************************************************
-// cars
-//********************************************************************
-if ( $_SERVER['REQUEST_METHOD'] === 'GET'  )  {
-    $router->addGet("/cars/{status}", function($status) use($handlerCars)  {  
-      $handlerCars->getCars($status);
-    });
+//*********************************************************************************************************************************************************
+// get record(s)
+if ($getRequest) {
+  // resultformat =>  json , returns as an array of json,     reference, returns as a simple keyed array,  expressions.tablename, expresssions.title, etc
+  $router->Get("/expressions/{resultformat}/{country}/{status}", function($resultformat, $country, $status) use($handlerExpressions) {  
+    $handlerExpressions->getExpressions($resultformat, $country, $status);
+  });
 
-    // same route, different method
-    $router->addGet("/cars/{id}", function($id) use($handlerCars)  {  
-      $handlerCars->getCarById($id);
-    });
+  $router->Get("/expressions/{id}", function($id) use($handlerExpressions)  {  
+    $handlerExpressions->getExpressionById($id);
+  });
+
+  $router->Get("/cars/{status}", function($status) use($handlerCars)  {  
+    $handlerCars->getCars($status);
+  });
+
+  $router->Get("/cars/{id}", function($id) use($handlerCars)  {  
+    $handlerCars->getCarById($id);
+  });
+
+
+  $router->Get("/bookings/{country}/{car_id}/{firstday}/{lastday}", 
+        function($country, $car_id, $firstday, $lastday) use($handlerBookings)  {  
+    $handlerBookings->getBookingsByCarIdAndPeriod( $country, $car_id, $firstday, $lastday );
+  });
+
+  // need to inform country, because of the date format used in the query
+  $router->Get("/bookings/{country}/{id}", function($country, $id) use($handlerBookings)  {  
+    $handlerBookings->getBookingById( $country, $id );
+  });
+
+
+
 }
 
-if ( $_SERVER['REQUEST_METHOD'] === 'POST'  ) {
-    // update
-    $router->addPost("/cars/{id}", function($id) use($handlerCars)  {  
-      $handlerCars->postCar($id);
+//*********************************************************************************************************************************************************
+// update record, bookings cannot be updated, just created or deleted
+if ($patchRequest) {
+    $router->Patch("/expressions/{id}", function($id) use($handlerExpressions)  {  
+      $handlerExpressions->postOrPatchExpression($id);
     });
 
-    // insert
-    $router->addPost("/cars", function() use($handlerCars)  {  
-      $handlerCars->postCar();
+    $router->Patch("/cars/{id}", function($id) use($handlerCars)  {  
+      $handlerCars->postOrPatchCar($id);
     });
 
-    // change status
-    $router->addPost("/cars/status/{id}", function($id) use($handlerCars)  {  
+    $router->Patch("/cars/status/{id}", function($id) use($handlerCars)  {  
       $handlerCars->ChangeStatus($id);
     });
+
+    $router->Patch("/expressions/status/{id}", function($id) use($handlerCars)  {  
+      $handlerCars->ChangeStatus($id);
+    });
+
+
 }
 
 
-
-
-
-
-//********************************************************************
-// bookings 
-// the country is needed to inform the format of the date to be 
-// retrieved in the database
-//********************************************************************
-if ( $_SERVER['REQUEST_METHOD'] === 'GET'  )  {
-
-    $router->addGet("/products/{id}", function($id) {
-        echo "This is the page for product $id";
-    });
-    $router->addGet("/products/{id}/orders/{order_id}", function($id, $order_id) {
-        echo "This is the page for product $id, and order $order_id";
-      die();
+//*********************************************************************************************************************************************************
+// add record
+if ($postRequest) {
+    $router->Post("/expressions", function() use($handlerExpressions)  {  
+      $handlerExpressions->postOrpostOrPatchExpression();
     });
 
-    $router->addGet("/bookings/{country}/{car_id}/{firstday}/{lastday}", 
-          function($country, $car_id, $firstday, $lastday) use($handlerBookings)  {  
-
-      $handlerBookings->getByCarIdAndPeriod( $country, $car_id, $firstday, $lastday );
+    $router->Post("/cars", function() use($handlerCars)  {  
+      $handlerCars->postOrpostOrPatchCar();
     });
 
-    $router->addGet("/bookings/{country}/{id}", function($country, $id) use($handlerBookings)  {  
-      $handlerBookings->getBookingById( $country, $id );
+    $router->Post("/bookings", function() use($handlerBookings)  {  
+      $handlerBookings->postOrPatchBooking();
     });
 }
 
-// same route, different methods
-if ( $_SERVER['REQUEST_METHOD'] === 'POST'  )  {
-  // patch (update) record
-  $router->addPost("/booking/{booking_id}", function($id) use($handlerBookings)  {     
-    $handlerBookings->postBooking($id);
-  });
-  // new record
-  $router->addPost("/booking", function($id) use($handlerBookings)  {  
-    $handlerBookings->postBooking($id);
-  });
+//*********************************************************************************************************************************************************
+// delete record
+// only bookings can be deleted, cars and expressions only deactivated
+if ($deleteRequest) {
+
+    $router->Delete("/bookings/{booking_id}", function($id) use($handlerBookings)  {     
+      $handlerBookings->deleteBooking($id);
+    });
+
 }
 
-if ( $_SERVER['REQUEST_METHOD'] === 'DELETE'  ) {
-  $router->addDelete("/booking/{id}", function($id) use($handlerBookings)  {  
-    $handlerBookings->deleteBooking($id);
-  });
-}
 
 
 $router->dispatch($path);

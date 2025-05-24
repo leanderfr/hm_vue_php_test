@@ -302,7 +302,7 @@ async function changeStatus (id) {
 
   emit('showLoading')
 
-  await fetch(route, {method: 'POST'})
+  await fetch(route, {method: 'PATCH'})
 
   .then(response => {
     if (!response.ok) {

@@ -7,9 +7,9 @@ use Aws\S3\Exception\S3Exception as S3;
 //*********************************************************************************
 // informs the received route is incorrect
 //*********************************************************************************
-function routeError() {
+function routeError($detail='') {
   http_response_code(500);     
-  die('Error with the route');
+  die('Error with the route= '.$detail);
 }
 
 

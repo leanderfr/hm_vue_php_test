@@ -396,7 +396,7 @@ async function  saveBooking()  {
   if (props.formHttpMethodApply=='POST') 
     route += 'booking'        
   if (props.formHttpMethodApply=='PATCH') 
-    route += `booking/${props.bookingIdEdit}`   
+    route += `bookings/${props.bookingIdEdit}`   
 
   // formHttpMethodApply= POST, PATCH ou DELETE
   setTimeout(() => {
@@ -442,7 +442,7 @@ async function  deleteBooking()  {
     emit('showLoading')    
   }, 10);
 
-  await fetch(`${props.backendUrl}/booking/${props.bookingIdEdit}`, {method: 'DELETE'})
+  await fetch(`${props.backendUrl}/bookings/${props.bookingIdEdit}`, {method: 'DELETE'})
 
   .then(response => {
     if (!response.ok) {
