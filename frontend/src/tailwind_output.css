@@ -721,6 +721,10 @@ video {
   height: 5rem;
 }
 
+.h-5 {
+  height: 1.25rem;
+}
+
 .h-9 {
   height: 2.25rem;
 }
@@ -745,6 +749,10 @@ video {
   height: 40px;
 }
 
+.h-\[50px\] {
+  height: 50px;
+}
+
 .h-\[60px\] {
   height: 60px;
 }
@@ -764,14 +772,6 @@ video {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-5 {
-  height: 1.25rem;
-}
-
-.h-\[50px\] {
-  height: 50px;
 }
 
 .max-h-full {

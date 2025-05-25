@@ -161,8 +161,8 @@
         :formHttpMethodApply = 'formHttpMethodApply'  
         @closeExpressionForm="showExpressionForm=false"  
         @showLoading="emit('showLoading')" 
-        @hideLoading="emit('hideLoading')" 
-        @refreshDatatable = "fetchData();emit('toRefreshExpreCarsBrowser');"   />
+        @hideLoading="emit('hideLoading')"  juca
+        @refreshDatatable = "fetchData();emit('toRefreshExpressions');"   />
   </div>
 
 

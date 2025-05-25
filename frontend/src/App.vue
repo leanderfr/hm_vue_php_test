@@ -77,6 +77,7 @@
             @hideLoading="isLoading=false"     
             @toDisplaySchedule='displaySchedule'   
             @toRefreshCarsBrowser="toRefreshCarsBrowser++"
+            @toRefreshExpressions="fetchExpressions()" 
             @setDatatableToDisplay='setDatatableToDisplay'
             :imagesUrl = 'imagesUrl' />
       </div>
