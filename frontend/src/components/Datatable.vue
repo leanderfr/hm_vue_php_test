@@ -12,29 +12,51 @@
 
           <div></div>
 
-          <!-- action buttons -->
-          <div class="flex flex-row pt-1">
+          <!-- navigation buttons -->
+          <div class="flex flex-row pt-1 w-full justify-between">
+              <div class='pl-4 pt-2 text-2xl'> {{ title }} </div>
 
-              <!-- schedule  -->
-              <div  class='btnSCHEDULE_TABLE putPrettierTooltip' :title="expressions.schedule" @click="forceHideTolltip();emit('toDisplaySchedule')" aria-hidden="true"></div>   
+              <div class='flex flex-row'>
+                  <!-- schedule icon  -->
+                  <div  class='btnSCHEDULE_TABLE putPrettierTooltip' :title="expressions.schedule" @click="forceHideTolltip();emit('toDisplaySchedule')" aria-hidden="true"></div>   
 
-              <!-- cars table -->
-              <div  class='btnCARS_TABLE putPrettierTooltip' 
-                :title="expressions.cars" 
-                @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" 
-                aria-hidden="true"></div>   
+                  <!-- cars table icon -->
+                  <div  class='btnCARS_TABLE putPrettierTooltip' 
+                    :title="expressions.cars" 
+                    @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" 
+                    aria-hidden="true"></div>   
 
 
-              <!-- expressions table -->
-              <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' :title="expressions.expressions" @click="forceHideTolltip();emit('setDatatableToDisplay', 'expressions')" aria-hidden="true"></div>   
-
+                  <!-- expressions table icon -->
+                  <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' :title="expressions.expressions" @click="forceHideTolltip();emit('setDatatableToDisplay', 'expressions')" aria-hidden="true"></div>   
+                </div>
           </div> 
 
       </div>
 
       <div class='datatableTitle' >
-        <div style='padding-left:10px'> {{ title }} </div>
-        <div class='gap-5 flex flex-row'>
+        <div class='flex flex-col w-full'>
+
+            <!--  search box --> 
+            <div class="flex flex-col" >  
+              <input type="text" class='txtTABLE_SEARCHBOX'  id='txtTableSearchText'  autocomplete="off" 
+                  @focus='showTipSearchbox=true' 
+                  @blur='showTipSearchbox=false' 
+                  @mouseenter="focusSearchBox" />
+
+              <div class="flex flex-row pt-1 text-xs"  >  
+                  <div v-if="showTipSearchbox">
+                    <span class="text-blue-900 font-bold">Enter</span>
+                    <span class="text-black">= {{ expressions.search_verb }}</span>
+                </div>
+                <div v-else>&nbsp;</div>
+              </div>
+            </div>
+        </div>
+
+
+        <!-- action buttons -->
+        <div class='gap-5 flex flex-row items-start '>
 
           <div v-if="currentStatus=='active'" class='btnTABLE_ONLY_ACTIVE_RECORDS_ON putPrettierTooltip' 
                   :title="expressions.only_active" 
@@ -195,6 +217,9 @@ const formHttpMethodApply = ref(null)
 // which type of status should be viewed at the moment, active or inactive
 const currentStatus = ref('')  
 
+// if must show the 'Press Enter to search' message underneath the search box
+const showTipSearchbox = ref(false)
+
 
 //*****************************************************************************
 //*****************************************************************************
@@ -207,8 +232,12 @@ const rowClicked = (id) =>   {
 
 }
 
-
-
+//*****************************************************************************
+// if users hovers mouse over search box, put the focus in it 
+//*****************************************************************************
+const focusSearchBox = (e) => {
+  if (! $(e.target).is(':focus') ) $(e.target).focus()
+}
 
 //*****************************************************************************
 //*****************************************************************************

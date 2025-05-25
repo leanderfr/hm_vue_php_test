@@ -445,33 +445,33 @@ button.btnDELETE {
 .btnTABLE_NEW_RECORD {
     /* icon-new-record is defined in tailwind.config.js */
     @apply cursor-pointer w-[70px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
-        bg-icon-new-record  bg-contain bg-center hover:border-gray-500 h-9;
+        bg-icon-new-record  bg-center hover:border-gray-500 h-9;
 }
 
 .btnTABLE_ONLY_ACTIVE_RECORDS_ON {
   /* ON= with border */
   /* icon-only-active-records is defined in tailwind.config.js */
   @apply cursor-pointer w-[70px] box-border border-2 border-gray-500  rounded-md bg-transparent bg-no-repeat 
-      bg-icon-only-active-records  bg-contain bg-center hover:border-gray-500 h-9;
+      bg-icon-only-active-records  bg-center hover:border-gray-500 h-9;
 }
 /* OFF= without border */
 .btnTABLE_ONLY_ACTIVE_RECORDS_OFF {
     /* icon-only-active-records is defined in  tailwind.config.js */
     @apply cursor-pointer w-[70px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
-        bg-icon-only-active-records  bg-contain bg-center hover:border-gray-500 h-9;
+        bg-icon-only-active-records   bg-center hover:border-gray-500 h-9;
 }
 
 .btnTABLE_ONLY_INACTIVE_RECORDS_ON {
     /* ON= with borders */
     /* icon-only-inactive-records is defined in  tailwind.config.js */
     @apply cursor-pointer w-[70px] box-border border-2 border-gray-500  rounded-md bg-transparent bg-no-repeat 
-        bg-icon-only-inactive-records  bg-contain bg-center hover:border-gray-500 h-9;
+        bg-icon-only-inactive-records  bg-center hover:border-gray-500 h-9;
 }
 /* OFF= without borders */
 .btnTABLE_ONLY_INACTIVE_RECORDS_OFF {
     /* icon-only-inactive-records is defined in tailwind.config.js */
     @apply cursor-pointer w-[70px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
-        bg-icon-only-inactive-records  bg-contain bg-center hover:border-gray-500 h-9;
+        bg-icon-only-inactive-records  bg-center hover:border-gray-500 h-9;
 }
 
 
@@ -511,7 +511,7 @@ input[type="text"].text_formFieldValue:focus {
 datatable main parts
 ****************************************************************************/
 .datatableTitle {
-height: 50px;
+height: 80px;
 font-size: 25px  ;
 display: flex;
 flex-direction: row;
@@ -554,26 +554,7 @@ text-overflow: ellipsis;
   border-bottom: solid 1px lightgray;  
 }
 
-#lavai {
-  display: flex;
-  flex-direction: column;
-  background-color: cyan;
-  width: 100%;
-  overflow-y: scroll;
-}
 
-/*
-.DatatableRow {
-  display: flex;
-  flex-direction: row;
-  width:100%;
-  cursor: pointer;
-  line-height: 40px;
-}
-.DatatableRow:hover {
-background-color:  #FFC266
-}
-*/
 .DatatableRow {
     @apply flex flex-row w-full cursor-pointer items-center hover:bg-[#ffedcc] leading-10 ;
 }
@@ -623,10 +604,13 @@ background-color: white;
 display:flex;
 }
 
-/****************************************************************************
-// the rows in the datatable being hovered or clicked
-****************************************************************************/
+/* searchBox => textbox to search  , magnifying icon at the right corner */
+.txtTABLE_SEARCHBOX {
+    /* magnifying-icon is defined in tailwind.config.js */
+    @apply cursor-pointer w-[400px] box-border border-2 border-gray-400 hover:border-black rounded-md bg-transparent bg-no-repeat 
+        bg-position-right-corner-icon p-searchbox bg-icon-magnifying h-9;
+}
 
-
-
-
+.txtTABLE_SEARCHBOX:focus {
+    @apply bg-[#ebf6f9];
+}
