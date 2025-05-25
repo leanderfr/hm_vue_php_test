@@ -120,12 +120,6 @@ function executeFetchQueryAndReturnJsonResult($sql, $simplifyJSON=false, $toRetu
     die( json_encode([]) );
 }
 
-
-
-
-
-
-
 //*********************************************************************************************************
 // execute query to post or patch  (crud)
 //*********************************************************************************************************
