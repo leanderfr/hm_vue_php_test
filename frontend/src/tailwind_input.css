@@ -475,6 +475,21 @@ button.btnDELETE {
 }
 
 
+/* div (when active) resets the datatable searchbox filter if clicked */
+.btnTABLE_CANCEL_FILTER_ACTIVE {
+    /* icon-filter-cancel-active é definido em tailwind.config.js */
+    @apply cursor-pointer w-[70px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
+        bg-icon-filter-cancel-active  bg-contain bg-center hover:border-gray-500 h-9;
+}
+
+/* div (when active) resets the datatable searchbox filter if clicked */
+.btnTABLE_CANCEL_FILTER_INACTIVE {
+    /* icon-filter-cancel-inactive é definido em tailwind.config.js */
+    @apply cursor-pointer w-[70px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
+        bg-icon-filter-cancel-inactive  bg-contain bg-center  h-9;
+}
+
+
 
 /****************************************************************************
  input type text

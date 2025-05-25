@@ -6,16 +6,25 @@ class Cars
   //***************************************************************************************************************************************
   //***************************************************************************************************************************************
   
-  public function getCars($status): void   {
+  public function getCars($status, $searchbox): void   {
 
     $sql =  "select description, concat('car_', id, '.png') as car_image, id, plate, ifnull(active, false) as active ".
             "from cars  ".
             "where deleted_at is null ";
 
-    if ($status=='active') $sql .= 'and ifnull(active, false)=true';
-    else if ($status=='inactive') $sql .= 'and ifnull(active, false)=false';
-    else if ($status=='all') $sql .= '';
-    else $sql .= ' and 1=2';  // no status received
+    // priority is filter whatever came from the searchbox
+    if ($searchbox!='')  {
+      $sql .= "and trim(description) like trim('%$searchbox%')";
+    } 
+
+    // searchbox empty, filter by status
+    else {
+
+      if ($status=='active') $sql .= 'and ifnull(active, false)=true';
+      else if ($status=='inactive') $sql .= 'and ifnull(active, false)=false';
+      else if ($status=='all') $sql .= '';
+      else $sql .= ' and 1=2';  // no status received
+    }
 
     $sql .= ' order by description';
 

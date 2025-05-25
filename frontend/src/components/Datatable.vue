@@ -35,7 +35,7 @@
       </div>
 
       <div class='datatableTitle' >
-        <div class='flex flex-col w-full'>
+        <div class='flex flex-row w-full'>
 
             <!--  search box --> 
             <div class="flex flex-col" >  
@@ -48,15 +48,24 @@
                   <div v-if="showTipSearchbox">
                     <span class="text-blue-900 font-bold">Enter</span>
                     <span class="text-black">= {{ expressions.search_verb }}</span>
-                </div>
-                <div v-else>&nbsp;</div>
+                  </div>
+                  <div v-else>&nbsp;</div> 
               </div>
+
+              <button id='teste' v-show="false" @click='fetchData()'></button>
             </div>
+
+            <!-- button to reset filter --> 
+            <div id='btnResetTextTableFilter'   
+                :class="filterApplied ? 'btnTABLE_CANCEL_FILTER_ACTIVE' : 'btnTABLE_CANCEL_FILTER_INACTIVE'"
+                @click="filterApplied.value=false"  aria-hidden="true">
+            </div> 
+          
         </div>
 
 
         <!-- action buttons -->
-        <div class='gap-5 flex flex-row items-start '>
+        <div class=' flex flex-row items-start  h-full gap-5 pt-3 '>
 
           <div v-if="currentStatus=='active'" class='btnTABLE_ONLY_ACTIVE_RECORDS_ON putPrettierTooltip' 
                   :title="expressions.only_active" 
@@ -220,10 +229,22 @@ const currentStatus = ref('')
 // if must show the 'Press Enter to search' message underneath the search box
 const showTipSearchbox = ref(false)
 
+// controls if the searchbox filter was applied
+const filterApplied = ref(false)  
+
+
 
 //*****************************************************************************
 //*****************************************************************************
+const applyFilter = () => {
 
+  juca
+  filterApplied.value=true
+
+
+}
+//*****************************************************************************
+//*****************************************************************************
 const rowClicked = (id) =>   {
   let tr = $(`#${id}`)
 
@@ -263,7 +284,7 @@ onMounted( () => {
 //***************************************************************************
 // if user changes current status, refresh table base on the last choice
 //*************************************************************************** 
-watch([currentStatus], () => { 
+watch([currentStatus, filterApplied], () => { 
   fetchData()
   },
   { immediate: false }
@@ -282,12 +303,16 @@ async function fetchData() {
   if (realStatus==='') realStatus='all'
 
   // 1 exception, expressions must inform what country/language
+  // if user fullfilled searchbox, consider it
+  // what field will be searched in the backend depends on the table, the backend decides
+  // if a text is specified to search for, the status will be ignored in the backend
+  let stringSearch = $.trim( $('#txtTableSearchText').val() )
   let route
   if ( props.currentViewedDatatable === 'expressions')   
-    route = `${props.backendUrl}/expressions/json/${props.currentCountry}/${realStatus}`
+    route = `${props.backendUrl}/expressions/json/${props.currentCountry}/${realStatus}` +  (stringSearch!='' ? `/${stringSearch}` : '')
 
   else 
-    route = `${props.backendUrl}/${props.currentViewedDatatable}/${realStatus}`
+    route = `${props.backendUrl}/${props.currentViewedDatatable}/${realStatus}`  +  (stringSearch!='' ? `/${stringSearch}` : '')
 
   await fetch(route) 
   .then(response => {

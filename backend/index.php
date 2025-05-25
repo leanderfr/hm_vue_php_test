@@ -50,19 +50,33 @@ $deleteRequest = $_SERVER['REQUEST_METHOD']==='DELETE';
 //*********************************************************************************************************************************************************
 // get record(s)
 if ($getRequest) {
+
   // resultformat =>  json , returns as an array of json,     reference, returns as a simple keyed array,  expressions.tablename, expresssions.title, etc
-  $router->Get("/expressions/{resultformat}/{country}/{status}", function($resultformat, $country, $status) use($handlerExpressions) {  
-    $handlerExpressions->getExpressions($resultformat, $country, $status);
+  // with searchbox
+  $router->Get("/expressions/{resultformat}/{country}/{status}/{searchbox}", function($resultformat, $country, $status, $searchbox) use($handlerExpressions) {  
+    $handlerExpressions->getExpressions($resultformat, $country, $status, $searchbox);
   });
+
+  // no searchbox
+  $router->Get("/expressions/{resultformat}/{country}/{status}", function($resultformat, $country, $status) use($handlerExpressions) {  
+    $handlerExpressions->getExpressions($resultformat, $country, $status, '');
+  });
+
 
   $router->Get("/expression/{id}", function($id) use($handlerExpressions)  {  
     $handlerExpressions->getExpressionById($id);
   });
 
-  $router->Get("/cars/{status}", function($status) use($handlerCars)  {  
-    $handlerCars->getCars($status);
+  // with searchbox
+  $router->Get("/cars/{status}/{searchbox}", function($status, $searchbox) use($handlerCars)  {  
+    $handlerCars->getCars($status, $searchbox);
   });
 
+  // no searchbox
+  $router->Get("/cars/{status}", function($status) use($handlerCars)  {  
+    $handlerCars->getCars($status, '');
+  });
+  
   $router->Get("/car/{id}", function($id) use($handlerCars)  {  
     $handlerCars->getCarById($id);
   });

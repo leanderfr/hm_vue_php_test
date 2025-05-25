@@ -312,6 +312,15 @@ const onKeyDown = (e) =>  {
         $("[sequence='"+tab+"']").focus();          
   }
 
+  // if user presses Enter when the  search box of Datatable.vue is focuse, triggers the search
+  if (e.which == 13 && $('#txtTableSearchText').is(':focus') )   { 
+    if (  $.trim($('#txtTableSearchText').is(':focus')).lenght<3 ) 
+      slidingMessage('Fatal error= ', 2000)        
+    else 
+      $('#teste').click()
+
+  } 
+    
   
 
   // if user presses F2 or Esc, being any form edit screen opened

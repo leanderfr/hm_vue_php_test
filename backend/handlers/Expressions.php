@@ -6,7 +6,7 @@ class Expressions
   //***************************************************************************************************************************************
   //***************************************************************************************************************************************
 
-  public function getExpressions(string $resultformat, string $country, string $status): void   {
+  public function getExpressions(string $resultformat, string $country, string $status, string $searchbox): void   {
 
     if ($country!='usa' && $country!='brazil' )   routeError();
 
@@ -22,10 +22,19 @@ class Expressions
               "from expressions  ".
               "where deleted_at is null ";
 
-    if ($status=='active') $sql .= 'and ifnull(active, false)=true';
-    else if ($status=='inactive') $sql .= 'and ifnull(active, false)=false';
-    else if ($status=='all') $sql .= '';
-    else $sql .= ' and 1=2';  // no status received
+    // priority is filter whatever came from the searchbox
+    if ($searchbox!='')  {
+      $sql .= "and trim(item) like('%$searchbox%') or trim(portuguese) like('%$searchbox%') or trim(english) like('%$searchbox%') ";
+    } 
+
+    // searchbox empty, filter by status
+    else {
+
+        if ($status=='active') $sql .= 'and ifnull(active, false)=true';
+        else if ($status=='inactive') $sql .= 'and ifnull(active, false)=false';
+        else if ($status=='all') $sql .= '';
+        else $sql .= ' and 1=2';  // no status received
+    }
 
     $sql .= ' order by item';
 
