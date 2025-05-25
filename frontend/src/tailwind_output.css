@@ -620,6 +620,18 @@ video {
   left: 0px;
 }
 
+.left-1 {
+  left: 0.25rem;
+}
+
+.left-10 {
+  left: 2.5rem;
+}
+
+.left-4 {
+  left: 1rem;
+}
+
 .top-0 {
   top: 0px;
 }
@@ -639,6 +651,10 @@ video {
 .my-6 {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+}
+
+.-mt-2 {
+  margin-top: -0.5rem;
 }
 
 .mb-5 {
@@ -748,6 +764,14 @@ video {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-5 {
+  height: 1.25rem;
+}
+
+.h-\[50px\] {
+  height: 50px;
 }
 
 .max-h-full {
@@ -957,6 +981,14 @@ video {
 
 .gap-6 {
   gap: 1.5rem;
+}
+
+.gap-7 {
+  gap: 1.75rem;
+}
+
+.gap-8 {
+  gap: 2rem;
 }
 
 .gap-\[10px\] {
@@ -1222,6 +1254,11 @@ video {
   background-color: rgb(253 224 71 / var(--tw-bg-opacity, 1));
 }
 
+.bg-yellow-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 252 232 / var(--tw-bg-opacity, 1));
+}
+
 .bg-icon-all-cars {
   background-image: url("data:image/svg+xml,<svg width='64px' height='64px' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' stroke='navy'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'> <g id='Interface / Filter_Off'> <path id='Vector' d='M13 4H18.4C18.9601 4 19.2409 4 19.4548 4.10899C19.6429 4.20487 19.7948 4.35774 19.8906 4.5459C19.9996 4.75981 20 5.04005 20 5.6001V6.3448C20 6.58444 20 6.70551 19.9727 6.81942C19.9482 6.92146 19.9072 7.01893 19.8524 7.1084C19.7906 7.20931 19.7043 7.2958 19.5314 7.46875L18 9.00012M7.49961 4H5.59961C5.03956 4 4.75981 4 4.5459 4.10899C4.35774 4.20487 4.20487 4.35774 4.10899 4.5459C4 4.75981 4 5.04005 4 5.6001V6.33736C4 6.58195 4 6.70433 4.02763 6.81942C4.05213 6.92146 4.09263 7.01893 4.14746 7.1084C4.20928 7.20928 4.29591 7.29591 4.46875 7.46875L9.53149 12.5315C9.70443 12.7044 9.79044 12.7904 9.85228 12.8914C9.90711 12.9808 9.94816 13.0786 9.97266 13.1807C10 13.2946 10 13.4155 10 13.6552V18.411C10 19.2682 10 19.6971 10.1805 19.9552C10.3382 20.1806 10.5814 20.331 10.8535 20.3712C11.1651 20.4172 11.5487 20.2257 12.3154 19.8424L13.1154 19.4424C13.4365 19.2819 13.5966 19.2013 13.7139 19.0815C13.8176 18.9756 13.897 18.8485 13.9453 18.7083C14 18.5499 14 18.37 14 18.011V13.6626C14 13.418 14 13.2958 14.0276 13.1807C14.0521 13.0786 14.0926 12.9809 14.1475 12.8915C14.2091 12.7909 14.2952 12.7048 14.4669 12.5331L14.4688 12.5314L15.5001 11.5001M15.5001 11.5001L5 1M15.5001 11.5001L19 15' stroke='navy' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'></path> </g> </g></svg>");
 }
@@ -1455,6 +1492,10 @@ video {
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+
+.text-\[20px\] {
+  font-size: 20px;
 }
 
 .text-\[30px\] {
@@ -2052,7 +2093,7 @@ input:checked + .slider_language:before {
 /* puppy icon, bottom right corner */
 
 div._doggy {
-  bottom: 0px;
+  bottom: 5px;
   right: 5px;
   z-index: 11;
   position: fixed;

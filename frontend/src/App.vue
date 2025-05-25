@@ -83,7 +83,7 @@
 
 
       <!-- footer toolbar   -->
-      <div v-if="expressions.length!=0" class='bottomToolbar'  >        
+      <div v-if="expressions.length!=0" class='bottomToolbar'  >     
       </div>
 
 
@@ -110,6 +110,20 @@
     <div class='_doggy_2' id='divDoggy_2'></div>
     <div v-if='isUSASelected' class='_doggy_3_english' id='divDoggy_3'></div>
     <div v-if='! isUSASelected' class='_doggy_3_portuguese' id='divDoggy_3'></div>
+
+
+    <div class='absolute bottom-0  flex flex-row left-4 text-[20px] font-bold gap-7 h-[50px]'>
+      <div class='flex flex-row items-center gap-3' >
+        Frontend:
+        <img src="./assets/images/vue.svg" alt='' />
+      </div>
+      <div class='flex flex-row items-center gap-3' >
+        Backend:
+        <img src="./assets/images/php.svg" alt='' />
+      </div>
+
+    </div>
+
   </div>
 
 
@@ -317,7 +331,6 @@ const onKeyDown = (e) =>  {
   } 
     
   
-
   // if user presses F2 or Esc, being any form edit screen opened
   if (e.which == 27 || e.which == 113)   { 
         let editionForm = typeof $('#bookingForm').attr("id")!='undefined' || 
