@@ -136,9 +136,6 @@ let draggingBookingDivYet = false
   onBeforeMount( () => {
 
     var scriptsToLoad = [
-        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.js", 
-        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.date.js",
-        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/legacy.js",
     ]
 
     loadScripts(scriptsToLoad).done(function() {

@@ -70,7 +70,7 @@
       <!-- display records from the current table -->
       <template v-if='records'>
         <div id='rowsContainer'>
-          <div  class="DatatableRows" v-for='record in records' :key="record" id="DatatableRows"> 
+          <div  class="DatatableRows" v-for='record in records' :key="record"  @click="rowClicked('tr_'+record.id)" :id="'tr_'+record.id"> 
 
               <!-- if the record status= true (activate), row will be normal color, otherwise (inactive), color will be red -->
               <div :class="record.active ? 'DatatableRow' : 'DatatableRowInactiveRecord'"   >         
@@ -86,14 +86,14 @@
                     {{ record[column.fieldname] }}
                   </div>
 
-                  <!-- the last column was printed above and the current record is active, now put the 3 action icons (edit, delete and change status) -->
+                  <!-- if the last column was printed and the current record is active, now put the 3 action icons (edit, delete and change status) -->
                   <div v-if='index === columns.length-1 && record.active==1' class='actionColumn' :style="{width: column.width}" :key="'1tr-'+index" >
                       <div class='actionIcon' @click='editForm(record.id)' ><img alt=''  src='../assets/images/edit.svg' /></div>
                       <div class='actionIcon'  @click='deleteRecord'><img alt=''   src='../assets/images/delete.svg' /></div>
                       <div class='actionIcon' @click='changeStatus(record.id)'><img alt=''  src='../assets/images/active.svg' /></div>
                   </div>   
 
-                  <!-- the last column was printed above and the current record is inactive, put only the icon to reactivate -->
+                  <!-- if the last column was printed and the current record is inactive, put only the icon to reactivate -->
                   <div v-if='index === columns.length-1 && record.active==0' class='actionColumn' :style="{width: column.width}" :key="'1tr-'+index"  >
                       <div class='actionIconNull'>&nbsp;</div>
                       <div class='actionIconNull'>&nbsp;</div>
@@ -148,7 +148,7 @@ import { onMounted, ref, watch  } from 'vue';
 import CarForm from './CarForm.vue';
 import ExpressionForm from './ExpressionForm.vue';
 
-const emit = defineEmits( ['showLoading', 'hideLoading','setDatatableToDisplay','displaySchedule', 'toRefreshCarsBrowser'] );
+const emit = defineEmits( ['showLoading', 'hideLoading','setDatatableToDisplay','toDisplaySchedule', 'toRefreshCarsBrowser'] );
 const props = defineProps( ['currentViewedDatatable', 'currentCountry', 'backendUrl', 'imagesUrl', 'expressions' ] )
 
 // records that are gonna be showed in the datatable
@@ -194,6 +194,19 @@ const formHttpMethodApply = ref(null)
 
 // which type of status should be viewed at the moment, active or inactive
 const currentStatus = ref('')  
+
+
+//*****************************************************************************
+//*****************************************************************************
+
+const rowClicked = (id) =>   {
+  let tr = $(`#${id}`)
+
+  $('.DatatableRow_selected').removeClass('DatatableRow_selected')
+  tr.addClass('DatatableRow_selected')
+
+}
+
 
 
 

@@ -542,6 +542,7 @@ white-space: nowrap;
 text-overflow: ellipsis; 
 
 }
+
 .DatatableRows {
   display: flex;
   flex-direction: column;
@@ -561,7 +562,7 @@ text-overflow: ellipsis;
   overflow-y: scroll;
 }
 
-
+/*
 .DatatableRow {
   display: flex;
   flex-direction: row;
@@ -572,6 +573,18 @@ text-overflow: ellipsis;
 .DatatableRow:hover {
 background-color:  #FFC266
 }
+*/
+.DatatableRow {
+    @apply flex flex-row w-full cursor-pointer items-center hover:bg-[#ffedcc] leading-10 ;
+}
+
+/* selected= qdo usuario clicar na divTR, coloca em cor diferente e coloca sua respectiva coluna 'checkbox' como marcada */
+.DatatableRow_selected {
+    @apply flex flex-row w-full cursor-pointer items-center bg-[#FFC266] hover:bg-[#FFC266];
+}
+
+
+
 .actionColumn {
 display: flex;
 flex-direction: row;
@@ -586,6 +599,7 @@ justify-content: center;
 align-items: center;
 height:100%;
 flex:1;
+height: 40px;
 }
 .actionIconNull { 
 border: solid 1px transparent;
@@ -607,8 +621,12 @@ border: solid 1x gray;
 border-radius: 5px;
 background-color: white;
 display:flex;
-
 }
+
+/****************************************************************************
+// the rows in the datatable being hovered or clicked
+****************************************************************************/
+
 
 
 
