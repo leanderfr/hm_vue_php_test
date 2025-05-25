@@ -52,17 +52,16 @@
                   <div v-else>&nbsp;</div> 
               </div>
 
-              <button id='teste' v-show="false" @click='fetchData()'></button>
+              <button id='triggerSearchBox' v-show="false" @click='fetchData()'></button>
             </div>
 
             <!-- button to reset filter --> 
-            <div id='btnResetTextTableFilter'   
+            <div id='btnResetTextTableFilter'  class='putPrettierTooltip' :title="expressions.reset_filter"
                 :class="filterApplied ? 'btnTABLE_CANCEL_FILTER_ACTIVE' : 'btnTABLE_CANCEL_FILTER_INACTIVE'"
-                @click="filterApplied.value=false"  aria-hidden="true">
+                @click="forceHideTolltip();clearFilter()"  aria-hidden="true">
             </div> 
           
         </div>
-
 
         <!-- action buttons -->
         <div class=' flex flex-row items-start  h-full gap-5 pt-3 '>
@@ -236,12 +235,9 @@ const filterApplied = ref(false)
 
 //*****************************************************************************
 //*****************************************************************************
-const applyFilter = () => {
-
-  juca
-  filterApplied.value=true
-
-
+const clearFilter = () => {
+  $('#txtTableSearchText').val('');
+  filterApplied.value=false
 }
 //*****************************************************************************
 //*****************************************************************************
@@ -313,6 +309,8 @@ async function fetchData() {
 
   else 
     route = `${props.backendUrl}/${props.currentViewedDatatable}/${realStatus}`  +  (stringSearch!='' ? `/${stringSearch}` : '')
+
+  filterApplied.value = stringSearch!='' ? true : false ;
 
   await fetch(route) 
   .then(response => {
@@ -398,6 +396,5 @@ const deleteRecord = (id) => {
   slidingMessage(props.expressions.unavailable_option, 3000)        
 
 }
-
 
 </script>

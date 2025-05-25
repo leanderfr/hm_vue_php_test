@@ -312,13 +312,12 @@ const onKeyDown = (e) =>  {
         $("[sequence='"+tab+"']").focus();          
   }
 
-  // if user presses Enter when the  search box of Datatable.vue is focuse, triggers the search
+  // if user presses Enter when the  search box of Datatable.vue is focused and fullfilled, triggers the search
   if (e.which == 13 && $('#txtTableSearchText').is(':focus') )   { 
-    if (  $.trim($('#txtTableSearchText').is(':focus')).lenght<3 ) 
-      slidingMessage('Fatal error= ', 2000)        
+    if (  $.trim($('#txtTableSearchText').val()).length<3 ) 
+      slidingMessage(expressions.value.searchbox_minimum, 2000)        
     else 
-      $('#teste').click()
-
+      $('#triggerSearchBox').click()
   } 
     
   
