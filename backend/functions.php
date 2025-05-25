@@ -111,7 +111,6 @@ function executeFetchQueryAndReturnJsonResult($sql, $simplifyJSON=false, $toRetu
   //********************************************************************************************
   // send data to frontend
   //********************************************************************************************
-  header('Content-type: application/json'); 
   http_response_code(200);   // 200= everything's ok
 
   if ($anyData)     {
