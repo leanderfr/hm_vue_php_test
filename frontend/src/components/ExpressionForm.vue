@@ -51,13 +51,13 @@
 
           <div class="flex flex-row w-full pb-2 gap-6 ">  
             <div class='w-1/3'>
-              <input type="text" autocomplete="off" sequence="1"   id="txtItem" maxlength='100' class='text_formFieldValue w-full'  >  
+              <input type="text" autocomplete="off" sequence="1"   id="txtItem" maxlength='30' minlength='3' class='text_formFieldValue w-full'  >  
             </div>
             <div class='w-1/3'>
-              <input type="text" autocomplete="off" sequence="2"   id="txtEnglish" maxlength='200' class='text_formFieldValue w-full'  >  
+              <input type="text" autocomplete="off" sequence="2"   id="txtEnglish" maxlength='200' minlength='3' class='text_formFieldValue w-full'  >  
             </div>
             <div class='w-1/3'>
-              <input type="text" autocomplete="off" sequence="3"   id="txtPortuguese" maxlength='200' class='text_formFieldValue w-full'  >  
+              <input type="text" autocomplete="off" sequence="3"   id="txtPortuguese" maxlength='200' minlength='3' class='text_formFieldValue w-full'  >  
             </div>
 
           </div>
@@ -176,9 +176,13 @@ async function saveExpression()  {
 
   let error = ''
 
-  if ( $('#txtItem').val().trim().length < 3 )  error = props.expressions.missing_item
-  if ( $('#txtEnglish').val().trim().length < 3 )  error = props.expressions.missing_english
-  if ( $('#txtPortuguese').val().trim().length < 3 )  error = props.expressions.missing_portuguese
+  if ( $('#txtItem').val().trim().length < parseInt($('#txtItem').attr('minlength'), 10)  )  
+      error = props.expressions.missing_item + ' - Min '+$('#txtItem').attr('minlength')
+  if ( $('#txtEnglish').val().trim().length < parseInt($('#txtEnglish').attr('minlength'), 10) )  
+      error = props.expressions.missing_english + ' - Min '+$('#txtEnglish').attr('minlength')
+  if ( $('#txtPortuguese').val().trim().length < parseInt($('#txtPortuguese').attr('minlength'), 10) )  
+      error = props.expressions.missing_portuguese + ' - Min '+$('#txtPortuguese').attr('minlength')
+
 
   // show any error detected
   if (error!='') {
@@ -212,13 +216,13 @@ async function saveExpression()  {
     return response.text()
   })
   .then((msg) => {
-    slidingMessage(props.expressions.expression_recorded, 2000)        
+    slidingMessage(props.expressions.expression_recorded, 1500)        
     emit('hideLoading')
     setTimeout(() => {
       emit('closeExpressionForm')  
       emit('refreshDatatable')  
 
-    }, 2100);
+    }, 1700);
     
   })
   .catch((error) => {

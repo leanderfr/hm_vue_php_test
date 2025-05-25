@@ -414,13 +414,13 @@ async function  saveBooking()  {
     return response.text()
   })
   .then((msg) => {
-    slidingMessage(props.expressions.booking_recorded, 2000)        
+    slidingMessage(props.expressions.booking_recorded, 1500)        
     emit('hideLoading')
     setTimeout(() => {
       emit('closeBookingForm')  
       emit('refreshBookingDatesAndContent')  
 
-    }, 2100);
+    }, 1700);
     
   })
   .catch((error) => {
@@ -451,13 +451,13 @@ async function  deleteBooking()  {
     return response.text()
   })
   .then((msg) => {
-    slidingMessage(props.expressions.booking_deleted, 2000)        
+    slidingMessage(props.expressions.booking_deleted, 1500)        
     emit('hideLoading')
     setTimeout(() => {
       emit('closeBookingForm')  
       emit('refreshBookingDatesAndContent')  
 
-    }, 2100);
+    }, 1700);
     
   })
   .catch((error) => {

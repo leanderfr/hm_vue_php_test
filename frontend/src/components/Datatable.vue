@@ -173,7 +173,7 @@
 
 
 <script setup>
-import { slidingMessage, forceHideTolltip , divStillVisible } from '../assets/js/utils.js'
+import { slidingMessage, forceHideTolltip , divStillVisible, scrollUntilElementVisible } from '../assets/js/utils.js'
 import { onMounted, ref, watch  } from 'vue';
 import CarForm from './CarForm.vue';
 import ExpressionForm from './ExpressionForm.vue';
@@ -328,6 +328,14 @@ async function fetchData() {
         if( divStillVisible('rowsContainer') ) {
           while ( divStillVisible('rowsContainer') ) { $('#rowsContainer').height( $('#rowsContainer').height()+5 );     }
         }        
+        let lastRowUpdated = 'tr_'+currentId.value
+        // highlight the last updated row
+        setTimeout(() => {
+          scrollUntilElementVisible(lastRowUpdated)
+          $(`#${lastRowUpdated}`).addClass('DatatableRow_selected')  
+        }, 100);
+        
+
     }, 300);
 
 

@@ -50,10 +50,10 @@
 
           <div class="flex flex-row w-full pb-2 gap-6 ">  
             <div class='w-1/2'>
-              <input type="text" autocomplete="off" sequence="1"   id="txtDescription" maxlength='100' class='text_formFieldValue w-full'  >  
+              <input type="text" autocomplete="off" sequence="1"   id="txtDescription" maxlength='50' minlength='5' class='text_formFieldValue w-full'  >  
             </div>
             <div class='w-1/2'>
-              <input type="text" autocomplete="off" sequence="2"   id="txtPlate" maxlength='50' class='text_formFieldValue w-full'  >  
+              <input type="text" autocomplete="off" sequence="2"   id="txtPlate" maxlength='10' minlength='5' class='text_formFieldValue w-full'  >  
             </div>
           </div>
 
@@ -207,12 +207,14 @@ async function saveCar()  {
   let toDo = props.formHttpMethodApply=='POST' ? 'insert' : 'update'
   let error = ''
 
-  if ( $('#txtDescription').val().trim().length < 3 )  error = props.expressions.missing_car_description
-  if ( $('#txtPlate').val().trim().length < 3 )  error = props.expressions.missing_car_plate
+  // minlength is invented, but needed to the IF below
+  if ( $('#txtDescription').val().trim().length < parseInt($('#txtDescription').attr('minlength'), 10) )  
+      error = props.expressions.missing_car_description + ' - Min: '+$('#txtDescription').attr('minlength')
+  if ( $('#txtPlate').val().trim().length < parseInt($('#txtPlate').attr('minlength'), 10) )  
+      error = props.expressions.missing_car_plate+ ' - Min: '+$('#txtPlate').attr('minlength')
 
   // check if user has chosen any image when adding record
   if (typeof $('#fileCarImage')[0].files[0]=='undefined' && toDo=='insert')   error = props.expressions.choose_an_image
-
 
   // show any error detected
   if (error!='') {
@@ -249,13 +251,13 @@ async function saveCar()  {
     return response.text()
   })
   .then((msg) => {
-    slidingMessage(props.expressions.car_recorded, 2000)        
+    slidingMessage(props.expressions.car_recorded, 1500)        
     emit('hideLoading')
     setTimeout(() => {
       emit('closeCarForm')  
       emit('refreshDatatable')  
 
-    }, 2100);
+    }, 1700);
     
   })
   .catch((error) => {

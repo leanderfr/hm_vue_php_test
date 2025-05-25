@@ -73,8 +73,8 @@ class Cars
   	if ($car_id!='' && ! is_numeric($car_id))   routeError();
 
     // verify request
-    $fields = [ ['string', 'description', 5, 100]  ,
-                ['string', 'plate', 5, 20] ];
+    $fields = [ ['string', 'description', 5, 50]  ,
+                ['string', 'plate', 5, 10] ];
 
 
     // if it is posting ($car_id==''), get the usual $_POST from php

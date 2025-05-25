@@ -90,9 +90,9 @@ class Expressions
   	if ($expression_id!='' && ! is_numeric($expression_id))   routeError();
 
     // verify request
-    $fields = [ ['string', 'item', 5, 100]  ,
-                ['string', 'english', 5, 50],
-                ['string', 'portuguese', 5, 50] 
+    $fields = [ ['string', 'item', 5, 30]  ,
+                ['string', 'english', 3, 200],
+                ['string', 'portuguese', 3, 200] 
               ];
 
     // if it is posting ($expression_id==''), get the usual $_POST from php
