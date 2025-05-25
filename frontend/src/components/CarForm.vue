@@ -74,7 +74,7 @@
     <div class="flex flex-row w-full justify-between px-6 border-t-[1px] border-t-gray-300 py-2">
       <button  id="btnCLOSE" class="btnCANCEL" @click="emit('closeCarForm')" >{{ expressions.button_cancel }}</button>
 
-      <button  id="btnUPLOAD" class="btnUPLOAD" @click="console.log('clicou');fileCarImage.click()" >{{ expressions.upload_image }}</button>
+      <button  id="btnUPLOAD" class="btnUPLOAD" @click="fileCarImage.click()" >{{ expressions.upload_image }}</button>
 
       <button  id="btnSAVE" class="btnSAVE" @click="saveCar()" aria-hidden="true">{{ expressions.button_save }}</button>
     </div>

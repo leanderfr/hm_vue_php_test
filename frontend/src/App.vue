@@ -191,18 +191,14 @@
   }
 
 
-  //***************************************************************************
-  // load crucial js before anything
-  //***************************************************************************
+  //******************************************************************************************
+  // load crucial js before anything - DEPRECATED , JS will be loaded in index.html
+  //******************************************************************************************
   onBeforeMount( () => {
 
     var scriptsToLoad = [
-        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/multiDraggable.js",
-        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/maskDateHour.js",
-        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/legacy.js",
-        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.js", 
-        "http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com/hiringmachine/externalJS/calendar/picker.date.js",
     ]
+
 
     loadScripts(scriptsToLoad).done(function() {
       neededJsLoaded.value=true        
