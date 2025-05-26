@@ -315,7 +315,7 @@ async function fetchData() {
   await fetch(route) 
   .then(response => {
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      return response.text().then(text => {throw new Error(`HTTP error! ${response.status}` + text)})
     }
     return response.json()
   })
@@ -325,8 +325,8 @@ async function fetchData() {
 
     // strecth the div containing the records to the maximum
     setTimeout(() => {
-        if( divStillVisible('rowsContainer') ) {
-          while ( divStillVisible('rowsContainer') ) { $('#rowsContainer').height( $('#rowsContainer').height()+5 );     }
+        if( divStillVisible('#rowsContainer') ) {
+          while ( divStillVisible('#rowsContainer') ) { $('#rowsContainer').height( $('#rowsContainer').height()+5 );     }
         }        
         let lastRowUpdated = 'tr_'+currentId.value
         // highlight the last updated row
@@ -343,7 +343,7 @@ async function fetchData() {
   })
   .catch((error) => {
     emit('hideLoading')
-    slidingMessage('Fatal error= '+error, 3000)        
+    slidingMessage('Error= '+error, 3000)        
   })  
 }
 
@@ -379,7 +379,7 @@ async function changeStatus (id) {
 
   .then(response => {
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      return response.text().then(text => {throw new Error(`HTTP error! ${response.status}` + text)})
     }
     return response.text()
   })
@@ -391,7 +391,7 @@ async function changeStatus (id) {
   })
   .catch((error) => {
     emit('hideLoading')
-    slidingMessage('Fatal error= '+error, 3000)        
+    slidingMessage('Error= '+error, 3000)        
   })  
 }
 

@@ -195,7 +195,7 @@ async function getBookingFormPopulatedAndReady() {
         .then( (response) => {
 
           if (!response.ok) {
-            throw new Error(`Booking Read Err Fatal= ${response.status}`);
+            return response.text().then(text => {throw new Error(`HTTP error! ${response.status}` + text)})
           }
           return response.json();
         })
@@ -209,6 +209,7 @@ async function getBookingFormPopulatedAndReady() {
           $('#txtDriverName').val( booking.driver_name )
 
           $('#carPicture').attr('src', props.imagesUrl + booking.car_image )
+          carId.value = booking.car_id  
 
           putFocusInFirstInputText_AndOthersParticularitiesOfTheBookingForm() 
         })
@@ -250,10 +251,6 @@ const putFocusInFirstInputText_AndOthersParticularitiesOfTheBookingForm = () => 
   makeWindowDraggable('divWINDOW_TOP', 'bookingForm')
 }
 
-
-
-
-
 /********************************************************************************************************************************************************
  validate data from the form and if its ok, try to save it
 ********************************************************************************************************************************************************/
@@ -292,8 +289,6 @@ async function  saveBooking()  {
     error = props.expressions.pickup_hour_error
 
   
-
-  
   //******************************************************************************************/
   // drop off date
   //******************************************************************************************/
@@ -323,13 +318,11 @@ async function  saveBooking()  {
   // driver's name
   if ( $('#txtDriverName').val().trim().length < 3 )  error = props.expressions.missing_driver_name
 
-
   // show any error detected
   if (error!='') {
     slidingMessage(error, 2000)
     return;
   }
-
 
   var formData = new FormData(); 
 
@@ -384,13 +377,12 @@ async function  saveBooking()  {
   //formData.append('pickup_datetime', dateToIsoStringConsideringLocalUTC(pickupAlmostReady))    //  iso8601 datetime format
   formData.append('dropoff_datetime', formatDate(dropoffAlmostReady))    //  iso8601 datetime format
   formData.append('pickup_datetime', formatDate(pickupAlmostReady))    //  iso8601 datetime format
-  
+
+  // if it is adding of a booking, carId.value = ID of the currently selected car (in component 'carsBrowser')
+  // if it is update of the booking, carId.value = id of the car previously recorded in the booking
+  formData.append('car_id', carId.value) 
   formData.append('driver_name', $('#txtDriverName').val())
 
-  // get the ID of the currently selected car (in component 'carsBrowser')
-  // if it is update of the record carId.value will be null, doesnt need it
-  if (carId.value)  
-      formData.append('car_id', carId.value) 
 
   let route = ''
   if (props.formHttpMethodApply=='POST') 
@@ -403,13 +395,16 @@ async function  saveBooking()  {
     emit('showLoading')    
   }, 10);
   
-  // PHP doesnt work weel with PATCH (laravel does), need to send all with POST here
-  //await fetch(`${props.backendUrl}/booking`, {method: props.formHttpMethodApply, body: formData})
-  await fetch(`${props.backendUrl}/${route}`, {method: 'POST', body: formData})
+  await fetch(`${props.backendUrl}/${route}`, {method: props.formHttpMethodApply, body: formData})
 
   .then(response => {
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      return response.text().then(text => {
+        if ($.trim(text)=='time_or_car_occupied')
+          throw new Error('Time/car already reserved')
+        else
+          throw new Error(`HTTP error! ${response.status}|` + text+'|')
+      })  
     }
     return response.text()
   })
@@ -425,7 +420,7 @@ async function  saveBooking()  {
   })
   .catch((error) => {
     emit('hideLoading')
-    slidingMessage('Fatal error= '+error, 2000)        
+    slidingMessage(error, 3000)        
   })  
 
 }
@@ -446,7 +441,7 @@ async function  deleteBooking()  {
 
   .then(response => {
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      return response.text().then(text => {throw new Error(`HTTP error! ${response.status}` + text)})
     }
     return response.text()
   })
@@ -462,7 +457,7 @@ async function  deleteBooking()  {
   })
   .catch((error) => {
     emit('hideLoading')
-    slidingMessage('Fatal error= '+error, 2000)        
+    slidingMessage('Error= '+error, 2000)        
   })  
 
 }

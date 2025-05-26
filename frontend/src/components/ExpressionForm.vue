@@ -120,7 +120,7 @@ async function getExpressionFormPopulatedAndReady() {
         .then( (response) => {
 
           if (!response.ok) {
-            throw new Error(`Expression Read Err Fatal= ${response.status}`);
+            return response.text().then(text => {throw new Error(`HTTP error! ${response.status}` + text)})
           }
           return response.json();
         })
@@ -211,7 +211,7 @@ async function saveExpression()  {
 
   .then(response => {
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      return response.text().then(text => {throw new Error(`HTTP error! ${response.status}` + text)})
     }
     return response.text()
   })
@@ -227,7 +227,7 @@ async function saveExpression()  {
   })
   .catch((error) => {
     emit('hideLoading')
-    slidingMessage('Fatal error= '+error, 3000)        
+    slidingMessage('Error= '+error, 3000)        
   })  
 
 }

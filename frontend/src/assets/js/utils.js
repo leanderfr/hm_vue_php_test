@@ -188,28 +188,23 @@ const forceHideTolltip = () => {
   $('div[class^="ui-tooltip"]').remove();
 }
 
-
-
-
-
 /*******************************************************************************/
-const divStillVisible = (div) => {
+const divStillVisible = (divId) => {
     // Current distance from the top of the page
     var windowScrollTopView = $(window).scrollTop();
     
     // Current distance from the top of the page, plus the height of the window
     var windowBottomView = windowScrollTopView + $(window).height();
  
-    let $div = $('#'+div)
+    let $div = $(divId)
     
     // Element distance from top
     var elemTop = $div.offset().top;
             
-    let elemBottom = elemTop + $div.height()+60;
-   
-    
-    return ((elemBottom <= windowBottomView) && (elemTop >= windowScrollTopView ));
+    let elemBottom = elemTop + $div.height() + 80; 
+      return ( elemBottom <= windowBottomView) && (elemTop >= windowScrollTopView ) ;
 }
+
 
 /************************************************************************************************************************************************************
 scroll a horizontal div by scrolling the mouse wheel, which theorically should be only to vertical divs

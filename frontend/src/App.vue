@@ -7,7 +7,7 @@
 
       <div class='headerBar'>
 
-        <div class='headerLogo' ></div>
+        <div id='headerLogo' ></div>
 
         <div class='headerText' >
             <div>{{ expressions.app_header_title }}</div>
@@ -157,8 +157,8 @@
   const error = ref(null)
 
   // it changes depending if the app is running as a container (AWS EC2) or locally
-  const backendUrl = ref('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com:8073')  
-  //const backendUrl = ref('http://localhost')  
+  //const backendUrl = ref('http://ec2-54-233-183-5.sa-east-1.compute.amazonaws.com:8073')  
+  const backendUrl = ref('http://localhost')  
 
   const imagesUrl = ref('https://devs-app.s3.sa-east-1.amazonaws.com/hiring_machine/')  
 
@@ -288,7 +288,7 @@
 
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        return response.text().then(text => {throw new Error(`HTTP error! ${response.status}` + text)})
       }
       return response.json()
     })
@@ -297,7 +297,7 @@
     })
     .catch((error) => {
       isLoading.value = false;
-      slidingMessage('Fatal error= '+error, 3000)        
+      slidingMessage('Error= '+error, 3000)        
     })  
   }
 

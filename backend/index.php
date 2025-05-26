@@ -111,6 +111,11 @@ if ($patchRequest) {
       $handlerCars->postOrPatchCar($id);
     });
 
+    $router->Patch("/booking/{id}", function($id) use($handlerBookings)  {  
+      $handlerBookings->postOrPatchBooking($id);
+    });
+
+
     $router->Patch("/cars/status/{id}", function($id) use($handlerCars)  {  
       $handlerCars->ChangeStatus($id);
     });
@@ -132,7 +137,7 @@ if ($postRequest)  {
     });
 
     $router->Post("/booking", function() use($handlerBookings)  {  
-      $handlerBookings->postBooking();
+      $handlerBookings->postOrPatchBooking();
     });
 }
 

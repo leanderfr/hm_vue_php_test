@@ -96,7 +96,7 @@ class Bookings
 
   //***************************************************************************************************************************************
   //***************************************************************************************************************************************
-  public function postBooking($booking_id=''): void   {
+  public function postOrPatchBooking($booking_id=''): void   {
     global $dbConnection;
 
 
@@ -106,6 +106,17 @@ class Bookings
                 ['datetime', 'dropoff_datetime', 5, 200]  ,
                 ['string', 'driver_name', 3, 50] ];
 
+    // if it is posting ($booking_id==''), get the usual $_POST from php
+    if ($booking_id=='')    {
+      $_FIELDS = $_POST;
+    }
+
+    // otherwise, use the PHP 8.4 request_parse_body() 
+    else {
+      [$_FIELDS] = request_parse_body();
+    }
+
+
     $dataError = '';
     for ($i=0; $i < count($fields); $i++)  {
 
@@ -114,7 +125,7 @@ class Bookings
       $minSize = $fields[$i][2];
       $maxSize = $fields[$i][3];
 
-      $fieldValue = $_POST[$fieldName];
+      $fieldValue = $_FIELDS[$fieldName];
 
       // is numeric
       if ($fields[$i][0] == 'int') {
@@ -135,11 +146,35 @@ class Bookings
 
     if ($dataError!='') internalError( $dataError );
 
-    $carId = $_POST['car_id'];
-    $pickupDatetime =   $_POST['pickup_datetime'];
-    $dropoffDatetime = $_POST['dropoff_datetime'];
-    $driverName = $_POST['driver_name'];
+    $carId = $_FIELDS['car_id'];
+    $pickupDatetime =   $_FIELDS['pickup_datetime'];
+    $dropoffDatetime = $_FIELDS['dropoff_datetime'];
+    $driverName = $_FIELDS['driver_name'];
 
+    // check if there's already a booking between the times the user is trying to reserve and with the same car
+
+    //  - INTERVAL 1 MINUTE / + INTERVAL 1 MINUTE   to the bookings being able to share the same threshold
+    // car is reserved between 08 am and 4 pm and at the same time, reserved between 4 pm and 10 pm,  1 minute tolerance
+    $sql =
+        "select bookings.id ".
+        " from bookings " .
+        " where ".
+        " ( '$pickupDatetime' between date_format(pickup_datetime + INTERVAL 1 MINUTE, '%Y-%m-%d %H:%i') and date_format(dropoff_datetime - INTERVAL 1 MINUTE, '%Y-%m-%d %H:%i') or " .
+        "   '$dropoffDatetime' between date_format(pickup_datetime + INTERVAL 1 MINUTE, '%Y-%m-%d %H:%i') and date_format(dropoff_datetime - INTERVAL 1 MINUTE, '%Y-%m-%d %H:%i') or  " .
+        "   date_format(pickup_datetime + INTERVAL 1 MINUTE, '%Y-%m-%d %H:%i') between '$pickupDatetime' and '$dropoffDatetime' or " .
+        "   date_format(dropoff_datetime - INTERVAL 1 MINUTE, '%Y-%m-%d %H:%i') between '$pickupDatetime' and '$dropoffDatetime' ) " .
+        " and " .
+        "  bookings.car_id = $carId  " .
+        ( $booking_id!='' ? " and bookings.id <> $booking_id   "  : ''  );
+
+    try {
+      $result = mysqli_query($dbConnection, $sql) or internalError('[1] Database error');    
+    } catch(Exception $e)  {
+      internalError( mysqli_error($dbConnection) );
+    }
+    if ( mysqli_num_rows($result) > 0 )  internalError('time_or_car_occupied');
+
+  
     // if no ID's been informed, its a POST, new record
     if ($booking_id=='')    {
       $crudSql = "insert into bookings(car_id, pickup_datetime, dropoff_datetime, driver_name, created_at, updated_at) ". 

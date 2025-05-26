@@ -54,7 +54,7 @@ async function fetchCars()  {
 
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        return response.text().then(text => {throw new Error(`HTTP error! ${response.status}` + text)})
       }
       return response.json()
     })
@@ -65,7 +65,7 @@ async function fetchCars()  {
     })
     .catch((error) => {
       emit('hideLoading')
-      slidingMessage('Fatal error= '+error, 3000)        
+      slidingMessage('Error= '+error, 3000)        
     })  
 }
 

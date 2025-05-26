@@ -149,7 +149,7 @@ async function getCarFormPopulatedAndReady() {
         .then( (response) => {
 
           if (!response.ok) {
-            throw new Error(`Car Read Err Fatal= ${response.status}`);
+            return response.text().then(text => {throw new Error(`HTTP error! ${response.status}` + text)})
           }
           return response.json();
         })
@@ -246,7 +246,9 @@ async function saveCar()  {
 
   .then(response => {
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      return response.text().then(text => {
+        throw new Error(`HTTP error! ${response.status}|` + text+'|')
+      })
     }
     return response.text()
   })
@@ -262,7 +264,7 @@ async function saveCar()  {
   })
   .catch((error) => {
     emit('hideLoading')
-    slidingMessage('Fatal error= '+error, 3000)        
+    slidingMessage('Error= '+error, 3000)        
   })  
 
 }

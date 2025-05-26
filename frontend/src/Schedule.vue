@@ -285,7 +285,7 @@ async function refreshBookingDatesAndContent() {
       .then( (response) => {
 
         if (!response.ok) {
-          throw new Error(`Bookings Prepare Err Fatal= ${response.status}`);
+          return response.text().then(text => {throw new Error(`HTTP error! ${response.status}` + text)})
         }
         return response.json();
       })
@@ -406,13 +406,13 @@ async function refreshBookingDatesAndContent() {
         // exibe as <div>'s de reserva 
         postItBookingDivs()
 
-        // strecth the div containing the records to the maximum
-        setTimeout(() => {
-            if( divStillVisible('bookingsTable') ) {
-              while ( divStillVisible('bookingsTable') ) { $('#bookingsTable').height( $('#bookingsTable').height()+5 );     }
-            }        
-        }, 300);
+        while (divStillVisible('#bookingsTable') ) {
+            $('#bookingsTable').height( $('#bookingsTable').height()+10 );     
+        }
 
+
+
+//console.log(divStillVisible('#headerLogo'))
     })
 
   } 
@@ -501,6 +501,8 @@ display the post it's (<div>'s) with the reservation data obtained through API
 ************************************************************************************************************************************************************/
 
 const postItBookingDivs = () => {
+
+
 
   let $bookingsTable = $('#bookingsTable') 
   $bookingsTable.scrollTop(0)

@@ -1638,14 +1638,14 @@ though this was thought to be a tailwind file, I use some moments vanilla css to
   padding: 0px;
 }
 
-.headerLogo {
+#headerLogo {
   background-image: url("./assets/images/hiringmachine_io_logo.jpeg");
   background-repeat: no-repeat;
   background-size: 60px 60px;
   display: flex;
   flex-basis: 33%;
   height: 100%;
-  background-position: 10px;
+  background-position: 10px ;
 }
 
 .headerText {
