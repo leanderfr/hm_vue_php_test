@@ -69,7 +69,7 @@ class Cars
   public function postOrPatchCar($car_id=''): void   {
     global $dbConnection;
 
-    // update doenst need the car id
+    // only method PATCH will worry about record_id, method POST, wont
   	if ($car_id!='' && ! is_numeric($car_id))   routeError();
 
     // verify request

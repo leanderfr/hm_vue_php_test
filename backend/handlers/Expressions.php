@@ -86,7 +86,7 @@ class Expressions
   public function postOrPatchExpression($expression_id=''): void   {
     global $dbConnection;
 
-    // update doenst need the expression id
+    // only method PATCH will worry about record_id, method POST, wont
   	if ($expression_id!='' && ! is_numeric($expression_id))   routeError();
 
     // verify request

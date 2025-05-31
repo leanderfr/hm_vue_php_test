@@ -99,6 +99,8 @@ class Bookings
   public function postOrPatchBooking($booking_id=''): void   {
     global $dbConnection;
 
+    // only method PATCH will worry about record_id, method POST, wont
+  	if ($booking_id!='' && ! is_numeric($booking_id))   routeError();
 
     // verify request
     $fields = [ ['int', 'car_id', 1, 6]  ,  
