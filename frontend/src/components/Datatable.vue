@@ -18,17 +18,17 @@
 
               <div class='flex flex-row'>
                   <!-- schedule icon  -->
-                  <div  class='btnSCHEDULE_TABLE putPrettierTooltip' :title="expressions.schedule" @click="forceHideTolltip();emit('toDisplaySchedule')" aria-hidden="true"></div>   
+                  <div  class='btnSCHEDULE_TABLE putPrettierTooltip' :title="expressions.schedule" @click="forceHideToolTip();emit('toDisplaySchedule')" aria-hidden="true"></div>   
 
                   <!-- cars table icon -->
                   <div  class='btnCARS_TABLE putPrettierTooltip' 
                     :title="expressions.cars" 
-                    @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" 
+                    @click="forceHideToolTip();emit('setDatatableToDisplay', 'cars')" 
                     aria-hidden="true"></div>   
 
 
                   <!-- expressions table icon -->
-                  <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' :title="expressions.expressions" @click="forceHideTolltip();emit('setDatatableToDisplay', 'expressions')" aria-hidden="true"></div>   
+                  <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' :title="expressions.expressions" @click="forceHideToolTip();emit('setDatatableToDisplay', 'expressions')" aria-hidden="true"></div>   
                 </div>
           </div> 
 
@@ -52,13 +52,14 @@
                   <div v-else>&nbsp;</div> 
               </div>
 
+              <!-- hidden button that triggers the search when the user press Enter -->
               <button id='triggerSearchBox' v-show="false" @click='fetchData()'></button>
             </div>
 
             <!-- button to reset filter --> 
             <div id='btnResetTextTableFilter'  class='putPrettierTooltip' :title="expressions.reset_filter"
                 :class="filterApplied ? 'btnTABLE_CANCEL_FILTER_ACTIVE' : 'btnTABLE_CANCEL_FILTER_INACTIVE'"
-                @click="forceHideTolltip();clearFilter()"  aria-hidden="true">
+                @click="forceHideToolTip();clearFilter()"  aria-hidden="true">
             </div> 
           
         </div>
@@ -66,29 +67,30 @@
         <!-- action buttons -->
         <div class=' flex flex-row items-start  h-full gap-5 pt-3 '>
 
+          <!-- show/hide active records -->
           <div v-if="currentStatus=='active'" class='btnTABLE_ONLY_ACTIVE_RECORDS_ON putPrettierTooltip' 
                   :title="expressions.only_active" 
-                  @click="forceHideTolltip();currentStatus=''" 
+                  @click="forceHideToolTip();currentStatus=''" 
                   aria-hidden="true"></div>   
 
           <div v-else class='btnTABLE_ONLY_ACTIVE_RECORDS_OFF putPrettierTooltip' 
                 :title="expressions.only_active" 
-                @click="forceHideTolltip();currentStatus='active'" 
+                @click="forceHideToolTip();currentStatus='active'" 
                 aria-hidden="true"></div>   
 
+          <!-- show/hide inactive records -->
           <div v-if="currentStatus=='inactive'" class='btnTABLE_ONLY_INACTIVE_RECORDS_ON putPrettierTooltip' 
                 :title="expressions.only_inactive" 
-                @click="forceHideTolltip();currentStatus=''" 
+                @click="forceHideToolTip();currentStatus=''" 
                 aria-hidden="true"></div>   
 
           <div v-else class='btnTABLE_ONLY_INACTIVE_RECORDS_OFF putPrettierTooltip' 
               :title="expressions.only_inactive" 
-                  @click="forceHideTolltip();currentStatus='inactive'" 
+                  @click="forceHideToolTip();currentStatus='inactive'" 
               aria-hidden="true"></div>   
 
+          <!-- new record -->
           <div  class='btnTABLE_NEW_RECORD putPrettierTooltip' :title="expressions.add_record" @click="editForm();" aria-hidden="true"></div>   
-
-
         </div>
       </div>
 
@@ -113,7 +115,7 @@
                       :key="'1tr-'+index" 
                      :class="record.active==0 ? 'text-red-500 font-bold' : 'text-black'"  
                      class='datatableColumn'  >
-                    {{ record[column.fieldname] }}
+                    {{ record[column.fieldname] }} >
                   </div>
 
                   <!-- if the last column was printed and the current record is active, now put the 3 action icons (edit, delete and change status) -->
@@ -173,7 +175,7 @@
 
 
 <script setup>
-import { slidingMessage, forceHideTolltip , divStillVisible, scrollUntilElementVisible } from '../assets/js/utils.js'
+import { slidingMessage, forceHideToolTip , divStillVisible, scrollUntilElementVisible, improveTooltipLook } from '../assets/js/utils.js'
 import { onMounted, ref, watch  } from 'vue';
 import CarForm from './CarForm.vue';
 import ExpressionForm from './ExpressionForm.vue';
@@ -260,18 +262,7 @@ const focusSearchBox = (e) => {
 //*****************************************************************************
 onMounted( () => {
     
-
-  setTimeout( () => {
-    // define tooltip of top buttons
-    if (typeof $('.putPrettierTooltip').tooltip !== "undefined") {
-      $('.putPrettierTooltip').tooltip({ 
-        tooltipClass: 'prettierTitle_black',
-        show: false,  
-        hide: false,  
-        position: { my: "left top", at: "left top-40", collision: "flipfit" }
-      })
-    }
-  }, 500)    
+  improveTooltipLook()
 
   fetchData()
 })

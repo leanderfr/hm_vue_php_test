@@ -184,7 +184,7 @@ const makeWindowDraggable = (title_id, window_id) => {
 the jquery tooltip wont go away when user clicks on a div or button with a tooltip attached to it, 
 the code below solves this
 ***********************************************************************************************************************/
-const forceHideTolltip = () => {
+const forceHideToolTip = () => {
   $('div[class^="ui-tooltip"]').remove();
 }
 
@@ -255,10 +255,34 @@ export const scrollUntilElementVisible = (element_id) => {
       return $.when.apply($, promises);
   }
 
+//******************************************************************************
+// improve the look of the title atribute (mouse hover an element)
+// thanx jquery for this
+// elements that have 'putPrettierTooltip' class will be affected
+//******************************************************************************
+function improveTooltipLook() {
+
+  setTimeout( () => {
+    // define tooltip of top buttons
+    if (typeof $('.putPrettierTooltip').tooltip !== "undefined") {
+      $('.putPrettierTooltip').tooltip({ 
+        tooltipClass: 'prettierTitle_black',  
+        show: false,  
+        hide: false,  
+        position: { my: "left top", at: "left top-40", collision: "flipfit" }
+      })
+    }
+
+  }, 500)    
+
+
+}
+
+
 
 //********************************************************************************************************************************
 //*******************************************************************************************************************************
 export { prepareLoadingAnimation, isStringJSON, slidingMessage, counter, makeWindowDraggable, divStillVisible, 
-      hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC, formatDate, forceHideTolltip, loadScripts,
-      toWheelCarsBrowser };
+      hourFormat, preparePuppyIcon, dateToIsoStringConsideringLocalUTC, formatDate, forceHideToolTip, loadScripts,
+      toWheelCarsBrowser, improveTooltipLook };
 

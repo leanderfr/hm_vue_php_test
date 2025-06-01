@@ -13,31 +13,31 @@ scheduleContainer
       <!-- action buttons -->
       <div class="flex flex-row pt-1">
           <!-- new booking -->
-          <div  class='btnBOOKING_ADD_CAR_RESERVATION putPrettierTooltip'  :title="expressions.new_booking"   @click="forceHideTolltip();newBookingRecord()" aria-hidden="true"></div>   
+          <div  class='btnBOOKING_ADD_CAR_RESERVATION putPrettierTooltip'  :title="expressions.new_booking"   @click="forceHideToolTip();newBookingRecord()" aria-hidden="true"></div>   
 
           <!-- display calendar -->
-          <div  class='btnBOOKING_CALENDAR putPrettierTooltip' :title="expressions.choose_date" @click="forceHideTolltip();showCalendar=true" aria-hidden="true"></div>    
+          <div  class='btnBOOKING_CALENDAR putPrettierTooltip' :title="expressions.choose_date" @click="forceHideToolTip();showCalendar=true" aria-hidden="true"></div>    
 
           <!-- display all the cars reservations -->
           <div  class='btnBOOKING_ALL_CARS putPrettierTooltip'  :class="{btnBOOKING_ALL_CARS_ACTIVE: props.selectedCar==0}"
                 :title="expressions.display_all_cars" 
-                @click="forceHideTolltip();emit('setNewSelectedCar', 0)"  aria-hidden="true"></div>    
+                @click="forceHideToolTip();emit('setNewSelectedCar', 0)"  aria-hidden="true"></div>    
 
           <!-- back 1 week   -->
-          <div  class='btnBOOKING_LEFT_ARROW putPrettierTooltip'  :title="expressions.previous_week" @click="forceHideTolltip();browseBookingCalendar(-7)" aria-hidden="true"></div>   
+          <div  class='btnBOOKING_LEFT_ARROW putPrettierTooltip'  :title="expressions.previous_week" @click="forceHideToolTip();browseBookingCalendar(-7)" aria-hidden="true"></div>   
           <!-- forward 1 week -->
-          <div  class='btnBOOKING_RIGHT_ARROW putPrettierTooltip' :title="expressions.next_week" @click="forceHideTolltip();browseBookingCalendar(+7)" aria-hidden="true"></div>   
+          <div  class='btnBOOKING_RIGHT_ARROW putPrettierTooltip' :title="expressions.next_week" @click="forceHideToolTip();browseBookingCalendar(+7)" aria-hidden="true"></div>   
 
           <!-- cars table -->
           <div  class='btnCARS_TABLE putPrettierTooltip' 
               :title="expressions.cars" 
-              @click="forceHideTolltip();emit('setDatatableToDisplay', 'cars')" 
+              @click="forceHideToolTip();emit('setDatatableToDisplay', 'cars')" 
               aria-hidden="true"></div>   
 
           <!-- expressions table -->
           <div  class='btnEXPRESSIONS_TABLE putPrettierTooltip' 
               :title="expressions.expressions" 
-              @click="forceHideTolltip();emit('setDatatableToDisplay', 'expressions')" 
+              @click="forceHideToolTip();emit('setDatatableToDisplay', 'expressions')" 
               aria-hidden="true"></div>   
 
       </div> 
@@ -104,7 +104,7 @@ scheduleContainer
 
 import { onMounted, ref , onBeforeMount  } from 'vue';
 import BookingForm from './BookingForm.vue';
-import { slidingMessage, forceHideTolltip, hourFormat, counter, divStillVisible, loadScripts  } from './assets/js/utils.js'
+import { slidingMessage, forceHideToolTip, hourFormat, counter, divStillVisible, loadScripts, improveTooltipLook  } from './assets/js/utils.js'
 
 //const showLoading = defineEmits( ['showLoading'] );
 //const hideLoading = defineEmits( ['hideLoading'] );
@@ -152,19 +152,7 @@ onMounted( () => {
     prepareCalendar()  
   }, 1000);  
 
-  setTimeout( () => {
-    // define tooltip of top buttons
-    if (typeof $('.putPrettierTooltip').tooltip !== "undefined") {
-      $('.putPrettierTooltip').tooltip({ 
-        tooltipClass: 'prettierTitle_black',
-        show: false,  
-        hide: false,  
-        position: { my: "left top", at: "left top-40", collision: "flipfit" }
-      })
-    }
-
-  }, 500)    
-
+  improveTooltipLook();
 
   // prepare de choose date button 
   $('.btnBOOKING_CALENDAR').on('click', function(event) {
