@@ -120,7 +120,7 @@ class Cars
     $plate = ($_FIELDS['plate']);
 
     // is image ok  
-    // the front end already checked if the user chose an image when adding record, what's impeditive to go on
+    // the front end already checked if the user didnt choose an image when adding record, that's impeditive to go on
     // if the users didnt choose an image when updating record, bypass the image recording
     $bypassImage = true;
     if ( isset($_FILES['image']['tmp_name']) )  {
@@ -129,7 +129,7 @@ class Cars
   //    if ($imgInfo === FALSE) 
   //      internalError( 'File erro');
 
-      if ($imgInfo[2] !== IMAGETYPE_PNG) 
+      if ($imgInfo[2] !== IMAGETYPE_PNG)
         internalError( 'Image must be PNG');
 
       if ($_FILES['image']['size'] > 1500000) 
@@ -159,8 +159,8 @@ class Cars
     if ($car_id=='') {
       $car_id = explode("|", $result)[1];
     }
+    
     // uploads the image to AWS S3
-
     if (! $bypassImage)      {
       uploadImageToAWS_S3('image', $car_id);
     }

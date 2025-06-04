@@ -457,7 +457,7 @@ button.btnDELETE {
 /* OFF= without border */
 .btnTABLE_ONLY_ACTIVE_RECORDS_OFF {
     /* icon-only-active-records is defined in  tailwind.config.js */
-    @apply cursor-pointer w-[70px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
+    @apply cursor-pointer w-[70px] box-border border-2 border-white  rounded-md bg-transparent bg-no-repeat 
         bg-icon-only-active-records   bg-center hover:border-gray-500 h-9;
 }
 
@@ -470,7 +470,7 @@ button.btnDELETE {
 /* OFF= without borders */
 .btnTABLE_ONLY_INACTIVE_RECORDS_OFF {
     /* icon-only-inactive-records is defined in tailwind.config.js */
-    @apply cursor-pointer w-[70px] box-border border-2 border-transparent  rounded-md bg-transparent bg-no-repeat 
+    @apply cursor-pointer w-[70px] box-border border-2 border-white  rounded-md bg-transparent bg-no-repeat 
         bg-icon-only-inactive-records  bg-center hover:border-gray-500 h-9;
 }
 
