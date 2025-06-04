@@ -225,7 +225,7 @@ const currentId = ref(null)
 const formHttpMethodApply = ref(null)
 
 // which type of status should be viewed at the moment, active or inactive
-const currentStatus = ref('')  
+const currentStatus = ref('all')  
 
 // if must show the 'Press Enter to search' message underneath the search box
 const showTipSearchbox = ref(false)
@@ -285,21 +285,21 @@ async function fetchData() {
   emit('showLoading')
 
   $('#rowsContainer').height('0')
-  // if no status set, fetch all records
-  let realStatus = currentStatus.value
-  if (realStatus==='') realStatus='all'
 
-  // 1 exception, expressions must inform what country/language
+  // in the case of expressions being fetched, once the json parameter is sent,   
+  // no matter the country parameter, backend will return expressions from USA/Brazil
+
   // if user fullfilled searchbox, consider it
   // what field will be searched in the backend depends on the table, the backend decides
   // if a text is specified to search for, the status will be ignored in the backend
+
   let stringSearch = $.trim( $('#txtTableSearchText').val() )
   let route
   if ( props.currentViewedDatatable === 'expressions')   
-    route = `${props.backendUrl}/expressions/json/${props.currentCountry}/${realStatus}` +  (stringSearch!='' ? `/${stringSearch}` : '')
+    route = `${props.backendUrl}/expressions/json/__no_matter__/${currentStatus.value}` +  (stringSearch!='' ? `/${stringSearch}` : '')
 
   else 
-    route = `${props.backendUrl}/${props.currentViewedDatatable}/${realStatus}`  +  (stringSearch!='' ? `/${stringSearch}` : '')
+    route = `${props.backendUrl}/${props.currentViewedDatatable}/${currentStatus.value}`  +  (stringSearch!='' ? `/${stringSearch}` : '')
 
   filterApplied.value = stringSearch!='' ? true : false ;
 
