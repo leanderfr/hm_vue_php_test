@@ -35,7 +35,7 @@
       </div>
 
       <div class='datatableTitle' >
-        <div class='flex flex-row w-full'>
+        <div class='flex flex-row'>
 
             <!--  search box --> 
             <div class="flex flex-col" >  
@@ -64,34 +64,43 @@
           
         </div>
 
-        <!-- action buttons -->
-        <div class=' flex flex-row items-start  h-full gap-5 pt-3 '>
+        <div className=' flex flex-col'>
+            <!-- action buttons -->
+            <div class=' flex flex-row items-start  h-full gap-5 pt-3 '>
 
-          <!-- show/hide active records -->
-          <div v-if="currentStatus=='active'" class='btnTABLE_ONLY_ACTIVE_RECORDS_ON putPrettierTooltip' 
-                  :title="expressions.only_active" 
-                  @click="forceHideToolTip();currentStatus=''" 
+              <!-- show/hide active records -->
+              <div v-if="currentStatus=='active'" class='btnTABLE_ONLY_ACTIVE_RECORDS_ON putPrettierTooltip' 
+                      :title="expressions.only_active" 
+                      @click="forceHideToolTip();currentStatus=''" 
+                      aria-hidden="true"></div>   
+
+              <div v-else class='btnTABLE_ONLY_ACTIVE_RECORDS_OFF putPrettierTooltip' 
+                    :title="expressions.only_active" 
+                    @click="forceHideToolTip();currentStatus='active'" 
+                    aria-hidden="true"></div>   
+
+              <!-- show/hide inactive records -->
+              <div v-if="currentStatus=='inactive'" class='btnTABLE_ONLY_INACTIVE_RECORDS_ON putPrettierTooltip' 
+                    :title="expressions.only_inactive" 
+                    @click="forceHideToolTip();currentStatus=''" 
+                    aria-hidden="true"></div>   
+
+              <div v-else class='btnTABLE_ONLY_INACTIVE_RECORDS_OFF putPrettierTooltip' 
+                  :title="expressions.only_inactive" 
+                      @click="forceHideToolTip();currentStatus='inactive'" 
                   aria-hidden="true"></div>   
 
-          <div v-else class='btnTABLE_ONLY_ACTIVE_RECORDS_OFF putPrettierTooltip' 
-                :title="expressions.only_active" 
-                @click="forceHideToolTip();currentStatus='active'" 
-                aria-hidden="true"></div>   
+              <!-- new record -->
+              <div  class='btnTABLE_NEW_RECORD putPrettierTooltip' :title="expressions.add_record" @click="editForm();" aria-hidden="true"></div>   
+            </div>
 
-          <!-- show/hide inactive records -->
-          <div v-if="currentStatus=='inactive'" class='btnTABLE_ONLY_INACTIVE_RECORDS_ON putPrettierTooltip' 
-                :title="expressions.only_inactive" 
-                @click="forceHideToolTip();currentStatus=''" 
-                aria-hidden="true"></div>   
+            <!-- legend -->
+            <div :style="{paddingRight: '10px', fontSize: '12px', display:'flex', flexDirection: 'row', justifyContent: 'flex-end'}"  >
+                <div :style="{paddingTop: '10px'}">{ props.expressions.legend } : <span :style="{backgroundColor: 'red'}">&nbsp;&nbsp;&nbsp;</span>= {props.expressions.inactive }</div>
+            </div>
 
-          <div v-else class='btnTABLE_ONLY_INACTIVE_RECORDS_OFF putPrettierTooltip' 
-              :title="expressions.only_inactive" 
-                  @click="forceHideToolTip();currentStatus='inactive'" 
-              aria-hidden="true"></div>   
+         </div>
 
-          <!-- new record -->
-          <div  class='btnTABLE_NEW_RECORD putPrettierTooltip' :title="expressions.add_record" @click="editForm();" aria-hidden="true"></div>   
-        </div>
       </div>
 
       <!-- loop to display each column -->
@@ -296,10 +305,12 @@ async function fetchData() {
   let stringSearch = $.trim( $('#txtTableSearchText').val() )
   let route
   if ( props.currentViewedDatatable === 'expressions')   
-    route = `${props.backendUrl}/expressions/json/__no_matter__/${currentStatus.value}` +  (stringSearch!='' ? `/${stringSearch}` : '')
+    route = `${props.backendUrl}/expressions/json/__no_matter__/${currentStatus.value}` 
 
   else 
-    route = `${props.backendUrl}/${props.currentViewedDatatable}/${currentStatus.value}`  +  (stringSearch!='' ? `/${stringSearch}` : '')
+    route = `${props.backendUrl}/${props.currentViewedDatatable}/${currentStatus.value}`  
+
+  route += (stringSearch!='' ? `/${stringSearch}` : '')
 
   filterApplied.value = stringSearch!='' ? true : false ;
 
